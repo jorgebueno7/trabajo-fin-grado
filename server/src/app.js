@@ -1,13 +1,15 @@
 const express = require('express');
-const db = require('../database/database.js');
+const cors = require('cors');
+const db = require('../');
 require('dotenv').config();
 
 const app = express();
 const PORT = 5000;
 
-app.get('/', (req, res) => {
-    res.send('Hola Mundo');
-});
+app.use(cors());
+app.use(express.json());
+
+app.use('/sportly', require('./routes/users'));
 
 app.listen(PORT, (error) => {
     if(!error)

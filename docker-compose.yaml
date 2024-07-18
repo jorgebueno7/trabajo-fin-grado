@@ -15,6 +15,7 @@ services:
       - db_data:/var/lib/mysql
     networks:
       - network-database
+      
   server:
     build:
       context: ./server
