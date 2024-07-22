@@ -23,4 +23,17 @@ const registroUsers = async (req, res) => {
     }
 }
 
-module.exports = { getAllUsers, registroUsers };
+const loginUsers = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const usuario = await users.findOne({ where: { email } });
+        if(usuario && (await bcrypt.compare(password, usuario.password))){
+            res.status(200).json(usuario)
+        }else{
+            res.status(401).json({error: 'ERROR_LOGIN_USERS'})
+        }
+    } catch (error) {
+        res.status(500).json({error: `ERROR_LOGIN_USERS: ${error}`})
+    }
+}
+module.exports = { getAllUsers, registroUsers, loginUsers };
