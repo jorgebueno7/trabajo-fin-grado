@@ -1,19 +1,26 @@
 const users = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 const getAllUsers = async (req, res) => {
-    const usuarios = await users.findAll();
-    res.status(200).json(usuarios);
+    try {
+        const usuarios = await users.findAll();
+        res.status(200).json(usuarios);
+    } catch (error) {
+        res.status(500).json({error: `ERROR_GET_ALL_USERS: ${error}`})
+    }
 }
 
 const registroUsers = async (req, res) => {
-    const { dni, nombre, apellidos, email, password } = req.body;
-    const usuarios = await users.create({ dni, nombre, apellidos, email, password })
-    if(dni && nombre && apellidos && email && password){
+    try {
+        const { dni, nombre, apellidos, email, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const usuarios = await users.create({ dni, nombre, apellidos, email, password: hashedPassword })
+        if(dni && nombre && apellidos && email && password){
             res.status(201).json(usuarios)
-    }
-    else{
-        res.json({error: `ERROR_CREATE_USERS: Faltan parámetros en el body`})
+        }
+    } catch (error) {
+        res.status(500).json({error: `ERROR_CREATE_USERS: ${error}`})
     }
 }
 
-module.exports = { getAllUsers, registroUsers};
+module.exports = { getAllUsers, registroUsers };

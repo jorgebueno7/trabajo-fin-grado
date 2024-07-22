@@ -1,27 +1,3 @@
-// const db = require('../database/database.js');
-
-// const getUsers = (callback) => {
-//     const query = 'SELECT * FROM users';
-//     db.query(query, (error, results) => {
-//         if (error) {
-//             return callback(error, null);
-//         }
-//         callback(null, results);
-//     });
-// };
-
-// const postUsers = (callback) => {
-//     const query = 'INSERT INTO users (nombre, apellidos, email, password) VALUES (?, ?, ?, ?)';
-//     db.query(query, (error, results) => {
-//         if (error) {
-//             return callback(error, null);
-//         }
-//         callback(null, results);
-//     });
-// }
-
-// module.exports = { getUsers, postUsers };
-
 const { Model, DataTypes } = require('sequelize')
 const sequelize = require('../database/database')
 
