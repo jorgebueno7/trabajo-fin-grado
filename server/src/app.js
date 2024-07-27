@@ -10,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/sportly', require('./routes/users'));
+app.use('/sportly', require('./routes/sports'));
 
 app.listen(PORT, (error) => {
     if(!error)

@@ -17,7 +17,7 @@ const getUserById = async (req, res) => {
         if(usuario){
             res.status(200).json(usuario)
         }else{
-            res.status(404).json({error: 'El usuario con ese id no existe'})
+            res.status(404).json({error: 'User with that id does not exist'})
         }
     } catch (error) {
         res.status(500).json({error: `ERROR_GET_USER_BY_ID: ${error}`})
@@ -55,18 +55,8 @@ const updateUserById = async (req, res) => {
     try {
         const { id } = req.params;
         const { dni, nombre, apellidos, email, password } = req.body;
-        const usuario = await users.findByPk(id);
-        if (usuario) {
-            if (dni !== undefined) usuario.dni = dni;
-            if (nombre !== undefined) usuario.nombre = nombre;
-            if (apellidos !== undefined) usuario.apellidos = apellidos;
-            if (email !== undefined) usuario.email = email;
-            if (password !== undefined) usuario.password = password;
-            await usuario.save();
-            res.status(200).json(usuario);
-        } else {
-            res.status(404).json({ error: 'El usuario con ese id no existe' });
-        }
+        users.update({ dni, nombre, apellidos, email, password }, { where: { id } });
+        res.status(200).json({message: 'User updated successfully'})
     } catch (error) {
         res.status(500).json({ error: `ERROR_UPDATE_USER: ${error}` });
     }
@@ -74,13 +64,8 @@ const updateUserById = async (req, res) => {
 const deleteUserById = async (req, res) => {
     try {
         const { id } = req.params;
-        const usuario = await users.findByPk(id);
-        if(usuario){
-            await usuario.destroy();
-            res.status(200).json({message: 'Usuario eliminado correctamente'})
-        }else{
-            res.status(404).json({error: 'El usuario con ese id no existe'})
-        }
+        await users.destroy({ where: { id: id } });
+        res.status(200).json({message: 'User deleted successfully'})
     } catch (error) {
         res.status(500).json({error: `ERROR_DELETE_USER: ${error}`})
     }
