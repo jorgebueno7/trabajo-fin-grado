@@ -1,3 +1,56 @@
+# version: '3.8'
+
+# services:
+#   db:
+#     image: mysql:latest
+#     container_name: mysql_db
+#     environment:
+#       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+#       MYSQL_DATABASE: ${MYSQL_DATABASE}
+#       MYSQL_USER: ${MYSQL_USER}
+#       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#     ports:
+#       - "3306:3306"
+#     volumes:
+#       - db_data:/var/lib/mysql
+#     networks:
+#       - network-database
+      
+#   server:
+#     build:
+#       context: ./server
+#       dockerfile: Dockerfile
+#     container_name: backend
+#     ports:
+#       - "5000:5000"
+#     depends_on:
+#       - db
+#     volumes:
+#       - ./server:/app
+#     networks:
+#       - network-database
+
+#   client:
+#     build:
+#       context: ./client
+#       dockerfile: Dockerfile
+#     container_name: frontend
+#     ports:
+#       - "5173:5173"
+#     depends_on:
+#       - server
+#     volumes:
+#       - ./client:/app
+#     networks:
+#       - network-database
+
+# networks:
+#   network-database:
+#     driver: bridge
+
+# volumes:
+#   db_data:
+
 version: '3.8'
 
 services:
@@ -36,13 +89,15 @@ services:
       dockerfile: Dockerfile
     container_name: frontend
     ports:
-      - "3000:3000"
+      - "5173:5173"
     depends_on:
       - server
     volumes:
       - ./client:/app
     networks:
       - network-database
+    environment:
+      - VITE_HOST=0.0.0.0
 
 networks:
   network-database:
