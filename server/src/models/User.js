@@ -28,6 +28,10 @@ Users.init({
         type: DataTypes.STRING, 
         allowNull: false,
     },
+    role: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     fecha_nacimiento: DataTypes.DATE, 
     telefono: DataTypes.NUMBER, 
     direccion: DataTypes.STRING,

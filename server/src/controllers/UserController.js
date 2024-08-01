@@ -26,11 +26,21 @@ const getUserById = async (req, res) => {
 
 const registroUsers = async (req, res) => {
     try {
-        const { dni, nombre, apellidos, email, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const usuarios = await users.create({ dni, nombre, apellidos, email, password: hashedPassword })
-        if(dni && nombre && apellidos && email && password){
-            res.status(201).json(usuarios)
+        const { dni, nombre, apellidos, email, password, role } = req.body;
+        if(role == "Administrador"){
+            const admin = await users.findOne({ where: { role: "Administrador" } });
+            if(admin){
+                res.status(401).json({error: 'Already have a user admin'})
+            } 
+        }
+        else {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const usuarios = await users.create({ dni, nombre, apellidos, email, password: hashedPassword, role })
+            if(dni && nombre && apellidos && email && password && role){
+                res.status(201).json(usuarios)
+            } else {
+                res.status(400).json({error: 'ERROR_CREATE_USERS'})
+            }       
         }
     } catch (error) {
         res.status(500).json({error: `ERROR_CREATE_USERS: ${error}`})
