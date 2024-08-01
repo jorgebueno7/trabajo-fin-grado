@@ -1,5 +1,6 @@
 const users = require('../models/User');
 const bcrypt = require('bcryptjs');
+const transporter = require('../utils/mailtrap')
 
 const getAllUsers = async (req, res) => {
     try {
@@ -53,6 +54,19 @@ const loginUsers = async (req, res) => {
         const usuario = await users.findOne({ where: { email } });
         if(usuario && (await bcrypt.compare(password, usuario.password))){
             res.status(200).json(usuario)
+            // Configuración del correo electrónico
+            const email_options = {
+                from: 'sportly@events.com',
+                to: email,
+                subject: 'Te damos la bienvenida a Sportly App',
+                text: 'Inicio de sesión realizado con éxito!',
+                html: '<b>Inicio de sesión realizado con éxito!</b>'
+            };
+            // Enviar el correo electrónico
+            transporter.sendMail(email_options, (error, info) => {
+                if (error) { return console.log(error); }
+                console.log('Email sent: ' + info.response);
+            });
         }else{
             res.status(401).json({error: 'ERROR_LOGIN_USERS'})
         }
