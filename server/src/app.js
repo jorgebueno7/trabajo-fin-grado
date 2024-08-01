@@ -11,6 +11,8 @@ app.use(express.json());
 
 app.use('/sportly', require('./routes/users'));
 app.use('/sportly', require('./routes/sports'));
+app.use('/sportly', require('./routes/events'));
+app.use('/sportly', require('./routes/user-events'));
 
 app.listen(PORT, (error) => {
     if(!error)
