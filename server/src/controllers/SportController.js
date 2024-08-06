@@ -25,7 +25,6 @@ const getSportById = async (req, res) => {
 
 const postSport = async (req, res) => {
     try { 
-        
         const { nombre, descripcion, informacion, categoria, equipamiento } = req.body;
         const newSport = await sport.create({ nombre, descripcion, informacion, categoria, equipamiento });
         if (nombre && categoria && equipamiento){
