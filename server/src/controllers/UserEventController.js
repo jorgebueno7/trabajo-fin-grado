@@ -1,4 +1,6 @@
 const user_event = require('../models/UserEvent');
+const event = require('../models/Event')
+let queue = {};
 
 const getAllUserEvents = async (req, res) => {
     try {
@@ -42,10 +44,31 @@ const getEventByUserId = async (req, res) => {
 const postUserEvent = async (req, res) => {
     try {
         const { id_usuario, id_evento } = req.body;
-        const newUserEvent = await user_event.create({ id_usuario, id_evento });
-        if(id_usuario && id_evento){
-            res.status(201).json(newUserEvent);
-        } 
+        // Obtener el evento a través de la clave primaria
+        const evento = await event.findByPk(id_evento);
+        if (!evento) { // Si el evento no existe, devolver un 404
+            return res.status(404).json({ error: 'Event not found' });
+        }
+        // Contar los usuarios actuales en el evento
+        const currentUsersCount = await user_event.count({ where: { id_evento } });
+        if (currentUsersCount < evento.maximo_usuarios) { // Si el número de usuarios de los eventos, es menor al máximo permitido por el evento
+            // Crear un nuevo usuario en el evento
+            const newUserEvent = await user_event.create({ id_usuario, id_evento });
+            return res.status(201).json(newUserEvent);
+        } else { // Si el evento está lleno, añadir el usuario a la cola
+            if (!queue[id_evento]) {
+                queue[id_evento] = [];
+            }
+            queue[id_evento].push(id_usuario); // Añadimos el id del usuario
+
+            const firstUserInQueue = queue[id_evento][0];
+            await event.update(
+                { id_usuario_espera: firstUserInQueue }, // Actualizar el campo de id_usuario_espera con el primer usuario en la cola para el evento
+                { where: { id_evento } }
+            );
+            // Devolver un mensaje de éxito mostrando el contenido de la cola
+            return res.status(200).json({ message: 'User added to the waiting list for the event', queue: queue[id_evento] });
+        }
     } catch (error) {
         res.status(500).json({ error: `ERROR_POST_USER_EVENT: ${error}`})
     }
@@ -67,6 +90,21 @@ const deleteUserEvent = async (req, res) => {
     try {
         const { id_usuario, id_evento } = req.params;
         await user_event.destroy({ where: { id_usuario, id_evento } });
+        if (queue[id_evento] && queue[id_evento].length > 0) { // Verificar si hay usuarios en la cola esperando
+            // Obtener el siguiente usuario en la cola
+            const nextUser = queue[id_evento].shift();
+            await user_event.create({ id_usuario: nextUser, id_evento }); 
+
+            // Actualizar (si existe) el id_usuario_espera al siguiente usuario en la cola, sino, volver a ponerlo null
+            const firstUserInQueue = queue[id_evento][0] || null;
+            await event.update(
+                { id_usuario_espera: firstUserInQueue },
+                { where: { id_evento } }
+            );
+            console.log(`User ${nextUser} added to the event from the waiting list`);
+        } else {
+            await event.update({ id_usuario_espera: null }, { where: { id_evento } });
+        }
         res.status(200).json({ message: 'UserEvent deleted successfully' });
     } catch (error) {
         res.status(500).json({ error: `ERROR_DELETE_USER_EVENT: ${error}` });
