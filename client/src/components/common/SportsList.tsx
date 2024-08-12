@@ -1,0 +1,63 @@
+import React, { useEffect, useState } from 'react';
+import { getSports } from '../../api/sports';
+
+const Deportes = () => {
+    interface Sport {
+        id_deporte: number;
+        nombre: string;
+        descripcion: string;
+        informacion: string;
+        categoria: string;
+        equipamiento: string;
+    }
+      
+    const [sports, setSports] = useState<Sport[]>([]);
+    // const [form, setForm] = useState({ dni: '', nombre: '', apellidos: '', email: '', password: '', role: '' });
+
+    useEffect(() => {
+        fetchSports();
+    }, []);
+    
+    const fetchSports = async () => {
+        try {
+          const data = await getSports();
+          setSports(data);
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+    };
+
+    return (
+        <div>
+            <h1>Deportes</h1>
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" className="px-6 py-3">Nombre</th>
+                        <th scope="col" className="px-6 py-3">Descripción</th>
+                        <th scope="col" className="px-6 py-3">Información</th>
+                        <th scope="col" className="px-6 py-3">Categoria</th>
+                        <th scope="col" className="px-6 py-3">Equipamiento</th>
+                        <th scope="col" className="px-6 py-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {sports.map((sport) => (
+                        <tr key={sport.id_deporte} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{sport.nombre}</th>
+                            <td className="px-6 py-4">{sport.descripcion}</td>
+                            <td className="px-6 py-4">{sport.informacion}</td>
+                            <td className="px-6 py-4">{sport.categoria}</td>
+                            <td className="px-6 py-4">{sport.equipamiento}</td>
+                            <td className="px-6 py-4">
+                                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
+export default Deportes;
