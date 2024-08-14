@@ -7,6 +7,8 @@ import Events from './components/common/EventsList';
 import UserEvents from './components/common/UserEventsList';
 import Ratings from './components/common/RatingList';
 import Rankings from './components/common/RankingList';
+import Login from './components/layout/Login';
+import Register from './components/layout/Register';
 import './css/index.css'
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
           <Route path="/user_events" element={<UserEvents />} />
           <Route path="/ratings" element={<Ratings />} />
           <Route path="/rankings" element={<Rankings />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </div>
     </Router>

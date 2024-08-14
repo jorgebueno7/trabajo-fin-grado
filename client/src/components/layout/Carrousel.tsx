@@ -6,7 +6,7 @@ import natacionImage from '../../assets/images/natacion.jpg';
 
 const Carrousel = () => {
     return (
-    <div id="gallery" className="relative w-full mt-6" data-carousel="slide">
+    <div id="gallery" className="relative w-full mt-5" data-carousel="slide">
         <div className="relative h-72 overflow-hidden rounded-sm md:h-[600px]">
             <div className="hidden duration-700 ease-in-out" data-carousel-item>
                 <img
