@@ -1,17 +1,29 @@
 import { GoogleLogin } from '@react-oauth/google';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
+import UserContext from '../../context/UsersContext';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { setLoggedIn, setUser } = useContext(UserContext);
 
+    const navigate = useNavigate();
+    const navigateHome = () => {
+        navigate('/perfil');
+    };
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-
         try {
             const response = await axios.post(import.meta.env.VITE_API_URL + '/login', { email, password });
             console.log(response.data);
+            setUser(response.data);
+            console.log(response.data);
+
+            setLoggedIn(true); localStorage.setItem('isLoggedIn', 'true');
+
+            navigateHome();
         } catch (error) {
             console.error(error);
         }

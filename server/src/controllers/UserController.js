@@ -52,7 +52,7 @@ const registroUsers = async (req, res) => {
                             y de que puedas comenzar una nueva etapa en el mundo de los eventos deportivos!</p>
                         <br />
                         <p>Por favor, haga click en el siguiente enlace para confirmar su dirección de correo electrónico: 
-                            <a href="http://localhost:5173">Confirmar Email</a></p>`
+                            <a href="http://localhost:5173/login">Confirmar Email</a></p>`
                 };
                 transporter.sendMail(email_options, (error, info) => {
                     if (error) { return console.log(error); }
@@ -75,16 +75,16 @@ const loginUsers = async (req, res) => {
         if(usuario && (await bcrypt.compare(password, usuario.password))){
             // res.status(200).json({usuario, token})
             res.status(200).json(usuario);
-            const email_options = {
-                from: 'sportly@events.com',
-                to: email,
-                subject: 'Te damos la bienvenida a Sportly App',
-                html: '<b>Inicio de sesión realizado con éxito!</b>'
-            };
-            transporter.sendMail(email_options, (error, info) => {
-                if (error) { return console.log(error); }
-                console.log('Email sent: ' + info.response);
-            });
+            // const email_options = {
+            //     from: 'sportly@events.com',
+            //     to: email,
+            //     subject: 'Te damos la bienvenida a Sportly App',
+            //     html: '<b>Inicio de sesión realizado con éxito!</b>'
+            // };
+            // transporter.sendMail(email_options, (error, info) => {
+            //     if (error) { return console.log(error); }
+            //     console.log('Email sent: ' + info.response);
+            // });
         }else{
             res.status(401).json({error: 'ERROR_LOGIN_USERS'})
         }

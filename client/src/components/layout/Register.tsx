@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 
 const Register = () => {
@@ -9,11 +10,17 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('');
 
+    const navigate = useNavigate();
+    const navigateConfirmLogin = () => {
+        navigate('/confirm_login');
+    };
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
             const response = await axios.post(import.meta.env.VITE_API_URL + '/registro', { dni, nombre, apellidos, email, password, role });
             console.log(response.data);
+            navigateConfirmLogin();
         } catch (error) {
             console.error(error);
         }
