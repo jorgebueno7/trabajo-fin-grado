@@ -17,11 +17,11 @@ const Login = () => {
         event.preventDefault();
         try {
             const response = await axios.post(import.meta.env.VITE_API_URL + '/login', { email, password });
-            console.log(response.data);
-            setUser(response.data);
-            console.log(response.data);
 
-            setLoggedIn(true); localStorage.setItem('isLoggedIn', 'true');
+            setUser(response.data);
+            setLoggedIn(true); 
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('user', JSON.stringify(response.data));
 
             navigateHome();
         } catch (error) {
