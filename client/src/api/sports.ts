@@ -7,6 +7,11 @@ export const getSports = async () => {
   return response.data;
 };
 
+export const getSportsById = async (id: number) => {
+  const response = await axios.get(`${API_URL}/${id}`);
+  return response.data;
+};
+
 export const addUser = async (user: { dni: string; nombre: string; apellidos: string; email: string; password: string; role: string; }) => {
   const response = await axios.post(API_URL, user);
   return response.data;

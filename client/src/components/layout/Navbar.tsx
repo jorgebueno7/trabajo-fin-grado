@@ -51,9 +51,9 @@ const Navbar = () => {
                   </div>
                   <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
                     <li>
-                      <Link 
-                        to="/perfil" 
-                        className="block px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mi Perfil</Link>
+                      <a 
+                        href="/perfil" 
+                        className="block px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mi Perfil</a>
                     </li>
                     <li>
                       <Link 

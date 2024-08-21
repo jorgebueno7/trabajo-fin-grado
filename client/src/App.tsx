@@ -13,6 +13,7 @@ import Ratings from './components/common/RatingList';
 import Rankings from './components/common/RankingList';
 import Login from './components/layout/Login';
 import Register from './components/layout/Register';
+import SportDetail from './components/common/SportsDetail';
 import './css/index.css'
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/users" element={<Users />} />
             <Route path="/sports" element={<Sports />} />
+            <Route path="/sports/:id" element={<SportDetail />} />
             <Route path="/events" element={<Events />} />
             <Route path="/user_events" element={<UserEvents />} />
             <Route path="/ratings" element={<Ratings />} />

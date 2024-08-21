@@ -6,6 +6,7 @@ const ProfilePage = () => {
     return (
         <div>
             <h1>{user?.email}</h1>
+            <h2>{user?.nombre}</h2>
         </div>
     );
 };
