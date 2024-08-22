@@ -26,8 +26,8 @@ const getEventById = async (req, res) => {
 
 const postEvent = async (req, res) => {
     try {
-        const { id_deporte, fecha_ini, fecha_limite, lugar, hora_ini, maximo_usuarios } = req.body;
-        const newEvent = await event.create({ id_deporte, fecha_ini, fecha_limite, lugar, hora_ini, maximo_usuarios });
+        const { id_deporte, nombre, fecha_ini, fecha_fin, fecha_limite, lugar, hora_ini, maximo_usuarios } = req.body;
+        const newEvent = await event.create({ id_deporte, nombre, fecha_ini, fecha_fin, fecha_limite, lugar, hora_ini, maximo_usuarios });
         if(id_deporte && fecha_ini && fecha_limite && lugar 
             && hora_ini && maximo_usuarios){
             res.status(201).json(newEvent);
@@ -40,8 +40,8 @@ const postEvent = async (req, res) => {
 const updateEvent = async (req, res) => {
     try {
         const { id_evento } = req.params;
-        const { id_deporte, fecha_ini, fecha_limite, lugar, hora_ini, maximo_usuarios } = req.body;
-        await event.update({ id_deporte, fecha_ini, fecha_limite, lugar, hora_ini, maximo_usuarios },
+        const { id_deporte, nombre, fecha_ini, fecha_fin, fecha_limite, lugar, hora_ini, maximo_usuarios } = req.body;
+        await event.update({ id_deporte, nombre, fecha_ini, fecha_fin, fecha_limite, lugar, hora_ini, maximo_usuarios },
             { where: { id_evento } });
         res.status(200).json({message: 'Event updated successfully'});
     } catch (error) {

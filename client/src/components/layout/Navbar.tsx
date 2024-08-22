@@ -1,41 +1,44 @@
 import UserContext from '../../context/UsersContext';
 import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import logoImage from '../../assets/images/logo2.webp'
-import axios from 'axios';
 
 const Navbar = () => {
   const { isLoggedIn, user } = useContext(UserContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { setLoggedIn, setUser } = useContext(UserContext);
+  // const { setLoggedIn, setUser } = useContext(UserContext);
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
-
+  // const navigate = useNavigate();
+  // const navigateHome = () => {
+  //   navigate('/');
+  // };
   const handleLogOut = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-        await axios.post(import.meta.env.VITE_API_URL + '/logout');
-
-        setUser(null);
-        setLoggedIn(false); 
-
-        localStorage.setItem('isLoggedIn', 'false');
-        localStorage.setItem('user', 'null');
+        // setUser(null);
+        // setLoggedIn(false); 
+        // localStorage.removeItem('isLoggedIn');
+        // localStorage.removeItem('user');
+        localStorage.clear();
+        // localStorage.clear();
+        // localStorage.setItem('user', 'null');
     } catch (error) {
         console.error(error);
     }
-};
+  };
 
   return (
     <nav className="flex justify-between items-center mt-4 px-4">
         <div className="flex justify-start w-full">
-            <Link to="/" className="font-bold text-xl ml-5 text-slate-700 rounded-lg hover:text-slate-900">Sportly</Link>
+            <a href="/" className="font-bold text-xl ml-5 text-slate-700 rounded-lg hover:text-slate-900">Sportly</a>
         </div>
         <div className="flex justify-center w-full space-x-4">
             <a href="/" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Home</a>
             <Link to="/sports" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Deportes</Link>
             <Link to="/events" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Eventos</Link>
-            <Link to="/calendar" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Calendario</Link>
+            <Link to="/user-calendar" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Calendario</Link>
             <Link to="/rankings" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Ranking</Link>
             <Link to="/news" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Noticias</Link>
         </div>
@@ -62,9 +65,10 @@ const Navbar = () => {
                     </li>
                   </ul>
                   <div className="py-1">
-                    <Link to="/signout" 
-                      onClick={handleLogOut} 
-                      className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Cerrar sesión</Link>
+                    <a
+                      href="/"
+                      onChange={handleLogOut}
+                      className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Cerrar sesión</a>
                   </div>
                 </div>
               )}

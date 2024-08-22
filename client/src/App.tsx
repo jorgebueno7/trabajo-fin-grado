@@ -14,6 +14,8 @@ import Rankings from './components/common/RankingList';
 import Login from './components/layout/Login';
 import Register from './components/layout/Register';
 import SportDetail from './components/common/SportsDetail';
+import EventDetail from './components/common/EventsDetail';
+import UserCalendar from './components/layout/Calendario';
 import './css/index.css'
 
 function App() {
@@ -37,6 +39,7 @@ function App() {
             <Route path="/sports" element={<Sports />} />
             <Route path="/sports/:id" element={<SportDetail />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/events/:id" element={<EventDetail />} />
             <Route path="/user_events" element={<UserEvents />} />
             <Route path="/ratings" element={<Ratings />} />
             <Route path="/rankings" element={<Rankings />} />
@@ -44,6 +47,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/confirm_login" element={<ConfirmLoginPage />} />
             <Route path="/perfil" element={<PerfilPage />} />
+            <Route path="/user-calendar" element={<UserCalendar />} />          
           </Routes>
         </div>
       </Router>

@@ -10,7 +10,7 @@ const Login = () => {
     const { setLoggedIn, setUser } = useContext(UserContext);
 
     const navigate = useNavigate();
-    const navigateHome = () => {
+    const navigateProfile = () => {
         navigate('/perfil');
     };
     const handleSubmit = async (event: React.FormEvent) => {
@@ -23,7 +23,7 @@ const Login = () => {
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('user', JSON.stringify(response.data));
 
-            navigateHome();
+            navigateProfile();
         } catch (error) {
             console.error(error);
         }

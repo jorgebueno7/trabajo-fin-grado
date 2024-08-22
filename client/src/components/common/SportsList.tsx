@@ -60,7 +60,7 @@ const Deportes = () => {
             </div> */}
             <div className="grid grid-cols-3 gap-x-6 mx-20">
                 {sports.map((sport, index) => (
-                    <a href={`/sports/${sport.id_deporte}`}>
+                    <Link to={`/sports/${sport.id_deporte}`}>
                         <figure key={sport.id_deporte} className="mt-4 relative hover:filter hover:grayscale">
                             <figcaption className="absolute inset-0 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                                 <strong><h1 className="text-lg">{sport.nombre}</h1></strong>
@@ -71,7 +71,7 @@ const Deportes = () => {
                                 <img className="h-auto w-[630px] rounded-lg transition-all duration-300 cursor-pointer" 
                                     src={`https://flowbite.s3.amazonaws.com/docs/gallery/square/image-${index % 3 + 1}.jpg`} alt=""></img>
                         </figure>
-                    </a>
+                    </Link>
                 ))}
             </div>
         </>
