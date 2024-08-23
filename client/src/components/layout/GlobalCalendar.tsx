@@ -1,19 +1,11 @@
-import { useEffect, useState, useContext } from 'react';
-// import Calendar from 'react-calendar';
-// import 'react-calendar/dist/Calendar.css';
-import { getUserEventsByUserId, getUserEventsByEventId } from '../../api/userEvent';
-import { getEventsById } from '../../api/events';
-import UserContext from '../../context/UsersContext';
-
+import { useEffect, useState } from 'react';
+import { getEvents } from '../../api/events';
 import { Calendar, dayjsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css' 
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
-
-interface UserEvent {
-    id_evento: number;
-    id_usuario: number;
-}
 interface Event {
     id_evento: number;
     nombre: string;
@@ -43,36 +35,24 @@ interface TransformedEvent {
 
 const Calendario = () => {
     const [events, setEvents] = useState<TransformedEvent[]>([]);
-    const { user } = useContext(UserContext);
-
     const localizer = dayjsLocalizer(dayjs)
 
-    const getCurrentUser = () => {
-        if (!user) {
-          const storedUser = localStorage.getItem('user');
-          return storedUser ? JSON.parse(storedUser) : null;
-        }  
-        return user;
-    };
     useEffect(() => {
         fetchEventUser();
     }, []);
 
     const transformEvents = (events: Event[]) => {
         return events.map(({ fecha_ini, fecha_fin, ...event }) => ({
-            ...event, // Include all properties from the original event
-            start: dayjs(fecha_ini).toDate(),
-            end: dayjs(fecha_fin).toDate(),
+            ...event,
+            start: dayjs.utc(fecha_ini).toDate(),
+            end: dayjs.utc(fecha_fin).toDate(),
             title: event.nombre,
         }));
     };
 
     const fetchEventUser = async () => {
         try {
-            const user = getCurrentUser();
-            const userEvents = await getUserEventsByUserId(user.id);
-            const eventPromises = userEvents.map((userEvent: UserEvent) => getEventsById(userEvent.id_evento));
-            const events = await Promise.all(eventPromises);
+            const events = await getEvents();
             const transformedEvents = transformEvents(events);
             setEvents(transformedEvents);
         } catch (error) {

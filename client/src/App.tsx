@@ -15,7 +15,8 @@ import Login from './components/layout/Login';
 import Register from './components/layout/Register';
 import SportDetail from './components/common/SportsDetail';
 import EventDetail from './components/common/EventsDetail';
-import UserCalendar from './components/layout/Calendario';
+import UserCalendar from './components/layout/UserCalendar';
+import GlobalCalendar from './components/layout/GlobalCalendar';
 import './css/index.css'
 
 function App() {
@@ -47,7 +48,8 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/confirm_login" element={<ConfirmLoginPage />} />
             <Route path="/perfil" element={<PerfilPage />} />
-            <Route path="/user-calendar" element={<UserCalendar />} />          
+            <Route path="/user-calendar" element={<UserCalendar />} />   
+            <Route path="/calendar" element={<GlobalCalendar />} />       
           </Routes>
         </div>
       </Router>
