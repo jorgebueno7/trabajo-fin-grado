@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 import { getEvents } from '../../api/events';
 import { Calendar, dayjsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css' 
@@ -40,7 +41,10 @@ const Calendario = () => {
     useEffect(() => {
         fetchEventUser();
     }, []);
-
+    const navigate = useNavigate();
+    const navigateDetail = (event: TransformedEvent) => {
+        navigate(`/events/${event.id_evento}`);
+    };
     const transformEvents = (events: Event[]) => {
         return events.map(({ fecha_ini, fecha_fin, ...event }) => ({
             ...event,
@@ -67,6 +71,7 @@ const Calendario = () => {
             <Calendar
                 localizer={localizer}
                 events={eventos}
+                onSelectEvent={navigateDetail}
             />
         </div>
         

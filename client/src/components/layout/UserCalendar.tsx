@@ -1,10 +1,8 @@
 import { useEffect, useState, useContext } from 'react';
-// import Calendar from 'react-calendar';
-// import 'react-calendar/dist/Calendar.css';
+import { useNavigate } from 'react-router-dom'
 import { getUserEventsByUserId } from '../../api/userEvent';
 import { getEventsById } from '../../api/events';
 import UserContext from '../../context/UsersContext';
-
 import { Calendar, dayjsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css' 
 import dayjs from 'dayjs'
@@ -46,7 +44,12 @@ const Calendario = () => {
     const [events, setEvents] = useState<TransformedEvent[]>([]);
     const { user } = useContext(UserContext);
 
-    const localizer = dayjsLocalizer(dayjs)
+    const localizer = dayjsLocalizer(dayjs);
+
+    const navigate = useNavigate();
+    const navigateDetail = (event: TransformedEvent) => {
+        navigate(`/events/${event.id_evento}`);
+    };
 
     const getCurrentUser = () => {
         if (!user) {
@@ -89,6 +92,7 @@ const Calendario = () => {
             <Calendar
                 localizer={localizer}
                 events={eventos}
+                onSelectEvent={navigateDetail}
             />
         </div>
         
