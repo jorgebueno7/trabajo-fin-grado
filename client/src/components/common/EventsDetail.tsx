@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom'
+import UserContext from '../../context/UsersContext';
 import { useParams } from 'react-router-dom';
 import { getEventsById } from '../../api/events';
-import { getUserEventsByEventId } from '../../api/userEvent';
+import { getUserEventsByEventId, postUserEvent } from '../../api/userEvent';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
@@ -23,6 +25,29 @@ const EventDetail = () => {
     const { id } = useParams<{ id: string }>();
     const [event, setEvent] = useState<Event | null>(null);
     const [users, setUsers] = useState<number[]>([]);
+    const { isLoggedIn, user } = useContext(UserContext); 
+
+    const navigate = useNavigate();
+    const navigateToLogin = () => {
+        navigate('/login');
+    }
+    const handleJoinEvent = async () => {
+        if (!isLoggedIn) {
+            alert('Debes iniciar sesión para unirte a este evento');
+            navigateToLogin()            
+            return;
+        }
+        else{
+            try {
+                if (user && event) {
+                    await postUserEvent(event.id_evento, user.id);
+                    alert('Te has unido al evento exitosamente');
+                }
+            } catch (error) {
+                console.error('Error al unirse al evento:', error);
+            }
+        }
+    };
 
     const fetchEvent = async () => {
         try {
@@ -38,6 +63,16 @@ const EventDetail = () => {
             console.error('Error fetching event:', error);
         }
     };
+    
+    const getProgressBarColor = (percentage: number) => {
+        if (percentage < 50) {
+            return 'bg-blue-600 text-white';
+        } else if (percentage < 75) {
+            return 'bg-yellow-400 text-gray-900';
+        } else {
+            return 'bg-red-600 text-white';
+        }
+    };
 
     useEffect(() => {
         fetchEvent();
@@ -46,6 +81,9 @@ const EventDetail = () => {
     if (!event) {
         return <div>Loading...</div>;
     }
+    
+    const percentage = users.length / event.maximo_usuarios * 100;
+    const progressBarColor = getProgressBarColor(percentage);
 
     return (
         <div className="flex items-center justify-center min-h-screen">
@@ -53,6 +91,7 @@ const EventDetail = () => {
                 <a href={`/sports/${event.id_deporte}`}>
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{event.nombre}</h5>
                 </a>
+                <hr></hr><br></br>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha inicio del evento: <strong>{event.fecha_ini}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Hora de inicio del evento: <strong>{event.hora_ini}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Hora final del evento: <strong>{event.fecha_fin}</strong></p>
@@ -60,12 +99,18 @@ const EventDetail = () => {
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Máximo de usuarios: <strong>{event.maximo_usuarios}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha límite de inscripción: <strong>{event.fecha_limite}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Cantidad de usuarios inscritos: <strong>{users.length}</strong></p>
-                <a href="#" className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Read more
-                    <svg className="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                    </svg>
-                </a>
+                <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+                    <div className={`${progressBarColor} text-xs font-medium text-center p-0.5 leading-none rounded-full`} style={{ width: `${percentage}%` }}>
+                        {percentage}%
+                    </div>
+                </div>
+                <button 
+                    onClick={handleJoinEvent} 
+                    disabled={isLoggedIn}
+                    className={`inline-flex items-center px-3 py-2 mt-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 
+                        ${isLoggedIn ? 'opacity-60 cursor-not-allowed' : ''}`}>
+                    Unirse al evento
+                </button>
             </div>
         </div>
         

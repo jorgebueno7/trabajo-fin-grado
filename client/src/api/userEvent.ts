@@ -14,6 +14,10 @@ export const getUserEventsByUserId = async (userId: number) => {
 
 export const getUserEventsByEventId = async (eventId: number) => {
   const response = await axios.get(`${API_URL}/event/${eventId}`);
-  console.log("response.data", response.data);
+  return response.data;
+}
+
+export const postUserEvent = async (eventId: number, userId: number) => {
+  const response = await axios.post(API_URL, { id_evento: eventId, id_usuario: userId });
   return response.data;
 }

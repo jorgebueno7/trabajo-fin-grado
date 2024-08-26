@@ -1,6 +1,7 @@
 import React from 'react';
 
 export interface User {
+  id: number;
   dni: string;
   nombre: string;
   apellidos: string;
