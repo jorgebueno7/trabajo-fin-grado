@@ -8,6 +8,13 @@ const Usuarios = () => {
         nombre: string;
         apellidos: string;
         email: string;
+        fecha_nacimiento: string;
+        telefono: number;
+        direccion: string;
+        altura: number;
+        peso: number;
+        deporte: string;
+        mejor_marca: string;
         role: string;
     }
       

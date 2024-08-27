@@ -1,19 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getUsers } from '../../api/users';
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 
 const Register = () => {
+    interface User {
+        id: number;
+        dni: string;
+        nombre: string;
+        apellidos: string;
+        email: string;
+        fecha_nacimiento: string;
+        telefono: number;
+        direccion: string;
+        altura: number;
+        peso: number;
+        deporte: string;
+        mejor_marca: string;
+        role: string;
+    }
+
     const [dni, setDni] = useState('');
     const [nombre, setNombre] = useState('');
     const [apellidos, setApellidos] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('');
+    const [isAdminExists, setIsAdminExists] = useState(false);
 
     const navigate = useNavigate();
     const navigateConfirmLogin = () => {
         navigate('/confirm_login');
     };
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+          const users = await getUsers();
+          const isAdminExists = users.some((user: User) => user.role === 'Administrador');
+          setIsAdminExists(isAdminExists);
+        };
+    
+        fetchUsers();
+      }, []);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -57,9 +85,10 @@ const Register = () => {
                     <div className="mb-5">
                         <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
                         <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={role} onChange={e => setRole(e.target.value)} required>
-                            <option className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" value="administrador">Administrador</option>
-                            <option className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" value="participante">Participante</option>
-                            <option className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" value="organizador">Organizador</option>
+                            {!isAdminExists && 
+                                <option className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" value="administrador">Administrador</option>}
+                                <option className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" value="participante">Participante</option>
+                                <option className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" value="organizador">Organizador</option>
                         </select>
                     </div>
                     <br />
