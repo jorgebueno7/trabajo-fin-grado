@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getEvents } from '../../api/events';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 const Eventos = () => {
     interface Event {
@@ -24,10 +27,10 @@ const Eventos = () => {
     
     const fetchEvents = async () => {
         try {
-          const data = await getEvents();
-          setEvents(data);
+            const data = await getEvents();
+            setEvents(data);
         } catch (error) {
-          console.error('Error fetching users:', error);
+            console.error('Error fetching users:', error);
         }
     };
 
@@ -38,10 +41,9 @@ const Eventos = () => {
                     <Link to={`/events/${event.id_evento}`}>
                         <figure key={event.id_evento} className="mt-4 relative hover:filter hover:grayscale">
                             <figcaption className="absolute inset-0 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                                <strong><h1 className="text-lg">{event.id_deporte}</h1></strong>
-                                <strong><p className="text-gray-900">{event.nombre}</p></strong>      
-                                <strong><p className="text-gray-900">{event.fecha_ini}</p></strong>      
-                                <strong><p className="text-gray-900">{event.fecha_fin}</p></strong>                      
+                                <strong><h1 className="text-gray-900">{event.nombre}</h1></strong>      
+                                <strong><p className="text-gray-900">{dayjs.utc(event.fecha_ini).format('DD-MM-YYYY')}</p></strong>      
+                                <strong><p className="text-gray-900">{dayjs.utc(event.fecha_fin).format('DD-MM-YYYY')}</p></strong>                      
                                 <br></br>
                                 <strong><p className="block text-center">{event.lugar}</p></strong>
                             </figcaption>
