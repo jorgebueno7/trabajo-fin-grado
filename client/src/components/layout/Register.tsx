@@ -25,6 +25,16 @@ const Register = () => {
     const [apellidos, setApellidos] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [repeatPassword, setRepeatPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+
+    const [lengthRequirement, setLengthRequirement] = useState(false);
+    const [numberRequirement, setNumberRequirement] = useState(false);
+    const [lowercaseRequirement, setLowercaseRequirement] = useState(false);
+    const [uppercaseRequirement, setUppercaseRequirement] = useState(false);
+    const [specialCharRequirement, setSpecialCharRequirement] = useState(false);
+    const [isPasswordInputFocused, setIsPasswordInputFocused] = useState(false);
+
     const [role, setRole] = useState('');
     const [isAdminExists, setIsAdminExists] = useState(false);
 
@@ -33,15 +43,29 @@ const Register = () => {
         navigate('/confirm_login');
     };
 
+    const fetchUsers = async () => {
+        const users = await getUsers();
+        const isAdminExists = users.some((user: User) => user.role === 'Administrador');
+        setIsAdminExists(isAdminExists);
+    };
+
+    const comparePasswords = (password: string, repeatPassword: string) => {
+        if (password !== repeatPassword) {
+            setPasswordError('Las contraseñas no coinciden');
+        }else {
+            setPasswordError('');
+        }
+    };
+
     useEffect(() => {
-        const fetchUsers = async () => {
-          const users = await getUsers();
-          const isAdminExists = users.some((user: User) => user.role === 'Administrador');
-          setIsAdminExists(isAdminExists);
-        };
-    
+        setLengthRequirement(password.length >= 8);
+        setNumberRequirement(/\d/.test(password));
+        setLowercaseRequirement(/[a-z]/.test(password));
+        setUppercaseRequirement(/[A-Z]/.test(password));
+        setSpecialCharRequirement(/[!@#$%^&*_.]/.test(password));   
+        comparePasswords(password, repeatPassword);     
         fetchUsers();
-      }, []);
+    }, [password, repeatPassword]);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -76,11 +100,51 @@ const Register = () => {
                     </div>
                     <div className="mb-5">
                         <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
-                        <input type="password" id="password" onChange={e => setPassword(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="••••••••" required />
+                        <input type="password" id="password" value={password} onChange={e => setPassword(e.target.value)} 
+                            onFocus={() => setIsPasswordInputFocused(true)}
+                            onBlur={() => setIsPasswordInputFocused(false)}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="••••••••" required />
+                            {isPasswordInputFocused && (
+                                <ul className="max-w-md space-y-1 text-gray-500 list-inside dark:text-gray-400">
+                                    <li className={`flex items-center ${lengthRequirement ? 'text-green-500' : 'text-gray-500'}`}>
+                                        <svg className={`w-3.5 h-3.5 me-2 flex-shrink-0 ${lengthRequirement ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                                        </svg>
+                                        8 caracteres como mínimo
+                                    </li>
+                                    <li className={`flex items-center ${numberRequirement ? 'text-green-500' : 'text-gray-500'}`}>
+                                        <svg className={`w-3.5 h-3.5 me-2 flex-shrink-0 ${numberRequirement ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                                        </svg>
+                                        Al menos un número
+                                    </li>
+                                    <li className={`flex items-center ${lowercaseRequirement ? 'text-green-500' : 'text-gray-500'}`}>
+                                        <svg className={`w-3.5 h-3.5 me-2 flex-shrink-0 ${lowercaseRequirement ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                                        </svg>
+                                        Al menos una letra minúscula
+                                    </li>
+                                    <li className={`flex items-center ${uppercaseRequirement ? 'text-green-500' : 'text-gray-500'}`}>
+                                        <svg className={`w-3.5 h-3.5 me-2 flex-shrink-0 ${uppercaseRequirement ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                                        </svg>
+                                        Al menos una letra mayúscula
+                                    </li>
+                                    <li className={`flex items-center ${specialCharRequirement ? 'text-green-500' : 'text-gray-500'}`}>
+                                        <svg className={`w-3.5 h-3.5 me-2 flex-shrink-0 ${specialCharRequirement ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                                        </svg>
+                                        Al menos un carácter especial (!@#$%^&*_.)
+                                    </li>
+                                </ul>)
+                            }                   
                     </div>
                     <div className="mb-5">
                         <label htmlFor="repeat-password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Repeat password</label>
-                        <input type="password" id="repeat-password" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="••••••••" required />
+                        <input type="password" id="repeat-password" value={repeatPassword} onChange={e => setRepeatPassword(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="••••••••" required />
+                        {passwordError && (
+                            <p className="text-red-600 text-sm mt-2">{passwordError}</p>
+                        )}
                     </div>
                     <div className="mb-5">
                         <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>

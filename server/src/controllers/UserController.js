@@ -30,6 +30,10 @@ const getUserById = async (req, res) => {
 const registroUsers = async (req, res) => {
     try {
         const { dni, nombre, apellidos, email, password, role } = req.body;
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*_.]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres, incluyendo al menos una mayúscula, un número y un carácter especial.' });
+        }
         if(role == "Administrador"){
             const admin = await users.findOne({ where: { role: "Administrador" } });
             if(admin){
