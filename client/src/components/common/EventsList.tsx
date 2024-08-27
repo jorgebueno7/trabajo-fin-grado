@@ -42,8 +42,8 @@ const Eventos = () => {
                         <figure key={event.id_evento} className="mt-4 relative hover:filter hover:grayscale">
                             <figcaption className="absolute inset-0 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                                 <strong><h1 className="text-gray-900">{event.nombre}</h1></strong>      
-                                <strong><p className="text-gray-900">{dayjs.utc(event.fecha_ini).format('DD-MM-YYYY')}</p></strong>      
-                                <strong><p className="text-gray-900">{dayjs.utc(event.fecha_fin).format('DD-MM-YYYY')}</p></strong>                      
+                                <strong><p className="text-gray-900">{dayjs.utc(event.fecha_ini).format('DD-MM-YYYY - HH:mm:ss')}</p></strong>      
+                                <strong><p className="text-gray-900">{dayjs.utc(event.fecha_fin).format('DD-MM-YYYY - HH:mm:ss')}</p></strong>                      
                                 <br></br>
                                 <strong><p className="block text-center">{event.lugar}</p></strong>
                             </figcaption>
