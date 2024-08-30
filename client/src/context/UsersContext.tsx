@@ -22,6 +22,8 @@ interface UserContextProps {
   setLoggedIn: (value: boolean) => void;
   user: User | null;
   setUser: (user: User | null) => void;
+  isProfileComplete: boolean;
+  setProfileComplete: (value: boolean) => void;
 }
 
 const UserContext = React.createContext<UserContextProps>({
@@ -29,6 +31,8 @@ const UserContext = React.createContext<UserContextProps>({
   setLoggedIn: () => {},
   user: null,
   setUser: () => {},
+  isProfileComplete: false,
+  setProfileComplete: () => {}
 });
 
 export default UserContext;

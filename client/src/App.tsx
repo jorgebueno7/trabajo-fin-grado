@@ -17,6 +17,7 @@ import SportDetail from './components/common/SportsDetail';
 import EventDetail from './components/common/EventsDetail';
 import UserCalendar from './components/layout/UserCalendar';
 import GlobalCalendar from './components/layout/GlobalCalendar';
+import PerfilForm from './components/layout/PerfilForm';
 import './css/index.css'
 
 function App() {
@@ -24,13 +25,13 @@ function App() {
     return localStorage.getItem('isLoggedIn') === 'true';
   });
   const [user, setUser] = useState<User | null>(null);
-
+  const [isProfileComplete, setProfileComplete] = useState(false);
   useEffect(() => {
     localStorage.setItem('isLoggedIn', String(isLoggedIn));
   }, [isLoggedIn]);
 
   return (
-    <UserContext.Provider value={{ isLoggedIn, setLoggedIn, user, setUser }}>
+    <UserContext.Provider value={{ isLoggedIn, setLoggedIn, user, setUser, isProfileComplete, setProfileComplete }}>
       <Router>
         <div className="flex flex-col h-screen">
         <Navbar />
@@ -49,7 +50,8 @@ function App() {
             <Route path="/confirm_login" element={<ConfirmLoginPage />} />
             <Route path="/perfil" element={<PerfilPage />} />
             <Route path="/user-calendar" element={<UserCalendar />} />   
-            <Route path="/calendar" element={<GlobalCalendar />} />       
+            <Route path="/calendar" element={<GlobalCalendar />} />
+            <Route path="/perfil-form" element={<PerfilForm />} />       
           </Routes>
         </div>
       </Router>
