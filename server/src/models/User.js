@@ -32,13 +32,34 @@ Users.init({
         type: DataTypes.STRING,
         allowNull: false,
     },
-    fecha_nacimiento: DataTypes.DATE, 
-    telefono: DataTypes.NUMBER, 
-    direccion: DataTypes.STRING,
-    altura: DataTypes.STRING,
-    peso: DataTypes.STRING,
-    deporte: DataTypes.STRING,
-    mejor_marca: DataTypes.STRING,
+    fecha_nacimiento: { 
+        type: DataTypes.DATE, 
+        allowNull: false,
+    },
+    telefono: {
+        type: DataTypes.NUMBER, 
+        allowNull: false,
+    },
+    direccion: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    altura: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    peso: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    deporte: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    mejor_marca: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
 }, {
     sequelize,
     modelName: "users",

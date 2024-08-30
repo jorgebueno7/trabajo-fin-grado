@@ -71,6 +71,17 @@ const registroUsers = async (req, res) => {
     }
 }
 
+const completeProfile = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca } = req.body;
+        users.update({ fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca }, { where: { id } });
+        res.status(200).json({message: 'Profile completed successfully'})
+    } catch (error) {
+        res.status(500).json({error: `ERROR_COMPLETE_PROFILE: ${error}`})
+    }
+}
+
 const loginUsers = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -124,4 +135,4 @@ const deleteUserById = async (req, res) => {
         res.status(500).json({error: `ERROR_DELETE_USER: ${error}`})
     }
 }
-module.exports = { getAllUsers, registroUsers, loginUsers, logout, getUserById, updateUserById, deleteUserById };
+module.exports = { getAllUsers, registroUsers, loginUsers, logout, getUserById, updateUserById, deleteUserById, completeProfile};
