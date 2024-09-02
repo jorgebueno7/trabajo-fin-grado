@@ -1,5 +1,8 @@
 import { useContext, useEffect } from 'react';
 import UserContext from '../context/UsersContext';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 const ProfilePage = () => {   
     const { user, isProfileComplete, setProfileComplete } = useContext(UserContext);
@@ -32,16 +35,15 @@ const ProfilePage = () => {
                     ) : (
                         <div>
                             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{user?.nombre} {user?.apellidos}</h5>    
-                            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{user?.email}</p>
-                            <p className="font-normal text-gray-700 dark:text-gray-400">{user?.fecha_nacimiento}</p>
-                            <p className="font-normal text-gray-700 dark:text-gray-400">{user?.telefono}</p>
-                            <p className="font-normal text-gray-700 dark:text-gray-400">{user?.direccion}</p>
-                            <p className="font-normal text-gray-700 dark:text-gray-400">{user?.altura}</p>
-                            <p className="font-normal text-gray-700 dark:text-gray-400">{user?.direccion}</p>
-                            <p className="font-normal text-gray-700 dark:text-gray-400">{user?.peso}</p>
-                            <p className="font-normal text-gray-700 dark:text-gray-400">{user?.deporte}</p>
-                            <p className="font-normal text-gray-700 dark:text-gray-400">{user?.mejor_marca}</p>
-                            <p className="font-normal text-gray-700 dark:text-gray-400">{user?.role}</p>
+                            <p className="font-normal text-gray-700 dark:text-gray-400"><strong>Email:</strong> {user?.email}</p>
+                            <p className="font-normal text-gray-700 dark:text-gray-400"><strong>Fecha de nacimiento:</strong> {dayjs.utc(user?.fecha_nacimiento).format('DD-MM-YYYY')}</p>
+                            <p className="font-normal text-gray-700 dark:text-gray-400"><strong>Teléfono:</strong> {user?.telefono}</p>
+                            <p className="font-normal text-gray-700 dark:text-gray-400"><strong>Dirección:</strong> {user?.direccion}</p>
+                            <p className="font-normal text-gray-700 dark:text-gray-400"><strong>Altura:</strong> {user?.altura} cm</p>
+                            <p className="font-normal text-gray-700 dark:text-gray-400"><strong>Peso:</strong> {user?.peso} kg</p>
+                            <p className="font-normal text-gray-700 dark:text-gray-400"><strong>Deporte:</strong> {user?.deporte}</p>
+                            <p className="font-normal text-gray-700 dark:text-gray-400"><strong>Mejor marca:</strong> {user?.mejor_marca}</p>
+                            <p className="font-normal text-gray-700 dark:text-gray-400"><strong>Role:</strong> {user?.role}</p>
                         </div>  
                    )}
                 </div>
