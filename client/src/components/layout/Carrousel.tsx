@@ -1,53 +1,39 @@
+import { useState } from 'react';
 import ciclismoImage from '../../assets/images/ciclismo2.jpg';
 import futbolImage from '../../assets/images/olimpiadas.webp';
 import tenisMesaImage from '../../assets/images/tenismesa.jpg';
 import basketImage from '../../assets/images/basket.jpg';
 import natacionImage from '../../assets/images/natacion.jpg';
 
+const images = [ciclismoImage, futbolImage, tenisMesaImage, basketImage, natacionImage];
+
 const Carrousel = () => {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const handlePrevClick = () => {
+        setActiveIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : images.length - 1));
+    };
+
+    const handleNextClick = () => {
+        setActiveIndex((prevIndex) => (prevIndex < images.length - 1 ? prevIndex + 1 : 0));
+    };
     return (
     <div id="gallery" className="relative w-full mt-5" data-carousel="slide">
         <div className="relative h-72 overflow-hidden rounded-sm md:h-[600px]">
-            <div className="hidden duration-700 ease-in-out" data-carousel-item>
-                <img
-                src={ciclismoImage}
-                className="absolute w-full h-full object-cover top-0 left-0"
-                alt="Ciclismo"
-                />
-            </div>
-            <div className="hidden duration-700 ease-in-out" data-carousel-item="active">
-                <img
-                src={futbolImage}
-                className="absolute w-full h-full object-cover top-0 left-0"
-                alt="Futbol"
-                />
-            </div>
-            <div className="hidden duration-700 ease-in-out" data-carousel-item>
-                <img
-                src={tenisMesaImage}
-                className="absolute w-full h-full object-cover top-0 left-0"
-                alt="TenisMesa"
-                />
-            </div>
-            <div className="hidden duration-700 ease-in-out" data-carousel-item>
-                <img
-                src={basketImage}
-                className="absolute w-full h-full object-cover top-0 left-0"
-                alt="Basket"
-                />
-            </div>
-            <div className="hidden duration-700 ease-in-out" data-carousel-item>
-                <img
-                src={natacionImage}
-                className="absolute w-full h-full object-cover top-0 left-0"
-                alt="Natacion"
-                />
-            </div>
+            {images.map((image, index) => (
+                <div key={index} className={index === activeIndex ? 'ease-in-out' : 'hidden'} data-carousel-item="active">
+                    <img
+                        src={image}
+                        className="absolute w-full h-full object-cover top-0 left-0"
+                        alt=""
+                    />
+                </div>
+            ))}
         </div>
         <button
             type="button"
             className="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
             data-carousel-prev
+            onClick={handlePrevClick}
             >
             <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-400/50 group-focus:outline-none">
                 <svg
@@ -72,6 +58,7 @@ const Carrousel = () => {
             type="button"
             className="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
             data-carousel-next
+            onClick={handleNextClick}
             >
             <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-400/50 group-focus:outline-none">
                 <svg
