@@ -27,45 +27,86 @@ const getUserById = async (req, res) => {
     }
 }
 
+// const registroUsers = async (req, res) => {
+//     try {
+//         const { dni, nombre, apellidos, email, password, role } = req.body;
+//         const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+//         if (!passwordRegex.test(password)) {
+//             return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres, incluyendo al menos una mayúscula y un número.' });
+//         }
+//         if(role == "Administrador"){
+//             const admin = await users.findOne({ where: { role: "Administrador" } });
+//             if(admin){
+//                 res.status(401).json({error: 'Already have a user admin'})
+//             }
+//         }
+//         else {
+//             const hashedPassword = await bcrypt.hash(password, 10);
+//             const usuarios = await users.create({ dni, nombre, apellidos, email, password: hashedPassword, role })
+//             if(dni && nombre && apellidos && email && password && role){
+//                 res.status(201).json(usuarios)
+//                 const email_options = {
+//                     from: 'sportly@events.com',
+//                     to: email,
+//                     subject: 'Gracias por registrarte en Sportly Events!',
+//                     html: `
+//                         <h1>Hola ${nombre} 🙌</h1>
+//                         <p>Gracias por registrarte en Sportly Events! 🚴 ⚽ </p>
+//                         <p>Estamos felices de contar con tu presencia 
+//                             y de que puedas comenzar una nueva etapa en el mundo de los eventos deportivos!</p>
+//                         <br />
+//                         <p>Por favor, haga click en el siguiente enlace para confirmar su dirección de correo electrónico: 
+//                             <a href="http://localhost:5173/login">Confirmar Email</a></p>`
+//                 };
+//                 transporter.sendMail(email_options, (error, info) => {
+//                     if (error) { return console.log(error); }
+//                     console.log('Email sent: ' + info.response);
+//                 });
+//             } else {
+//                 res.status(400).json({error: 'ERROR_CREATE_USERS'})
+//             }       
+//         }
+//     } catch (error) {
+//         res.status(500).json({error: `ERROR_CREATE_USERS: ${error}`})
+//     }
+// }
 const registroUsers = async (req, res) => {
     try {
         const { dni, nombre, apellidos, email, password, role } = req.body;
-        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*_.]{8,}$/;
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
         if (!passwordRegex.test(password)) {
-            return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres, incluyendo al menos una mayúscula, un número y un carácter especial.' });
+            return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres, incluyendo al menos una mayúscula y un número.' });
         }
         if(role == "Administrador"){
             const admin = await users.findOne({ where: { role: "Administrador" } });
             if(admin){
-                res.status(401).json({error: 'Already have a user admin'})
-            } 
+                return res.status(401).json({error: 'Already have a user admin'})
+            }
         }
-        else {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const usuarios = await users.create({ dni, nombre, apellidos, email, password: hashedPassword, role })
-            if(dni && nombre && apellidos && email && password && role){
-                res.status(201).json(usuarios)
-                const email_options = {
-                    from: 'sportly@events.com',
-                    to: email,
-                    subject: 'Gracias por registrarte en Sportly Events!',
-                    html: `
-                        <h1>Hola ${nombre} 🙌</h1>
-                        <p>Gracias por registrarte en Sportly Events! 🚴 ⚽ </p>
-                        <p>Estamos felices de contar con tu presencia 
-                            y de que puedas comenzar una nueva etapa en el mundo de los eventos deportivos!</p>
-                        <br />
-                        <p>Por favor, haga click en el siguiente enlace para confirmar su dirección de correo electrónico: 
-                            <a href="http://localhost:5173/login">Confirmar Email</a></p>`
-                };
-                transporter.sendMail(email_options, (error, info) => {
-                    if (error) { return console.log(error); }
-                    console.log('Email sent: ' + info.response);
-                });
-            } else {
-                res.status(400).json({error: 'ERROR_CREATE_USERS'})
-            }       
-        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const usuarios = await users.create({ dni, nombre, apellidos, email, password: hashedPassword, role })
+        if(dni && nombre && apellidos && email && password && role){
+            res.status(201).json(usuarios)
+            const email_options = {
+                from: 'sportly@events.com',
+                to: email,
+                subject: 'Gracias por registrarte en Sportly Events!',
+                html: `
+                    <h1>Hola ${nombre} 🙌</h1>
+                    <p>Gracias por registrarte en Sportly Events! 🚴 ⚽ </p>
+                    <p>Estamos felices de contar con tu presencia 
+                        y de que puedas comenzar una nueva etapa en el mundo de los eventos deportivos!</p>
+                    <br />
+                    <p>Por favor, haga click en el siguiente enlace para confirmar su dirección de correo electrónico: 
+                        <a href="http://localhost:5173/login">Confirmar Email</a></p>`
+            };
+            transporter.sendMail(email_options, (error, info) => {
+                if (error) { return console.log(error); }
+                console.log('Email sent: ' + info.response);
+            });
+        } else {
+            res.status(400).json({error: 'ERROR_CREATE_USERS'})
+        }       
     } catch (error) {
         res.status(500).json({error: `ERROR_CREATE_USERS: ${error}`})
     }

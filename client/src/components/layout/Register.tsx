@@ -5,18 +5,6 @@ import axios from 'axios';
 
 const Register = () => {
     interface User {
-        id: number;
-        dni: string;
-        nombre: string;
-        apellidos: string;
-        email: string;
-        fecha_nacimiento: string;
-        telefono: number;
-        direccion: string;
-        altura: number;
-        peso: number;
-        deporte: string;
-        mejor_marca: string;
         role: string;
     }
 
@@ -32,7 +20,6 @@ const Register = () => {
     const [numberRequirement, setNumberRequirement] = useState(false);
     const [lowercaseRequirement, setLowercaseRequirement] = useState(false);
     const [uppercaseRequirement, setUppercaseRequirement] = useState(false);
-    const [specialCharRequirement, setSpecialCharRequirement] = useState(false);
     const [isPasswordInputFocused, setIsPasswordInputFocused] = useState(false);
 
     const [role, setRole] = useState('');
@@ -62,7 +49,6 @@ const Register = () => {
         setNumberRequirement(/\d/.test(password));
         setLowercaseRequirement(/[a-z]/.test(password));
         setUppercaseRequirement(/[A-Z]/.test(password));
-        setSpecialCharRequirement(/[!@#$%^&*_.]/.test(password));   
         comparePasswords(password, repeatPassword);     
         fetchUsers();
     }, [password, repeatPassword]);
@@ -70,7 +56,9 @@ const Register = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
+            console.log({ dni, nombre, apellidos, email, password, role });
             const response = await axios.post(import.meta.env.VITE_API_URL + '/registro', { dni, nombre, apellidos, email, password, role });
+            console.log("Servidor", response);  // Verifica la respuesta completa del servidor
             console.log(response.data);
             navigateConfirmLogin();
         } catch (error) {
@@ -130,12 +118,12 @@ const Register = () => {
                                         </svg>
                                         Al menos una letra mayúscula
                                     </li>
-                                    <li className={`flex items-center ${specialCharRequirement ? 'text-green-500' : 'text-gray-500'}`}>
+                                    {/* <li className={`flex items-center ${specialCharRequirement ? 'text-green-500' : 'text-gray-500'}`}>
                                         <svg className={`w-3.5 h-3.5 me-2 flex-shrink-0 ${specialCharRequirement ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                                         </svg>
                                         Al menos un carácter especial (!@#$%^&*_.)
-                                    </li>
+                                    </li> */}
                                 </ul>)
                             }                   
                     </div>
@@ -146,14 +134,44 @@ const Register = () => {
                             <p className="text-red-600 text-sm mt-2">{passwordError}</p>
                         )}
                     </div>
+                    {/* <div className="mb-5">
+                        <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
+                        <select
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            value={role}
+                            onChange={e => setRole(e.target.value)}
+                            required
+                        >
+                            {!isAdminExists && 
+                                <option value="Administrador">Administrador</option>
+                            }
+                            <option value="Participante">Participante</option>
+                            <option value="Organizador">Organizador</option>
+                        </select>
+
+                    </div> */}
+                    
                     <div className="mb-5">
                         <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
-                        <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={role} onChange={e => setRole(e.target.value)} required>
-                            {!isAdminExists && 
-                                <option className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" value="administrador">Administrador</option>}
-                                <option className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" value="participante">Participante</option>
-                                <option className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" value="organizador">Organizador</option>
+                        <select
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            value={role}
+                            onChange={e => setRole(e.target.value)}
+                            required
+                        >
+                            <option value="Participante">Participante</option>
+                            <option value="Organizador">Organizador</option>
                         </select>
+                    </div>
+                    <div className="mb-5">
+                        <label className="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" value="Administrador" className="sr-only peer" 
+                                checked={role === "Administrador"} 
+                                disabled={isAdminExists} 
+                                onChange={e => setRole(e.target.checked ? "Administrador" : "Participante")} />
+                            <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                            <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900">Administrador</span>
+                        </label>
                     </div>
                     <br />
                     <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Crear nueva cuenta</button>
