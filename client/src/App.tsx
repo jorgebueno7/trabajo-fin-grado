@@ -26,6 +26,7 @@ function App() {
   });
   const [user, setUser] = useState<User | null>(null);
   const [isProfileComplete, setProfileComplete] = useState(false);
+  
   useEffect(() => {
     localStorage.setItem('isLoggedIn', String(isLoggedIn));
   }, [isLoggedIn]);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 export interface User {
   id: number;
@@ -34,5 +34,28 @@ const UserContext = React.createContext<UserContextProps>({
   isProfileComplete: false,
   setProfileComplete: () => {}
 });
+
+export const UserProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isProfileComplete, setProfileComplete] = useState<boolean>(false);
+
+  useEffect(() => {
+    const storedProfileComplete = localStorage.getItem('isProfileComplete');
+    if (storedProfileComplete) {
+      setProfileComplete(JSON.parse(storedProfileComplete));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('isProfileComplete', JSON.stringify(isProfileComplete));
+  }, [isProfileComplete]);
+
+  return (
+    <UserContext.Provider value={{ isLoggedIn, setLoggedIn, user, setUser, isProfileComplete, setProfileComplete }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
 
 export default UserContext;

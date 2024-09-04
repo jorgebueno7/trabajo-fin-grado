@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { getUsers } from '../../api/users';
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
+import UserContext from '../../context/UsersContext';
 
 const Register = () => {
     interface User {
@@ -24,6 +25,8 @@ const Register = () => {
 
     const [role, setRole] = useState('');
     const [isAdminExists, setIsAdminExists] = useState(false);
+    const { setUser, setProfileComplete } = useContext(UserContext);
+
 
     const navigate = useNavigate();
     const navigateConfirmLogin = () => {
@@ -58,8 +61,11 @@ const Register = () => {
         try {
             console.log({ dni, nombre, apellidos, email, password, role });
             const response = await axios.post(import.meta.env.VITE_API_URL + '/registro', { dni, nombre, apellidos, email, password, role });
-            console.log("Servidor", response);  // Verifica la respuesta completa del servidor
             console.log(response.data);
+
+            setUser(response.data);
+            setProfileComplete(false);
+
             navigateConfirmLogin();
         } catch (error) {
             console.error(error);
@@ -134,23 +140,6 @@ const Register = () => {
                             <p className="text-red-600 text-sm mt-2">{passwordError}</p>
                         )}
                     </div>
-                    {/* <div className="mb-5">
-                        <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
-                        <select
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            value={role}
-                            onChange={e => setRole(e.target.value)}
-                            required
-                        >
-                            {!isAdminExists && 
-                                <option value="Administrador">Administrador</option>
-                            }
-                            <option value="Participante">Participante</option>
-                            <option value="Organizador">Organizador</option>
-                        </select>
-
-                    </div> */}
-                    
                     <div className="mb-5">
                         <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
                         <select

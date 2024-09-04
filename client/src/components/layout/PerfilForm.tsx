@@ -41,11 +41,10 @@ const Register = () => {
             const user = getCurrentUser();
             const userId = user.id;
             const response = await axios.put(`${import.meta.env.VITE_API_URL}/complete-profile/${userId}`, { fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca });
-            
-            setProfileComplete(true);
-            localStorage.setItem('profileComplete', 'true');
-            
+                        
             console.log(response.data);
+            setProfileComplete(true);
+            localStorage.setItem('isProfileComplete', 'true');
             navigateProfile();
         } catch (error) {
             console.error(error);

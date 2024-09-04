@@ -5,21 +5,22 @@ import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 
 const ProfilePage = () => {   
-    const { user, isProfileComplete, setProfileComplete } = useContext(UserContext);
+    const { user, isProfileComplete } = useContext(UserContext);
 
-    // Al cargar el perfil, verifica si está completo
-    useEffect(() => {
-        const profileComplete = localStorage.getItem('profileComplete');
-        if (profileComplete == 'true') {
-            setProfileComplete(true);
-        }
-    }, []);
+    // // Al cargar el perfil, verifica si está completo
+    // useEffect(() => {
+    //     const profileComplete = localStorage.getItem('profileComplete');
+    //     console.log("profileComplete (inicial): ", profileComplete);
+    //     if (profileComplete == 'true') {
+    //         setProfileComplete(true);
+    //     }
+    // }, []);
 
-    // Almacena el estado del perfil en el localStorage
-    useEffect(() => {
-        setProfileComplete(true);
-        localStorage.setItem('profileComplete', 'true');
-    }, [isProfileComplete]);
+    // // Almacena el estado del perfil en el localStorage
+    // useEffect(() => {
+    //     // setProfileComplete(true);
+    //     localStorage.setItem('profileComplete', 'true');
+    // }, [isProfileComplete]);
 
     return (
         <div className="flex items-center justify-center min-h-screen overflow-y-auto">
