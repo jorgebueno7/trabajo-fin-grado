@@ -63,12 +63,18 @@ const Calendario = () => {
     }, []);
 
     const transformEvents = (events: Event[]) => {
-        return events.map(({ fecha_ini, fecha_fin, ...event }) => ({
-            ...event, // Include all properties from the original event
-            start: dayjs.utc(fecha_ini).toDate(),
-            end: dayjs.utc(fecha_fin).toDate(),
-            title: event.nombre,
-        }));
+        return events.map(({ fecha_ini, fecha_fin, ...event }) => {
+            const fecha_ini_aux = dayjs.utc(fecha_ini).format('YYYY-MM-DDTHH:mm:ss');
+            const fecha_fin_aux = dayjs.utc(fecha_fin).format('YYYY-MM-DDTHH:mm:ss');
+            const start = new Date(fecha_ini_aux);
+            const end = new Date(fecha_fin_aux);
+            return {
+                ...event,
+                start,
+                end,
+                title: event.nombre,
+            };
+        });
     };
 
     const fetchEventUser = async () => {
