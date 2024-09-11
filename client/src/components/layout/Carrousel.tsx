@@ -17,7 +17,7 @@ const Carrousel = () => {
         setActiveIndex((prevIndex) => (prevIndex < images.length - 1 ? prevIndex + 1 : 0));
     };
     return (
-    <div id="gallery" className="relative w-full mt-5" data-carousel="slide">
+    <div id="gallery" className="relative w-full mt-5" data-carousel="static">
         <div className="relative h-72 overflow-hidden rounded-sm md:h-[600px]">
             {images.map((image, index) => (
                 <div key={index} className={index === activeIndex ? 'ease-in-out' : 'hidden'} data-carousel-item="active">
