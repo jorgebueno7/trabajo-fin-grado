@@ -60,8 +60,8 @@ const Deportes = () => {
             </div> */}
             <div className="grid grid-cols-3 gap-x-6 mx-20">
                 {sports.map((sport, index) => (
-                    <Link to={`/sports/${sport.id_deporte}`}>
-                        <figure key={sport.id_deporte} className="mt-4 relative hover:filter hover:grayscale">
+                    <Link key={sport.id_deporte} to={`/sports/${sport.id_deporte}`}>
+                        <figure  className="mt-4 relative hover:filter hover:grayscale">
                             <figcaption className="absolute inset-0 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                                 <strong><h1 className="text-lg">{sport.nombre}</h1></strong>
                                 <strong><p className="text-gray-900">{sport.descripcion}</p></strong>                            

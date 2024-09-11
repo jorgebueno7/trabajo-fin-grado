@@ -38,8 +38,8 @@ const Eventos = () => {
         <>
             <div className="grid grid-cols-3 gap-x-6 mx-20">
                 {events.map((event, index) => (
-                    <Link to={`/events/${event.id_evento}`}>
-                        <figure key={event.id_evento} className="mt-4 relative hover:filter hover:grayscale">
+                    <Link key={event.id_evento} to={`/events/${event.id_evento}`}>
+                        <figure className="mt-4 relative hover:filter hover:grayscale">
                             <figcaption className="absolute inset-0 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                                 <strong><h1 className="text-gray-900">{event.nombre}</h1></strong>      
                                 <strong><p className="text-gray-900">{dayjs.utc(event.fecha_ini).format('DD-MM-YYYY - HH:mm:ss')}</p></strong>      
