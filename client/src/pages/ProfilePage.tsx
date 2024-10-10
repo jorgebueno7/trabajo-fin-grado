@@ -1,27 +1,12 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import UserContext from '../context/UsersContext';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 
 const ProfilePage = () => {   
-    const { user, isProfileComplete } = useContext(UserContext);
-
-    // // Al cargar el perfil, verifica si está completo
-    // useEffect(() => {
-    //     const profileComplete = localStorage.getItem('profileComplete');
-    //     console.log("profileComplete (inicial): ", profileComplete);
-    //     if (profileComplete == 'true') {
-    //         setProfileComplete(true);
-    //     }
-    // }, []);
-
-    // // Almacena el estado del perfil en el localStorage
-    // useEffect(() => {
-    //     // setProfileComplete(true);
-    //     localStorage.setItem('profileComplete', 'true');
-    // }, [isProfileComplete]);
-
+    const { user } = useContext(UserContext);
+    const isProfileComplete = user && user.profile_complete;
     return (
         <div className="flex items-center justify-center min-h-screen overflow-y-auto">
             <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">

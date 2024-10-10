@@ -25,7 +25,6 @@ const Register = () => {
 
     const [role, setRole] = useState('');
     const [isAdminExists, setIsAdminExists] = useState(false);
-    const { setUser, setProfileComplete } = useContext(UserContext);
 
 
     const navigate = useNavigate();
@@ -62,9 +61,6 @@ const Register = () => {
             console.log({ dni, nombre, apellidos, email, password, role });
             const response = await axios.post(import.meta.env.VITE_API_URL + '/registro', { dni, nombre, apellidos, email, password, role });
             console.log(response.data);
-
-            setUser(response.data);
-            setProfileComplete(false);
 
             navigateConfirmLogin();
         } catch (error) {

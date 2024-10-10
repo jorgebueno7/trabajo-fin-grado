@@ -115,8 +115,8 @@ const registroUsers = async (req, res) => {
 const completeProfile = async (req, res) => {
     try {
         const { id } = req.params;
-        const { fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca } = req.body;
-        await users.update({ fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca }, { where: { id } });
+        const { fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca, profile_complete } = req.body;
+        await users.update({ fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca, profile_complete }, { where: { id } });
         res.status(200).json({message: 'Profile completed successfully'})
     } catch (error) {
         res.status(500).json({error: `ERROR_COMPLETE_PROFILE: ${error}`})

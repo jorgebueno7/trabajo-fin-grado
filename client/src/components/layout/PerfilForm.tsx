@@ -11,7 +11,7 @@ const Register = () => {
     const [peso, setPeso] = useState('');
     const [deporte, setDeporte] = useState('');
     const [mejor_marca, setMejorMarca] = useState('');
-    const { user, setUser, setProfileComplete } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
 
     const navigate = useNavigate();
     const navigateProfile = () => {
@@ -40,11 +40,12 @@ const Register = () => {
         try {
             const user = getCurrentUser();
             const userId = user.id;
-            const response = await axios.put(`${import.meta.env.VITE_API_URL}/complete-profile/${userId}`, { fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca });
-                        
+            const response = await axios.put(`${import.meta.env.VITE_API_URL}/complete-profile/${userId}`, { fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca, profile_complete: true});                        
             console.log(response.data);
-            setProfileComplete(true);
-            localStorage.setItem('isProfileComplete', 'true');
+            user.profile_complete = true;
+            // setProfileComplete(true);
+            setUser(user);
+            localStorage.setItem('user', JSON.stringify(user));
             navigateProfile();
         } catch (error) {
             console.error(error);

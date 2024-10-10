@@ -16,6 +16,7 @@ const Usuarios = () => {
         deporte: string;
         mejor_marca: string;
         role: string;
+        profile_complete: boolean;
     }
       
     const [users, setUsers] = useState<User[]>([]);

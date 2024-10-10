@@ -39,6 +39,7 @@ Users.init({
     peso: DataTypes.STRING,
     deporte: DataTypes.STRING,
     mejor_marca: DataTypes.STRING,
+    profile_complete: DataTypes.BOOLEAN,
 }, {
     sequelize,
     modelName: "users",
