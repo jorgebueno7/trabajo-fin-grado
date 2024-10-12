@@ -25,14 +25,13 @@ function App() {
     return localStorage.getItem('isLoggedIn') === 'true';
   });
   const [user, setUser] = useState<User | null>(null);
-  const [isProfileComplete, setProfileComplete] = useState(false);
   
   useEffect(() => {
     localStorage.setItem('isLoggedIn', String(isLoggedIn));
   }, [isLoggedIn]);
 
   return (
-    <UserContext.Provider value={{ isLoggedIn, setLoggedIn, user, setUser, isProfileComplete, setProfileComplete }}>
+    <UserContext.Provider value={{ isLoggedIn, setLoggedIn, user, setUser }}>
       <Router>
         <div className="flex flex-col h-screen">
         <Navbar />

@@ -28,9 +28,9 @@ Users.init({
         type: DataTypes.STRING, 
         allowNull: false,
     },
-    role: {
-        type: DataTypes.STRING,
-        allowNull: false,
+    isAdminUser: {               // Cambiado de "role" a "isAdminUser"
+        type: DataTypes.BOOLEAN,  // Cambiado de STRING a BOOLEAN
+        defaultValue: false,      // Asignar valor por defecto si no se define
     },
     fecha_nacimiento: DataTypes.DATE, 
     telefono: DataTypes.NUMBER,

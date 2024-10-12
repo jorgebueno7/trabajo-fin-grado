@@ -7,7 +7,7 @@ export interface User {
   apellidos: string;
   email: string;
   password: string;
-  role: string;
+  isAdminUser: boolean;
   fecha_nacimiento: string;
   telefono: number;
   direccion: string;
