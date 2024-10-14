@@ -94,7 +94,7 @@ const loginUsers = async (req, res) => {
         // const token = jwt.sign({ id: usuario.id}, process.env.JWT_SECRET, { expiresIn: '1h' });
         if(usuario && (await bcrypt.compare(password, usuario.password))){
             console.log("Contraseña correcta");
-            req.session.userId = usuario.id;
+            // req.session.userId = usuario.id;
             // req.session.role = usuario.role;
             // res.status(200).json({usuario, token})
             res.status(200).json(usuario);
