@@ -29,7 +29,6 @@ const ProfilePage = () => {
                             <p className="font-normal text-gray-700 dark:text-gray-400"><strong>Peso:</strong> {user?.peso} kg</p>
                             <p className="font-normal text-gray-700 dark:text-gray-400"><strong>Deporte:</strong> {user?.deporte}</p>
                             <p className="font-normal text-gray-700 dark:text-gray-400"><strong>Mejor marca:</strong> {user?.mejor_marca}</p>
-                            <p className="font-normal text-gray-700 dark:text-gray-400"><strong>Role:</strong> {user?.role}</p>
                         </div>  
                    )}
                 </div>

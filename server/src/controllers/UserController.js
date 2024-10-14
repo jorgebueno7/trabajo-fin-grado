@@ -90,13 +90,10 @@ const loginUsers = async (req, res) => {
     try {
         const { email, password } = req.body;
         const usuario = await users.findOne({ where: { email } });
-        console.log("REQ:" + req.body);
-        // const token = jwt.sign({ id: usuario.id}, process.env.JWT_SECRET, { expiresIn: '1h' });
         if(usuario && (await bcrypt.compare(password, usuario.password))){
             console.log("Contraseña correcta");
-            // req.session.userId = usuario.id;
-            // req.session.role = usuario.role;
-            // res.status(200).json({usuario, token})
+            req.session.userId = usuario.id;
+            console.log("id del usuario " + req.session.userId);
             res.status(200).json(usuario);
             // const email_options = {
             //     from: 'sportly@events.com',
@@ -118,9 +115,19 @@ const loginUsers = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
-        res.status(200).json({message: 'Logout successfully'})
+        console.log("ID del usuario que está cerrando la sesión: " + req.session.userId);
+        req.session.destroy(err => {
+            if (err) {
+                return res.status(500).json({error: `ERROR_LOGOUT: ${err}`});
+            }
+
+            // Opcional: puedes borrar la cookie de sesión en el cliente
+            res.clearCookie('connect.sid');
+
+            res.status(200).json({message: 'Logout successfully'});
+        });
     } catch (error) {
-        res.status(500).json({error: `ERROR_LOGOUT: ${error}`})
+        res.status(500).json({error: `ERROR_LOGOUT: ${error}`});
     }
 }
 

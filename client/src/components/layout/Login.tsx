@@ -9,6 +9,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [loginError, setLoginError] = useState(false);
     const { setLoggedIn, setUser } = useContext(UserContext);
+    // const { setUser } = useContext(UserContext);
 
     const navigate = useNavigate();
     const navigateProfile = () => {
@@ -17,12 +18,12 @@ const Login = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
-            const response = await axios.post(import.meta.env.VITE_API_URL + '/login', { email, password });
-
-            setUser(response.data);
-            setLoggedIn(true); 
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('user', JSON.stringify(response.data));
+            const response = await axios.post(import.meta.env.VITE_API_URL + '/login', { email, password }, { withCredentials: true });
+            if (response.status === 200) {
+                setUser(response.data.user); // Establecer el usuario en el contexto
+                setLoggedIn(true); // Marcar como logueado
+                navigate('/perfil'); // Redirigir a la página de perfil
+            }
 
             navigateProfile();
         } catch (error) {
