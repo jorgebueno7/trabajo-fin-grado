@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getUsers } from '../../api/users';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { addUser } from '../../api/users';
 
 const Register = () => {
     const [dni, setDni] = useState('');
@@ -64,10 +64,8 @@ const Register = () => {
         }
 
         try {
-            const response = await axios.post(
-                import.meta.env.VITE_API_URL + '/registro',
-                { dni, nombre, apellidos, email, password, isAdminUser }
-            );
+            const user = { dni, nombre, apellidos, email, password, isAdminUser };
+            const response = await addUser(user);
             console.log(response.data);
 
             navigateConfirmLogin();

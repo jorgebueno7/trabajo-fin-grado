@@ -25,13 +25,14 @@ function App() {
     return localStorage.getItem('isLoggedIn') === 'true';
   });
   const [user, setUser] = useState<User | null>(null);
-  
+  const [profileComplete, setProfileComplete] = useState(false); // Agregar esto
+
   useEffect(() => {
     localStorage.setItem('isLoggedIn', String(isLoggedIn));
   }, [isLoggedIn]);
 
   return (
-    <UserContext.Provider value={{ isLoggedIn, setLoggedIn, user, setUser }}>
+    <UserContext.Provider value={{ isLoggedIn, setLoggedIn, user, setUser, profileComplete, setProfileComplete }}>
       <Router>
         <RoutesWithNavbar />
       </Router>

@@ -75,11 +75,29 @@ const registroUsers = async (req, res) => {
     }
 }
 
+// const completeProfile = async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const { fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca, profile_complete } = req.body;
+//         await users.update({ fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca, profile_complete }, { where: { id } });
+//         res.status(200).json({message: 'Profile completed successfully'})
+//     } catch (error) {
+//         res.status(500).json({error: `ERROR_COMPLETE_PROFILE: ${error}`})
+//     }
+// }
+
 const completeProfile = async (req, res) => {
     try {
         const { id } = req.params;
-        const { fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca, profile_complete } = req.body;
-        await users.update({ fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca, profile_complete }, { where: { id } });
+        const { fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca } = req.body;
+
+        // Verificar si alguno de los campos está vacío
+        if (!fecha_nacimiento || !telefono || !direccion || !altura || !peso || !deporte || !mejor_marca) {
+            return res.status(400).json({error: 'All fields must be completed'});
+        }
+
+        // Si todos los campos están completos, actualizar el perfil
+        await users.update({ fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca, profile_complete: true }, { where: { id } });
         res.status(200).json({message: 'Profile completed successfully'})
     } catch (error) {
         res.status(500).json({error: `ERROR_COMPLETE_PROFILE: ${error}`})
@@ -93,7 +111,6 @@ const loginUsers = async (req, res) => {
         if(usuario && (await bcrypt.compare(password, usuario.password))){
             console.log("Contraseña correcta");
             req.session.userId = usuario.id;
-            console.log("id del usuario " + req.session.userId);
             res.status(200).json(usuario);
             // const email_options = {
             //     from: 'sportly@events.com',
@@ -120,10 +137,7 @@ const logout = async (req, res) => {
             if (err) {
                 return res.status(500).json({error: `ERROR_LOGOUT: ${err}`});
             }
-
-            // Opcional: puedes borrar la cookie de sesión en el cliente
             res.clearCookie('connect.sid');
-
             res.status(200).json({message: 'Logout successfully'});
         });
     } catch (error) {
@@ -150,4 +164,23 @@ const deleteUserById = async (req, res) => {
         res.status(500).json({error: `ERROR_DELETE_USER: ${error}`})
     }
 }
-module.exports = { getAllUsers, registroUsers, loginUsers, logout, getUserById, updateUserById, deleteUserById, completeProfile};
+
+const getUserFromSession = async (req, res) => {
+    try {
+        const { userId } = req.session;
+        if (userId) {
+            const usuario = await users.findByPk(userId);
+            if (usuario) {
+                res.status(200).json(usuario);
+            } else {
+                res.status(404).json({error: 'User not found'});
+            }
+        } else {
+            res.status(401).json({error: 'Unauthorized'});
+        }
+    } catch (error) {
+        res.status(500).json({error: `ERROR_GET_USER_FROM_SESSION: ${error}`});
+    }
+}
+
+module.exports = { getAllUsers, registroUsers, loginUsers, logout, getUserById, updateUserById, deleteUserById, completeProfile, getUserFromSession };

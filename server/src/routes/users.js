@@ -10,5 +10,6 @@ router.post('/logout', userController.logout);
 router.put('/complete-profile/:id', userController.completeProfile);
 router.put('/users/:id', userController.updateUserById);
 router.delete('/users/:id', userController.deleteUserById);
+router.get('/user-from-session', userController.getUserFromSession);
 
 module.exports = router;

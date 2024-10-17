@@ -11,42 +11,81 @@ const Register = () => {
     const [peso, setPeso] = useState('');
     const [deporte, setDeporte] = useState('');
     const [mejor_marca, setMejorMarca] = useState('');
-    const { user, setUser } = useContext(UserContext);
+    const { user, setUser, setProfileComplete } = useContext(UserContext);
 
     const navigate = useNavigate();
     const navigateProfile = () => {
         navigate('/perfil');
     };
 
-    const getCurrentUser = () => {
-        if (!user) {
-          const storedUser = localStorage.getItem('user');
-          return storedUser ? JSON.parse(storedUser) : null;
-        }  
-        return user;
-    };
+    // const getCurrentUser = () => {
+    //     if (!user) {
+    //       const storedUser = localStorage.getItem('user');
+    //       return storedUser ? JSON.parse(storedUser) : null;
+    //     }  
+    //     return user;
+    // };
 
-    const fetchUsers = async () => {
-        const user = getCurrentUser()
-        setUser(user);
-    };
+    // const fetchUsers = async () => {
+    //     const user = getCurrentUser()
+    //     setUser(user);
+    // };
 
+    // useEffect(() => {     
+    //     fetchUsers();
+    // }, []);
+
+    // const handleSubmit = async (event: React.FormEvent) => {
+    //     event.preventDefault();
+    //     try {
+    //         const user = getCurrentUser();
+    //         const userId = user.id;
+    //         const response = await axios.put(`${import.meta.env.VITE_API_URL}/complete-profile/${userId}`, { fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca, profile_complete: true}, { withCredentials: true });                        
+    //         console.log(response.data);
+    //         navigateProfile();
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
+
+    const fetchCurrentUser = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/user-from-session`, { withCredentials: true });
+            setUser(response.data);
+            console.log(response.data);
+            // setProfileComplete(true);
+            // const userId = response.data;
+            // const userDetails = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`);
+            // setUser(userDetails.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    
     useEffect(() => {     
-        fetchUsers();
+        fetchCurrentUser();
     }, []);
-
+    
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
-            const user = getCurrentUser();
-            const userId = user.id;
-            const response = await axios.put(`${import.meta.env.VITE_API_URL}/complete-profile/${userId}`, { fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca, profile_complete: true});                        
+            const userId = user?.id;
+            if (!userId) {
+                console.error("User ID is not available");
+                return;
+            }
+            const response = await axios.put(`${import.meta.env.VITE_API_URL}/complete-profile/${userId}`, 
+            { fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca}, { withCredentials: true });                        
             console.log(response.data);
+            setUser(response.data);
+            setProfileComplete(true);
+            await fetchCurrentUser();
             navigateProfile();
         } catch (error) {
             console.error(error);
         }
     };
+    
     return (
         <div className="flex items-center justify-center min-h-screen overflow-y-auto">
             <div className="w-full max-w-sm bg-white border border-gray-300 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">

@@ -5,13 +5,12 @@ import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 
 const ProfilePage = () => {   
-    const { user } = useContext(UserContext);
-    const isProfileComplete = user && user.profile_complete;
+    const { user, profileComplete } = useContext(UserContext);
     return (
         <div className="flex items-center justify-center min-h-screen overflow-y-auto">
             <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div className="p-5">
-                    {!isProfileComplete ? (
+                    {!profileComplete ? (
                         <div className="mt-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700" role="alert">
                             <p className="font-bold">Perfil incompleto</p>
                             <p>Por favor, complete toda la información de su perfil para una mejor experiencia.</p>

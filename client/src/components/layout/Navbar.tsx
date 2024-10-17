@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import UserContext from '../../context/UsersContext';
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   const { isLoggedIn, setLoggedIn } = useContext(UserContext);
   const navigate = useNavigate();
     const navigateHome = () => {
@@ -41,7 +41,7 @@ const Navbar: React.FC = () => {
       <div className="flex justify-end w-full space-x-4">
         {isLoggedIn ? (
           <>
-            <NavLink to="/perfil" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Perfil</NavLink>
+            <NavLink to="/perfil" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Mi Perfil</NavLink>
             <button onClick={handleLogOut} className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Cerrar sesión</button>
           </>
         ) : (
