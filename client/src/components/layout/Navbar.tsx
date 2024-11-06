@@ -6,7 +6,7 @@ import axios from 'axios';
 
 
 const Navbar = () => {
-  const { isLoggedIn, setLoggedIn } = useContext(UserContext);
+  const { isLoggedIn, setLoggedIn, isAdmin } = useContext(UserContext);
   const navigate = useNavigate();
     const navigateHome = () => {
         navigate('/');
@@ -35,8 +35,14 @@ const Navbar = () => {
         ) : (
           <NavLink to="/calendar" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Calendario</NavLink>
         )}
-        <NavLink to="/rankings" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Ranking</NavLink>
-        <NavLink to="/news" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Noticias</NavLink>
+        {isAdmin && (
+          <>
+            <NavLink to="/rankings" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Ranking</NavLink>
+            <NavLink to="/news" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Noticias</NavLink>
+          </>
+        )}
+        {/* <NavLink to="/rankings" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Ranking</NavLink>
+        <NavLink to="/news" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Noticias</NavLink> */}
       </div>
       <div className="flex justify-end w-full space-x-4">
         {isLoggedIn ? (

@@ -20,6 +20,7 @@ const Login = () => {
         try {
             const response = await axios.post(import.meta.env.VITE_API_URL + '/login', { email, password }, { withCredentials: true });
             if (response.status === 200) {
+                console.log("Usuario en el response.data: " + response.data);
                 setUser(response.data.user); // Establecer el usuario en el contexto
                 setLoggedIn(true); // Marcar como logueado
                 navigate('/perfil'); // Redirigir a la página de perfil
