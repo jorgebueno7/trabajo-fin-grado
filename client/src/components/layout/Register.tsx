@@ -258,15 +258,25 @@ const Register = () => {
                         <button 
                             type="button" 
                             onClick={handleNext} 
-                            className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            className="w-full text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
                         >
-                            Siguiente
+                            <span>&#8680;</span>
                         </button>
                         </>
                         
                     )} 
                     {currentPage === 2 && (
                         <>
+                            <div className="mb-5">
+                                <label htmlFor="fecha_nacimiento" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de Nacimiento</label>
+                                <input 
+                                    type="date" 
+                                    id="fecha_nacimiento" 
+                                    onChange={e => setFechaNacimiento(e.target.value)} 
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" 
+                                    required 
+                                />
+                            </div>
                             <div className="mb-5">
                                 <label htmlFor="telefono" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teléfono</label>
                                 <input 
@@ -333,22 +343,13 @@ const Register = () => {
                                     required 
                                 />
                             </div>
-                            <div className="mb-5">
-                                <label htmlFor="fecha_nacimiento" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de Nacimiento</label>
-                                <input 
-                                    type="date" 
-                                    id="fecha_nacimiento" 
-                                    onChange={e => setFechaNacimiento(e.target.value)} 
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" 
-                                    required 
-                                />
-                            </div>
+                            
                             <button 
                                 type="button" 
                                 onClick={handlePrevious} 
-                                className="w-full text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 mb-2"
+                                className="w-full text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
                             >
-                                Anterior
+                                <span>&#8678;</span>
                             </button>
                             <button 
                                 type="submit" 
