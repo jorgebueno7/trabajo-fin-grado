@@ -140,7 +140,7 @@ import { updateProfile } from '../../api/users';
 // import axios from 'axios';
 
 const PerfilForm = () => {
-    const { user, setUser, setProfileComplete } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
     const [nombre, setNombre] = useState(user?.nombre || '');
     const [apellidos, setApellidos] = useState(user?.apellidos || '');
     const [email, setEmail] = useState(user?.email || '');
