@@ -258,7 +258,6 @@ const updateUserProfile = async (req, res) => {
     }
 };
 
-
 const logout = async (req, res) => {
     try {
         console.log("ID del usuario que está cerrando la sesión: " + req.session.userId);
@@ -312,6 +311,25 @@ const deleteUserById = async (req, res) => {
 //     }
 // }
 
+const deleteUserFromSession = async (req, res) => {
+    try {
+        const { userId } = req.session;
+        if (userId) {
+            const usuario = await users.findByPk(userId);
+            if (usuario) {
+                await users.destroy({ where: { id: userId }, withCredentials: true } );
+                res.status(200).json({message: 'User deleted successfully'});
+            } else {
+                res.status(404).json({error: 'User not found'});
+            }
+        } else {
+            res.status(401).json({error: 'Unauthorized'});
+        }
+    } catch (error) {
+        res.status(500).json({error: `ERROR_DELETE_USER_FROM_SESSION: ${error}`});
+    }
+}
+
 const getUserFromSession = async (req, res) => {
     try {
         const { userId } = req.session;
@@ -332,4 +350,5 @@ const getUserFromSession = async (req, res) => {
     }
 };
 
-module.exports = { getAllUsers, registroUsers, loginUsers, logout, getUserById, updateUserById, deleteUserById, completeProfile, getUserFromSession, userAdminExists, updateUserProfile };
+module.exports = { getAllUsers, registroUsers, loginUsers, logout, getUserById, updateUserById, deleteUserById, completeProfile, 
+    getUserFromSession, userAdminExists, updateUserProfile, deleteUserFromSession };

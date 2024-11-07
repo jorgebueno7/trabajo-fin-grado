@@ -29,6 +29,11 @@ export const updateProfile = async (user: any) => {
   return response.data;
 }
 
+export const deleteProfile = async () => {
+  const response = await axios.delete(API_URL + '/delete-profile', { withCredentials: true });
+  return response.data;
+}
+
 export const checkAdminExists = async () => {
   try {
       await axios.get(`${API_URL}/user-admin-exists`);

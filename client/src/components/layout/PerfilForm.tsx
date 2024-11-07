@@ -140,7 +140,7 @@ import { updateProfile } from '../../api/users';
 // import axios from 'axios';
 
 const PerfilForm = () => {
-    const { user, setUser } = useContext(UserContext);
+    const { user, setUser, setProfileComplete } = useContext(UserContext);
     const [nombre, setNombre] = useState(user?.nombre || '');
     const [apellidos, setApellidos] = useState(user?.apellidos || '');
     const [email, setEmail] = useState(user?.email || '');
@@ -242,7 +242,8 @@ const PerfilForm = () => {
     
             // Actualizar el contexto de usuario y estado de perfil completo si es necesario
             if (response && response.user) {
-                setUser(response.user);
+                setUser(response.user); // Actualizar solo con los datos del usuario
+                setProfileComplete(true);
                 navigate('/perfil');
             } else {
                 console.error('Respuesta inesperada al actualizar el perfil:', response);
@@ -256,13 +257,13 @@ const PerfilForm = () => {
 
     return (
         <div className="flex items-center justify-center min-h-screen overflow-y-auto">
-            <div className="w-full max-w-sm bg-white border border-gray-300 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-                <form className="space-y-6 max-w-sm mx-auto" onSubmit={handleSubmit}>
+            <div className="w-full max-w-sm bg-white border border-gray-300 rounded-lg shadow md:p-6 dark:bg-gray-800 dark:border-gray-700">
+                <form className="space-y-5 max-w-sm mx-auto" onSubmit={handleSubmit}>
                     <h5 className="text-xl font-medium text-gray-900 dark:text-white text-center">
                         Actualizar Perfil
                     </h5>
                     <div className="relative max-w-sm">
-                        <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label htmlFor="nombre" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
                             Nombre
                         </label>
                         <input
@@ -284,7 +285,7 @@ const PerfilForm = () => {
                         />
                     </div>
                     <div className="mb-5">
-                        <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
                             Email
                         </label>
                         <input
@@ -295,7 +296,7 @@ const PerfilForm = () => {
                         />
                     </div>
                     <div className="mb-5">
-                        <label htmlFor="telefono" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label htmlFor="telefono" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
                             Teléfono
                         </label>
                         <input
@@ -306,7 +307,7 @@ const PerfilForm = () => {
                         />
                     </div>
                     <div className="mb-5">
-                        <label htmlFor="direccion" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label htmlFor="direccion" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
                             Dirección
                         </label>
                         <input
@@ -317,7 +318,7 @@ const PerfilForm = () => {
                         />
                     </div>
                     <div className="mb-5">
-                        <label htmlFor="altura" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label htmlFor="altura" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
                             Altura (cm)
                         </label>
                         <input
@@ -328,7 +329,7 @@ const PerfilForm = () => {
                         />
                     </div>
                     <div className="mb-5">
-                        <label htmlFor="peso" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label htmlFor="peso" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
                             Peso (kg)
                         </label>
                         <input
@@ -339,7 +340,7 @@ const PerfilForm = () => {
                         />
                     </div>
                     <div className="mb-5">
-                        <label htmlFor="deporte" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label htmlFor="deporte" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
                             Deporte
                         </label>
                         <input
@@ -350,7 +351,7 @@ const PerfilForm = () => {
                         />
                     </div>
                     <div className="mb-5">
-                        <label htmlFor="mejor_marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label htmlFor="mejor_marca" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
                             Mejor marca
                         </label>
                         <input
@@ -360,7 +361,7 @@ const PerfilForm = () => {
                             className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
                         />
                     </div>
-                    <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600">
+                    <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600">
                         Guardar cambios
                     </button>
                 </form>

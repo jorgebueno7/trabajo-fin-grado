@@ -14,5 +14,6 @@ router.delete('/users/:id', userController.deleteUserById);
 router.put('/update-profile', verifySession, userController.updateUserProfile);
 router.get('/user-admin-exists', userController.userAdminExists);
 router.get('/user-from-session', verifySession, userController.getUserFromSession);
+router.delete('/delete-profile', verifySession, userController.deleteUserFromSession);
 
 module.exports = router;
