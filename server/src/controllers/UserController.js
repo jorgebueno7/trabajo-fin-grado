@@ -183,6 +183,82 @@ const loginUsers = async (req, res) => {
     }
 }
 
+// const updateUserProfile = async (req, res) => {
+//     console.log('Datos de la sesión:', req.session);
+//     try {
+//         const { userId } = req.session;
+//         const { nombre, apellidos, email, telefono, direccion, altura, peso, deporte, mejor_marca } = req.body;
+
+//         if (!userId) {
+//             return res.status(401).json({ error: 'No autorizado' });
+//         }
+//         const [updatedRows] = await users.update(
+//             { nombre, apellidos, email, telefono, direccion, altura, peso, deporte, mejor_marca },
+//             { where: { id: userId }}, { withCredentials: true }
+//         );
+//         if (updatedRows === 0) {
+//             return res.status(404).json({ error: 'Usuario no encontrado o no se pudo actualizar' });
+//         }
+//         res.status(200).json({ message: 'Perfil actualizado exitosamente' });
+//     } catch (error) {
+//         res.status(500).json({ error: `ERROR_UPDATE_USER_PROFILE: ${error}` });
+//     }
+// };
+
+const updateUserProfile = async (req, res) => {
+    console.log('Datos de la sesión:', req.session);
+    try {
+        const { userId } = req.session;
+
+        // Verificar que el usuario esté autenticado
+        if (!userId) {
+            return res.status(401).json({ error: 'No autorizado' });
+        }
+
+        // Filtrar solo los campos que se envían y contienen datos válidos
+        const allowedFields = ['nombre', 'apellidos', 'email', 'telefono', 'direccion', 'altura', 'peso', 'deporte', 'mejor_marca'];
+        const updates = {};
+
+        allowedFields.forEach((field) => {
+            if (req.body[field] !== undefined) { // Solo agregar si existe en req.body
+                updates[field] = req.body[field];
+            }
+        });
+
+        // Si no hay campos a actualizar, devolver un error o advertencia
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ error: 'No se proporcionaron datos para actualizar' });
+        }
+
+        // Realizar la actualización con los campos filtrados
+        const [updatedRows] = await users.update(updates, {
+            where: { id: userId },
+            withCredentials: true
+        });
+
+        // Verificar si se actualizó algún registro
+        if (updatedRows === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado o no se pudo actualizar' });
+        }
+
+        // res.status(200).json({ message: 'Perfil actualizado exitosamente' });
+        // Obtener los datos actualizados del usuario
+        const updatedUser = await users.findOne({
+            where: { id: userId },
+            attributes: [
+                'id', 'dni', 'email', 'nombre', 'apellidos', 'profile_complete', 'isAdminUser',
+                'fecha_nacimiento', 'telefono', 'direccion', 'altura', 'peso', 'deporte', 'mejor_marca'
+            ]
+        });
+
+        // Envolver los datos en un objeto `user` para mantener la consistencia con la estructura de respuesta esperada
+        res.status(200).json({ user: updatedUser });
+    } catch (error) {
+        res.status(500).json({ error: `ERROR_UPDATE_USER_PROFILE: ${error.message}` });
+    }
+};
+
+
 const logout = async (req, res) => {
     try {
         console.log("ID del usuario que está cerrando la sesión: " + req.session.userId);
@@ -256,4 +332,4 @@ const getUserFromSession = async (req, res) => {
     }
 };
 
-module.exports = { getAllUsers, registroUsers, loginUsers, logout, getUserById, updateUserById, deleteUserById, completeProfile, getUserFromSession, userAdminExists };
+module.exports = { getAllUsers, registroUsers, loginUsers, logout, getUserById, updateUserById, deleteUserById, completeProfile, getUserFromSession, userAdminExists, updateUserProfile };

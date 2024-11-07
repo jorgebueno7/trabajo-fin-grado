@@ -65,7 +65,7 @@ function RoutesWithNavbar() {
         <Route path="/perfil" element={<PerfilPage />} />
         <Route path="/user-calendar" element={<UserCalendar />} />   
         <Route path="/calendar" element={<GlobalCalendar />} />
-        <Route path="/perfil-form" element={<PerfilForm />} />       
+        <Route path="/update-profile" element={<PerfilForm />} />       
       </Routes>
     </div>
   );
