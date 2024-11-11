@@ -26,12 +26,18 @@ const getUsersByEventId = async (req, res) => {
     }
 }
 
-const getEventByUserId = async (req, res) => {
+const getEventByUserLoggedIn = async (req, res) => {
     try {
-        const { id_usuario } = req.params;
-        const user_events = await user_event.findAll({ where: {id_usuario} });
-        if (user_events){
-            res.status(200).json(user_events);
+        const userId = req.session.userId;
+        if (!userId) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const userEvents = await user_event.findAll({
+            where: { id_usuario: userId },
+            include: [{ model: event }],
+        });
+        if (userEvents.length > 0) {
+            res.status(200).json(userEvents);
         }
         else{
             res.status(404).json({error: 'UserEvents with that id does not exist'})
@@ -111,4 +117,4 @@ const deleteUserEvent = async (req, res) => {
     }
 }
 
-module.exports = { getAllUserEvents, getUsersByEventId, getEventByUserId, postUserEvent, putUserEvent, deleteUserEvent};
+module.exports = { getAllUserEvents, getUsersByEventId, getEventByUserLoggedIn, postUserEvent, putUserEvent, deleteUserEvent};
