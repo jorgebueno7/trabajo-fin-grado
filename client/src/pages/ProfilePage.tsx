@@ -16,7 +16,7 @@ const ProfilePage = () => {
             fecha_ini: string;
             hora_ini: string;
             lugar: string;
-            };
+        };
     }
     const { user, setUser } = useContext(UserContext);
     const [events, setEvents] = useState<Event[]>([]);

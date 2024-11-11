@@ -18,6 +18,7 @@ import EventDetail from './components/common/EventsDetail';
 import UserCalendar from './components/layout/UserCalendar';
 import GlobalCalendar from './components/layout/GlobalCalendar';
 import PerfilForm from './components/layout/PerfilForm';
+import ListUserEvents from './components/common/ListUserEvents';
 import './css/index.css'
 
 function App() {
@@ -65,7 +66,8 @@ function RoutesWithNavbar() {
         <Route path="/perfil" element={<PerfilPage />} />
         <Route path="/user-calendar" element={<UserCalendar />} />   
         <Route path="/calendar" element={<GlobalCalendar />} />
-        <Route path="/update-profile" element={<PerfilForm />} />       
+        <Route path="/update-profile" element={<PerfilForm />} />
+        <Route path="/my-events" element={<ListUserEvents />} />       
       </Routes>
     </div>
   );
