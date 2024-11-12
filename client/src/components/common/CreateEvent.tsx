@@ -55,7 +55,8 @@ const CreateEvent = () => {
     return (
         <div className="flex items-center justify-center min-h-screen overflow-y-auto">
             <div className="w-full max-w-sm bg-white border border-gray-300 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-                <h1 className="text-2xl font-bold mb-4">Creación de evento</h1>
+                <h1 className="text-2xl font-bold mb-2">Creación de evento</h1>
+                <hr></hr><br></br>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deporte:</label>
@@ -75,7 +76,7 @@ const CreateEvent = () => {
                         </select>
                     </div>
                     <div>
-                        <label className="block text-gray-700">Nombre del evento:</label>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre del evento:</label>
                         <input
                             type="text"
                             name="nombre"
@@ -86,7 +87,7 @@ const CreateEvent = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Fecha de inicio:</label>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de inicio:</label>
                         <input
                             type="datetime-local"
                             name="fecha_ini"
@@ -97,7 +98,7 @@ const CreateEvent = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Fecha de fin:</label>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de fin:</label>
                         <input
                             type="datetime-local"
                             name="fecha_fin"
@@ -108,7 +109,7 @@ const CreateEvent = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Fecha límite de inscripción:</label>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha límite de inscripción:</label>
                         <input
                             type="datetime-local"
                             name="fecha_limite"
@@ -119,7 +120,7 @@ const CreateEvent = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Lugar:</label>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lugar:</label>
                         <input
                             type="text"
                             name="lugar"
@@ -130,7 +131,7 @@ const CreateEvent = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Hora de inicio:</label>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hora de inicio:</label>
                         <input
                             type="time"
                             name="hora_ini"
@@ -141,7 +142,7 @@ const CreateEvent = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Máximo de usuarios:</label>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Máximo de usuarios:</label>
                         <input
                             type="number"
                             name="maximo_usuarios"

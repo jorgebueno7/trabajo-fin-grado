@@ -20,6 +20,8 @@ import GlobalCalendar from './components/layout/GlobalCalendar';
 import PerfilForm from './components/layout/PerfilForm';
 import ListUserEvents from './components/common/ListUserEvents';
 import CreateEvent from './components/common/CreateEvent';
+import CreateSport from './components/common/CreateSport';
+
 import './css/index.css'
 
 function App() {
@@ -69,7 +71,8 @@ function RoutesWithNavbar() {
         <Route path="/calendar" element={<GlobalCalendar />} />
         <Route path="/update-profile" element={<PerfilForm />} />
         <Route path="/my-events" element={<ListUserEvents />} />
-        <Route path="/create-event" element={<CreateEvent />} />   
+        <Route path="/create-event" element={<CreateEvent />} />  
+        <Route path="/create-sport" element={<CreateSport />} /> 
       </Routes>
     </div>
   );

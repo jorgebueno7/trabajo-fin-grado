@@ -12,6 +12,11 @@ export const getSportsById = async (id: number) => {
   return response.data;
 };
 
+export const postSport = async (sport: any) => {
+  const response = await axios.post(API_URL + '/create-sports', sport);
+  return response.data;
+}
+
 export const addUser = async (user: { dni: string; nombre: string; apellidos: string; email: string; password: string; role: string; }) => {
   const response = await axios.post(API_URL, user);
   return response.data;

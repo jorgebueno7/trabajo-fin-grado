@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { getSports } from '../../api/sports';
+import UserContext from "../../context/UsersContext";
 
 const Deportes = () => {
     interface Sport {
@@ -13,6 +14,10 @@ const Deportes = () => {
     }
 
     const [sports, setSports] = useState<Sport[]>([]);
+    const { isAdmin } = useContext(UserContext);
+
+    console.log("Valor de isAdmin", isAdmin);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchSports();
@@ -27,37 +32,25 @@ const Deportes = () => {
         }
     };
 
+    const handleCreateSportClick = () => {
+        navigate('/create-sport');
+    };
+
     return (
         <>
-            {/* <div>
-                <h1>Deportes</h1>
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" className="px-6 py-3">Nombre</th>
-                            <th scope="col" className="px-6 py-3">Descripción</th>
-                            <th scope="col" className="px-6 py-3">Información</th>
-                            <th scope="col" className="px-6 py-3">Categoria</th>
-                            <th scope="col" className="px-6 py-3">Equipamiento</th>
-                            <th scope="col" className="px-6 py-3">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {sports.map((sport) => (
-                            <tr key={sport.id_deporte} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{sport.nombre}</th>
-                                <td className="px-6 py-4">{sport.descripcion}</td>
-                                <td className="px-6 py-4">{sport.informacion}</td>
-                                <td className="px-6 py-4">{sport.categoria}</td>
-                                <td className="px-6 py-4">{sport.equipamiento}</td>
-                                <td className="px-6 py-4">
-                                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div> */}
+            <div className="flex mx-20 mt-6">
+                <div className="flex flex-col items-start mr-6">
+                    {isAdmin && (
+                        <button
+                            type="submit"
+                            onClick={handleCreateSportClick}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
+                        >
+                            Crear deporte
+                        </button>
+                    )}
+                </div>
+            </div>
             <div className="grid grid-cols-3 gap-x-6 mx-20">
                 {sports.map((sport, index) => (
                     <Link key={sport.id_deporte} to={`/sports/${sport.id_deporte}`}>

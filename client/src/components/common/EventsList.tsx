@@ -37,6 +37,7 @@ const Eventos = () => {
             console.error('Error fetching users:', error);
         }
     };
+    
     const handleCreateEventClick = () => {
         navigate('/create-event');
     };

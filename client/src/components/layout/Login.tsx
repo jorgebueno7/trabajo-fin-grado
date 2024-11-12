@@ -8,7 +8,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginError, setLoginError] = useState(false);
-    const { setLoggedIn, setUser } = useContext(UserContext);
+    const { setLoggedIn, setUser, setIsAdmin } = useContext(UserContext);
     // const { setUser } = useContext(UserContext);
 
     const navigate = useNavigate();
@@ -22,6 +22,10 @@ const Login = () => {
             if (response.status === 200) {
                 console.log("Usuario en el response.data: " + response.data);
                 setUser(response.data.user); // Establecer el usuario en el contexto
+                if (response.data.user.isAdminUser) {
+                    console.log("El usuario es administrador");
+                    setIsAdmin(true); 
+                }
                 setLoggedIn(true); // Marcar como logueado
                 navigate('/perfil'); // Redirigir a la página de perfil
             }

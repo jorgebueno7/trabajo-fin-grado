@@ -241,7 +241,6 @@ const Register = () => {
                                     className="sr-only peer" 
                                     checked={isAdmin} 
                                     disabled={isAdminExists}
-                                    // onChange={() => setIsAdminUser(!isAdminUser)} 
                                     onChange={e => { const checked = e.target.checked;
                                         setIsAdminUser(checked);
                                         if (checked) {
