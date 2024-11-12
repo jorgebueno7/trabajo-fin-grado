@@ -13,7 +13,6 @@ const CreateEvent = () => {
         hora_ini: '',
         maximo_usuarios: '',
     });
-
     interface Sport {
         id_deporte: number;
         nombre: string;

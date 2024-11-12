@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import UserContext from "../../context/UsersContext";
 import { getEvents } from '../../api/events';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -20,6 +21,8 @@ const Eventos = () => {
     }
       
     const [events, setEvents] = useState<Event[]>([]);
+    const { isLoggedIn } = useContext(UserContext);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -42,12 +45,23 @@ const Eventos = () => {
         <>
             <div className="flex mx-20 mt-6">
                 <div className="flex flex-col items-start mr-6">
-                    <button 
+                    {/* <button 
                         onClick={handleCreateEventClick}
                         className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
                     >
                         Crear evento
-                    </button>
+                    </button> */}
+                    { isLoggedIn ? (
+                        <button
+                            type="submit"
+                            onClick={handleCreateEventClick}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
+                        >
+                            Crear evento
+                        </button>) 
+                        : 
+                        (<></>)
+                    }
                 </div>
             </div>
             <div className="grid grid-cols-3 gap-x-6 mx-20">
