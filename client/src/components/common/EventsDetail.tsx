@@ -4,6 +4,7 @@ import UserContext from '../../context/UsersContext';
 import { useParams } from 'react-router-dom';
 import { getEventsById } from '../../api/events';
 import { getUserEventsByEventId, postUserEvent } from '../../api/userEvent';
+import { getSports } from '../../api/sports';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
@@ -21,16 +22,35 @@ const EventDetail = () => {
         maximo_usuarios: number;
         id_usuario_espera: number;
     }
+    interface Sport {
+        id_deporte: number;
+        nombre: string;
+    }
 
-    const { id } = useParams<{ id: string }>();
+    const [sports, setSports] = useState<Sport[]>([]);
     const [event, setEvent] = useState<Event | null>(null);
     const [users, setUsers] = useState<number[]>([]);
     const { isLoggedIn, user } = useContext(UserContext); 
+    const { id } = useParams<{ id: string }>();
 
     const navigate = useNavigate();
     const navigateToLogin = () => {
         navigate('/login');
     }
+
+    useEffect(() => {
+        const fetchSports = async () => {
+            try {
+                const sportsData = await getSports();
+                setSports(sportsData);
+            } catch (error) {
+                console.error('Error fetching sports:', error);
+            }
+        };
+
+        fetchSports();
+    }, []);
+
     const handleJoinEvent = async () => {
         if (!isLoggedIn) {
             alert('Debes iniciar sesión para unirte a este evento');
@@ -84,6 +104,7 @@ const EventDetail = () => {
     
     const percentage = users.length / event.maximo_usuarios * 100;
     const progressBarColor = getProgressBarColor(percentage);
+    const eventSport = sports.find(sport => sport.id_deporte === event.id_deporte);
 
     return (
         <div className="flex items-center justify-center min-h-screen">
@@ -92,6 +113,7 @@ const EventDetail = () => {
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{event.nombre}</h5>
                 </a>
                 <hr></hr><br></br>
+                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Deporte: {eventSport ? <strong>{eventSport.nombre}</strong>: 'Deporte no disponible'}</p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha inicio del evento: <strong>{event.fecha_ini}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Hora de inicio del evento: <strong>{event.hora_ini}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Hora final del evento: <strong>{event.fecha_fin}</strong></p>

@@ -40,13 +40,15 @@ const Eventos = () => {
 
     return (
         <>
-            <div className="flex justify-end m-5">
-                <button 
-                    onClick={handleCreateEventClick}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
-                >
-                    Crear evento
-                </button>
+            <div className="flex mx-20 mt-6">
+                <div className="flex flex-col items-start mr-6">
+                    <button 
+                        onClick={handleCreateEventClick}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
+                    >
+                        Crear evento
+                    </button>
+                </div>
             </div>
             <div className="grid grid-cols-3 gap-x-6 mx-20">
                 {events.map((event, index) => (
