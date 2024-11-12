@@ -54,110 +54,112 @@ const CreateEvent = () => {
     };
 
     return (
-        <div className="p-5">
-            <h1 className="text-2xl font-bold mb-4">Creación de evento</h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block text-gray-700">Deporte:</label>
-                    <select
-                        name="id_deporte"
-                        value={formData.id_deporte}
-                        onChange={handleChange}
-                        className="w-full border rounded p-2"
-                        required
+        <div className="flex items-center justify-center min-h-screen overflow-y-auto">
+            <div className="w-full max-w-sm bg-white border border-gray-300 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+                <h1 className="text-2xl font-bold mb-4">Creación de evento</h1>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deporte:</label>
+                        <select
+                            name="id_deporte"
+                            value={formData.id_deporte}
+                            onChange={handleChange}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            required
+                        >
+                            <option value="">Selecciona un deporte</option>
+                            {sports.map((sport) => (
+                                <option key={sport.id_deporte} value={sport.id_deporte}>
+                                    {sport.nombre}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block text-gray-700">Nombre del evento:</label>
+                        <input
+                            type="text"
+                            name="nombre"
+                            value={formData.nombre}
+                            onChange={handleChange}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" 
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700">Fecha de inicio:</label>
+                        <input
+                            type="datetime-local"
+                            name="fecha_ini"
+                            value={formData.fecha_ini}
+                            onChange={handleChange}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" 
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700">Fecha de fin:</label>
+                        <input
+                            type="datetime-local"
+                            name="fecha_fin"
+                            value={formData.fecha_fin}
+                            onChange={handleChange}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" 
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700">Fecha límite de inscripción:</label>
+                        <input
+                            type="datetime-local"
+                            name="fecha_limite"
+                            value={formData.fecha_limite}
+                            onChange={handleChange}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" 
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700">Lugar:</label>
+                        <input
+                            type="text"
+                            name="lugar"
+                            value={formData.lugar}
+                            onChange={handleChange}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" 
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700">Hora de inicio:</label>
+                        <input
+                            type="time"
+                            name="hora_ini"
+                            value={formData.hora_ini}
+                            onChange={handleChange}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" 
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700">Máximo de usuarios:</label>
+                        <input
+                            type="number"
+                            name="maximo_usuarios"
+                            value={formData.maximo_usuarios}
+                            onChange={handleChange}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" 
+                            required
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
                     >
-                        <option value="">Selecciona un deporte</option>
-                        {sports.map((sport) => (
-                            <option key={sport.id_deporte} value={sport.id_deporte}>
-                                {sport.nombre}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    <label className="block text-gray-700">Nombre del evento:</label>
-                    <input
-                        type="text"
-                        name="nombre"
-                        value={formData.nombre}
-                        onChange={handleChange}
-                        className="w-full border rounded p-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-gray-700">Fecha de inicio:</label>
-                    <input
-                        type="datetime-local"
-                        name="fecha_ini"
-                        value={formData.fecha_ini}
-                        onChange={handleChange}
-                        className="w-full border rounded p-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-gray-700">Fecha de fin:</label>
-                    <input
-                        type="datetime-local"
-                        name="fecha_fin"
-                        value={formData.fecha_fin}
-                        onChange={handleChange}
-                        className="w-full border rounded p-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-gray-700">Fecha límite de inscripción:</label>
-                    <input
-                        type="datetime-local"
-                        name="fecha_limite"
-                        value={formData.fecha_limite}
-                        onChange={handleChange}
-                        className="w-full border rounded p-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-gray-700">Lugar:</label>
-                    <input
-                        type="text"
-                        name="lugar"
-                        value={formData.lugar}
-                        onChange={handleChange}
-                        className="w-full border rounded p-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-gray-700">Hora de inicio:</label>
-                    <input
-                        type="time"
-                        name="hora_ini"
-                        value={formData.hora_ini}
-                        onChange={handleChange}
-                        className="w-full border rounded p-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-gray-700">Máximo de usuarios:</label>
-                    <input
-                        type="number"
-                        name="maximo_usuarios"
-                        value={formData.maximo_usuarios}
-                        onChange={handleChange}
-                        className="w-full border rounded p-2"
-                        required
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
-                >
-                    Crear evento
-                </button>
-            </form>
+                        Crear evento
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }
