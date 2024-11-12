@@ -12,8 +12,8 @@ export const getEventsById = async (id: number) => {
   return response.data;
 }
 
-export const postEvent = async () => {
-  const response = await axios.post(API_URL);
+export const postEvent = async (event: any) => {
+  const response = await axios.post(API_URL, event);
   return response.data;
 }
 
