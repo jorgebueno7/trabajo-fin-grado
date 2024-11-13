@@ -17,8 +17,8 @@ export const getUserEventsByEventId = async (eventId: number) => {
   return response.data;
 }
 
-export const postUserEvent = async (eventId: number, userId: number) => {
-  const response = await axios.post(API_URL, { id_evento: eventId, id_usuario: userId });
+export const postUserEvent = async (eventId: number) => {
+  const response = await axios.post(API_URL, { id_evento: eventId }, { withCredentials: true });
   return response.data;
 }
 

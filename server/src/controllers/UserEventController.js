@@ -49,7 +49,8 @@ const getEventByUserLoggedIn = async (req, res) => {
 
 const postUserEvent = async (req, res) => {
     try {
-        const { id_usuario, id_evento } = req.body;
+        const id_usuario = req.session.userId;
+        const { id_evento } = req.body;
         // Obtener el evento a través de la clave primaria
         const evento = await event.findByPk(id_evento);
         if (!evento) { // Si el evento no existe, devolver un 404

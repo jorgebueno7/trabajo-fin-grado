@@ -8,7 +8,8 @@ router.get('/user-events/event/:id_evento', userEvent.getUsersByEventId);
 // router.get('/user-events/user/:id_usuario', userEvent.getEventByUserId);
 router.get('/user-events', verifySession, userEvent.getEventByUserLoggedIn);
 
-router.post('/user-events', userEvent.postUserEvent);
+router.post('/user-events', verifySession, userEvent.postUserEvent);
+
 router.put('/user-events/:id_evento', userEvent.putUserEvent);
 router.delete('/user-events/event/:id_evento/user/:id_usuario', userEvent.deleteUserEvent);
 

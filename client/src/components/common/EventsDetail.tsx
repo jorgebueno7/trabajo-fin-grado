@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import UserContext from '../../context/UsersContext';
 import { useParams } from 'react-router-dom';
 import { getEventsById } from '../../api/events';
@@ -30,14 +30,17 @@ const EventDetail = () => {
     const [sports, setSports] = useState<Sport[]>([]);
     const [event, setEvent] = useState<Event | null>(null);
     const [users, setUsers] = useState<number[]>([]);
-    const { isLoggedIn, user } = useContext(UserContext); 
+    const { isLoggedIn, user } = useContext(UserContext);
     const { id } = useParams<{ id: string }>();
 
     const navigate = useNavigate();
+
+    // Redirigir a login si el usuario no está logueado
     const navigateToLogin = () => {
         navigate('/login');
-    }
+    };
 
+    // Obtener deportes
     useEffect(() => {
         const fetchSports = async () => {
             try {
@@ -47,28 +50,10 @@ const EventDetail = () => {
                 console.error('Error fetching sports:', error);
             }
         };
-
         fetchSports();
     }, []);
 
-    const handleJoinEvent = async () => {
-        if (!isLoggedIn) {
-            alert('Debes iniciar sesión para unirte a este evento');
-            navigateToLogin()            
-            return;
-        }
-        else{
-            try {
-                if (user && event) {
-                    await postUserEvent(event.id_evento, user.id);
-                    alert('Te has unido al evento exitosamente');
-                }
-            } catch (error) {
-                console.error('Error al unirse al evento:', error);
-            }
-        }
-    };
-
+    // Obtener datos del evento y usuarios inscritos
     const fetchEvent = async () => {
         try {
             const data = await getEventsById(Number(id));
@@ -78,12 +63,35 @@ const EventDetail = () => {
             setEvent(data);
 
             const userData = await getUserEventsByEventId(Number(id));
-            setUsers(userData);
+            setUsers(userData.map((userEvent: any) => userEvent.id_usuario));
         } catch (error) {
             console.error('Error fetching event:', error);
         }
     };
-    
+
+    useEffect(() => {
+        fetchEvent();
+    }, [id]);
+
+    // Unirse al evento
+    const handleJoinEvent = async () => {
+        if (!isLoggedIn) {
+            alert('Debes iniciar sesión para unirte a este evento');
+            navigateToLogin();
+            return;
+        }
+        try {
+            if (user && event) {
+                await postUserEvent(event.id_evento);
+                alert('Te has unido al evento exitosamente');
+                fetchEvent(); // Refresca los datos del evento después de unirse
+            }
+        } catch (error) {
+            console.error('Error al unirse al evento:', error);
+        }
+    };
+
+    // Obtener color de la barra de progreso según porcentaje
     const getProgressBarColor = (percentage: number) => {
         if (percentage < 50) {
             return 'bg-blue-600 text-white';
@@ -94,17 +102,14 @@ const EventDetail = () => {
         }
     };
 
-    useEffect(() => {
-        fetchEvent();
-    }, [id]);
-
     if (!event) {
         return <div>Loading...</div>;
     }
-    
-    const percentage = users.length / event.maximo_usuarios * 100;
+
+    // Calcular porcentaje de usuarios inscritos
+    const percentage = (users.length / event.maximo_usuarios) * 100;
     const progressBarColor = getProgressBarColor(percentage);
-    const eventSport = sports.find(sport => sport.id_deporte === event.id_deporte);
+    const eventSport = sports.find((sport) => sport.id_deporte === event.id_deporte);
 
     return (
         <div className="flex items-center justify-center min-h-screen">
@@ -112,8 +117,11 @@ const EventDetail = () => {
                 <a href={`/sports/${event.id_deporte}`}>
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{event.nombre}</h5>
                 </a>
-                <hr></hr><br></br>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Deporte: {eventSport ? <strong>{eventSport.nombre}</strong>: 'Deporte no disponible'}</p>
+                <hr />
+                <br />
+                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                    Deporte: {eventSport ? <strong>{eventSport.nombre}</strong> : 'Deporte no disponible'}
+                </p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha inicio del evento: <strong>{event.fecha_ini}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Hora de inicio del evento: <strong>{event.hora_ini}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Hora final del evento: <strong>{event.fecha_fin}</strong></p>
@@ -126,16 +134,15 @@ const EventDetail = () => {
                         {percentage}%
                     </div>
                 </div>
-                <button 
-                    onClick={handleJoinEvent} 
-                    disabled={isLoggedIn}
+                <button
+                    onClick={handleJoinEvent}
                     className={`inline-flex items-center px-3 py-2 mt-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 
-                        ${isLoggedIn ? 'opacity-60 cursor-not-allowed' : ''}`}>
-                    Unirse al evento
+                        ${(!isLoggedIn || (user && users.includes(user.id))) ? 'opacity-60 cursor-not-allowed' : ''}`}
+                >
+                    {user && users.includes(user.id) ? 'Unirse al evento' : 'Unirse al evento'}
                 </button>
             </div>
         </div>
-        
     );
 };
 
