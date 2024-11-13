@@ -11,6 +11,6 @@ router.get('/user-events', verifySession, userEvent.getEventByUserLoggedIn);
 router.post('/user-events', verifySession, userEvent.postUserEvent);
 
 router.put('/user-events/:id_evento', userEvent.putUserEvent);
-router.delete('/user-events/event/:id_evento/user/:id_usuario', userEvent.deleteUserEvent);
+router.delete('/user-events/event/:id_evento', verifySession, userEvent.deleteUserEvent);
 
 module.exports = router;

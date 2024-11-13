@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { getUserEvents } from '../../api/userEvent'; // Asumiendo que tienes esta función ya implementada
+import { useEffect, useState, useContext } from 'react';
+import { getUserEvents, deleteUserEvent } from '../../api/userEvent'; // Asumiendo que tienes esta función ya implementada
+import UserContext from '../../context/UsersContext';
 import dayjs from 'dayjs';
 
 const ListUserEvents = () => {
@@ -14,6 +15,7 @@ const ListUserEvents = () => {
         };
     }
     const [events, setEvents] = useState<Event[]>([]);
+    const { user } = useContext(UserContext);
 
     useEffect(() => {
         const fetchUserEvents = async () => {
@@ -28,7 +30,20 @@ const ListUserEvents = () => {
 
         fetchUserEvents();
     }, []);
-  
+
+    const handleLeaveEvent = async (id_evento: number) => {
+        if (user) {
+            try {
+                await deleteUserEvent(id_evento); // Llama a la API para eliminar el usuario del evento
+                setEvents(events.filter(event => event.id_evento !== id_evento)); // Elimina el evento de la lista local
+                alert('Te has dado de baja del evento.');
+            } catch (error) {
+                console.error('Error al eliminar el evento:', error);
+                alert('Hubo un error al intentar darte de baja.');
+            }
+        }
+    };
+
     return (
         <div className="p-5">
         <h1 className="text-2xl font-bold mb-4 ml-2">Mis eventos</h1>
@@ -40,7 +55,14 @@ const ListUserEvents = () => {
                         <p><strong>Fecha:</strong> {dayjs(event.Event.fecha_ini).format('DD-MM-YYYY')}</p>
                         <p><strong>Hora:</strong> {event.Event.hora_ini}</p>
                         <p><strong>Lugar:</strong> {event.Event.lugar}</p>
+                        <button
+                            onClick={() => handleLeaveEvent(event.id_evento)}
+                            className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                        >
+                            Darse de baja
+                        </button>
                     </div>
+                    
                 )) 
                 : 
                 (<p>No estás inscrito en ningún evento.</p>)

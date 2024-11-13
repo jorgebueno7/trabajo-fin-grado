@@ -26,3 +26,8 @@ export const getUserEvents = async () => {
   const response = await axios.get(`${API_URL}`, { withCredentials: true });
   return response.data;
 };
+
+export const deleteUserEvent = async (eventId: number) => {
+  const response = await axios.delete(`${API_URL}/event/${eventId}`, { withCredentials: true });
+  return response.data;
+};
