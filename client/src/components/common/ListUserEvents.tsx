@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getUserEvents, deleteUserEvent } from '../../api/userEvent'; // Asumiendo que tienes esta función ya implementada
 import UserContext from '../../context/UsersContext';
 import dayjs from 'dayjs';
@@ -16,6 +17,11 @@ const ListUserEvents = () => {
     }
     const [events, setEvents] = useState<Event[]>([]);
     const { user } = useContext(UserContext);
+    const navigate = useNavigate();
+
+    const navigateToEventDetail = (id_evento: number) => {
+        navigate(`/events/${id_evento}`);
+    };
 
     useEffect(() => {
         const fetchUserEvents = async () => {
@@ -30,6 +36,7 @@ const ListUserEvents = () => {
 
         fetchUserEvents();
     }, []);
+
 
     const handleLeaveEvent = async (id_evento: number) => {
         if (user) {
@@ -60,6 +67,12 @@ const ListUserEvents = () => {
                             className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                         >
                             Darse de baja
+                        </button>
+                        <button
+                            onClick={() => navigateToEventDetail(event.id_evento)}
+                            className="mt-3 ml-3 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                        >
+                            + Información del evento
                         </button>
                     </div>
                     
