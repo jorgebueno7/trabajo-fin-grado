@@ -1,8 +1,8 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'
-import { getUserEventsByUserId } from '../../api/userEvent';
+import { getUserEvents } from '../../api/userEvent';
 import { getEventsById } from '../../api/events';
-import UserContext from '../../context/UsersContext';
+// import UserContext from '../../context/UsersContext';
 import { Calendar, dayjsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css' 
 import dayjs from 'dayjs'
@@ -42,7 +42,7 @@ interface TransformedEvent {
 
 const Calendario = () => {
     const [events, setEvents] = useState<TransformedEvent[]>([]);
-    const { user } = useContext(UserContext);
+    // const { user } = useContext(UserContext);
 
     const localizer = dayjsLocalizer(dayjs);
 
@@ -51,13 +51,13 @@ const Calendario = () => {
         navigate(`/events/${event.id_evento}`);
     };
 
-    const getCurrentUser = () => {
-        if (!user) {
-          const storedUser = localStorage.getItem('user');
-          return storedUser ? JSON.parse(storedUser) : null;
-        }  
-        return user;
-    };
+    // const getCurrentUser = () => {
+    //     if (!user) {
+    //       const storedUser = localStorage.getItem('user');
+    //       return storedUser ? JSON.parse(storedUser) : null;
+    //     }  
+    //     return user;
+    // };
     useEffect(() => {
         fetchEventUser();
     }, []);
@@ -79,8 +79,8 @@ const Calendario = () => {
 
     const fetchEventUser = async () => {
         try {
-            const user = getCurrentUser();
-            const userEvents = await getUserEventsByUserId(user.id);
+            // const user = getCurrentUser();
+            const userEvents = await getUserEvents();
             const eventPromises = userEvents.map((userEvent: UserEvent) => getEventsById(userEvent.id_evento));
             const events = await Promise.all(eventPromises);
             const transformedEvents = transformEvents(events);
