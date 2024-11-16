@@ -22,7 +22,7 @@ const getAllRatings = async (req, res) => {
     }
 }
 
-const getRatingById = async (req, res) => { // Funcion de Administrador
+const getRatingById = async (req, res) => { // Función de Administrador
     try {
         const { id_rating } = req.params;
         const ratings = await rating.findByPk(id_rating);
@@ -35,6 +35,20 @@ const getRatingById = async (req, res) => { // Funcion de Administrador
         res.status(500).json({error: `ERROR_GET_RATING_BY_ID: ${error}`})
     }
 }
+
+// const getRatingByIdEvent = async (req, res) => {
+//     try {
+//         const { id_evento } = req.params;
+//         const ratings = await rating.findAll({ where: { id_evento } });
+//         if(ratings){
+//             res.status(200).json(ratings);
+//         }else{
+//             res.status(404).json({error: 'Rating with that id does not exist'})
+//         }
+//     } catch (error) {
+//         res.status(500).json({error: `ERROR_GET_RATING_BY_ID_EVENT: ${error}`})
+//     }
+// }
 
 const postRating = async (req, res) => {
     try { 
@@ -75,6 +89,16 @@ const getRatingsByEvent = async (req, res) => {
     try {
         const { id_evento } = req.params;
         const eventRating = await rating.findAll({
+            include: [
+                {
+                    model: event,
+                    attributes: ['nombre'],
+                },
+                {
+                    model: user,
+                    attributes: ['email'],
+                }
+            ],
             where: { id_evento },
         });
 
@@ -89,4 +113,5 @@ const getRatingsByEvent = async (req, res) => {
 };
 
 
-module.exports = { getAllRatings, getRatingById, postRating, putRating, deletedRating, getRatingsByEvent }; 
+module.exports = { getAllRatings, getRatingById, postRating, putRating, deletedRating, 
+    getRatingsByEvent }; 

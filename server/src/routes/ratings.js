@@ -9,5 +9,6 @@ router.post('/ratings', verifySession, ratingController.postRating);
 router.put('/ratings/:id_rating', ratingController.putRating);
 router.delete('/ratings/:id_rating', ratingController.deletedRating);
 router.get('/ratings/event/:id_evento', ratingController.getRatingsByEvent);
+// router.get('/ratings/event/:id_evento', ratingController.getRatingByIdEvent);
 
 module.exports = router;

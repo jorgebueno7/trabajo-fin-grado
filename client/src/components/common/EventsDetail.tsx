@@ -40,6 +40,12 @@ const EventDetail = () => {
         navigate('/login');
     };
 
+    const handleViewRatings = () => {
+        if (event) {
+            navigate(`/ratings/${event.id_evento}`);
+        }
+    };
+
     // Obtener deportes
     useEffect(() => {
         const fetchSports = async () => {
@@ -140,6 +146,12 @@ const EventDetail = () => {
                         ${(!isLoggedIn || (user && users.includes(user.id))) ? 'opacity-60 cursor-not-allowed' : ''}`}
                 >
                     {user && users.includes(user.id) ? 'Unirse al evento' : 'Unirse al evento'}
+                </button>
+                <button
+                    onClick={handleViewRatings}
+                    className="inline-flex items-center px-3 py-2 mt-6 ml-2 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600"
+                >
+                    Ver valoraciones
                 </button>
             </div>
         </div>

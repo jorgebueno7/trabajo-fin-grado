@@ -22,6 +22,7 @@ import ListUserEvents from './components/common/ListUserEvents';
 import CreateEvent from './components/common/CreateEvent';
 import CreateSport from './components/common/CreateSport';
 import RatingEvent from './components/common/RatingsEvent';
+import RatingDetail from './components/common/RatingDetail';
 
 import './css/index.css'
 
@@ -75,6 +76,7 @@ function RoutesWithNavbar() {
         <Route path="/create-event" element={<CreateEvent />} />  
         <Route path="/create-sport" element={<CreateSport />} /> 
         <Route path="/ratings-event" element={<RatingEvent />} />
+        <Route path="/ratings/:id_evento" element={<RatingDetail />} />
       </Routes>
     </div>
   );

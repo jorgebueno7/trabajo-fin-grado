@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getRatings } from '../../api/ratings';
 
 const Valoraciones = () => {
