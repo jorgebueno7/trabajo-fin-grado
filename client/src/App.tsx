@@ -21,6 +21,7 @@ import PerfilForm from './components/layout/PerfilForm';
 import ListUserEvents from './components/common/ListUserEvents';
 import CreateEvent from './components/common/CreateEvent';
 import CreateSport from './components/common/CreateSport';
+import RatingEvent from './components/common/RatingsEvent';
 
 import './css/index.css'
 
@@ -73,6 +74,7 @@ function RoutesWithNavbar() {
         <Route path="/my-events" element={<ListUserEvents />} />
         <Route path="/create-event" element={<CreateEvent />} />  
         <Route path="/create-sport" element={<CreateSport />} /> 
+        <Route path="/ratings-event" element={<RatingEvent />} />
       </Routes>
     </div>
   );

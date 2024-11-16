@@ -7,3 +7,7 @@ export const getRatings = async () => {
   return response.data;
 };
 
+export const getRatingsByEvent = async (id_evento: number) => {
+  const response = await axios.get(API_URL + '/event/' + id_evento);
+  return response.data;
+}

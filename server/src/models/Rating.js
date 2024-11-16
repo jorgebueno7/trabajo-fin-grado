@@ -2,7 +2,6 @@ const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/database");
 const Event = require('./Event');
 const User = require('./User');
-const Sports = require('./Sports');
 
 class Rating extends Model {}
 Rating.init({
@@ -19,14 +18,6 @@ Rating.init({
             key: 'id_usuario',
         },
     }, 
-    id_deporte: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: Sports,
-            key: 'id_deporte',
-        },
-    },
     id_evento: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -52,5 +43,8 @@ Rating.init({
     tableName: "valoraciones",
     timestamps: false,
 });
+
+Rating.belongsTo(Event, { foreignKey: 'id_evento' });
+Rating.belongsTo(User, { foreignKey: 'id_usuario' });
 
 module.exports = Rating;
