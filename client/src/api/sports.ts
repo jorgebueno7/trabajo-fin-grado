@@ -21,3 +21,8 @@ export const addUser = async (user: { dni: string; nombre: string; apellidos: st
   const response = await axios.post(API_URL, user);
   return response.data;
 };
+
+export const getEventsBySport = async (id_deporte: number) => {
+  const response = await axios.get(`${API_URL}/events-from-sport/${id_deporte}`);
+  return response.data;
+};

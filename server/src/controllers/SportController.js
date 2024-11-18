@@ -1,4 +1,5 @@
 const sport = require('../models/Sports');
+const event = require('../models/Event');
 
 const getAllSports = async (req, res) => {
     try {
@@ -57,4 +58,19 @@ const deleteSport = async (req, res) => {
     }
 }
 
-module.exports = { getAllSports, getSportById, postSport, updateSport, deleteSport };
+const getEventsFromSport = async (req, res) => {
+    try {
+        const { id_deporte } = req.params;
+        const sportById = await sport.findByPk(id_deporte);
+        if(sportById){
+            const events = await event.findAll({ where: { id_deporte: id_deporte } });
+            res.status(200).json(events);
+        }else{
+            res.status(404).json({error: 'Sport with that id does not exist'})
+        }
+    } catch (error) {
+        res.status(500).json({error: `ERROR_GET_EVENTS_FROM_SPORT: ${error}`})
+    }
+}
+
+module.exports = { getAllSports, getSportById, postSport, updateSport, deleteSport, getEventsFromSport };
