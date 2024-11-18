@@ -16,3 +16,8 @@ export const postRating = async (id_evento: number, valoracion: number, comentar
   const response = await axios.post(API_URL, { id_evento, valoracion, comentario }, { withCredentials: true });
   return response.data;
 }
+
+export const deleteRating = async (id_rating: number) => {
+  const response = await axios.delete(API_URL + '/' + id_rating, { withCredentials: true });
+  return response.data;
+}

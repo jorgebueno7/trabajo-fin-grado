@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getRatingsByEvent } from '../../api/ratings';
+import { getRatingsByEvent, deleteRating } from '../../api/ratings';
 
 const RatingDetail = () => {
     interface Rating {
@@ -48,6 +48,16 @@ const RatingDetail = () => {
         return ratings.length > 0 ? ratings[0].Event.nombre : '';
     }
     
+    const handleDeleteRating = async (id_rating: number) => {
+        try {
+            await deleteRating(id_rating); // Llama a la API para eliminar el usuario del evento
+            setRatings(ratings.filter(rating => rating.id_rating !== id_rating)); // Elimina el evento de la lista local
+            alert('Valoración eliminada correctamente');
+        } catch (error) {
+            console.error('Error al eliminar el evento:', error);
+            alert('Hubo un error al intentar darte de baja.');
+        }
+    }
     return (
         <div className="p-5">
             <h1 className="text-2xl mb-4 ml-2">Valoraciones del evento: <strong>{nombreEvento()}</strong></h1>
@@ -60,14 +70,18 @@ const RatingDetail = () => {
                             <p><strong>Usuario:</strong> {rating.user.email}</p>
                             <p><strong>Valoración:</strong> <span className="text-yellow-500">{renderStars(rating.valoracion)}</span></p>
                             <p><strong>Comentario:</strong> {rating.comentario}</p>
+                            <button 
+                                className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                                onClick={() => handleDeleteRating(rating.id_rating)}
+                            >
+                                Eliminar valoracion
+                            </button>
                         </div>
                     )) 
                     : 
                     (<p className="ml-2">No hay valoraciones disponibles.</p>)
                 }
-                <button>
-                    
-                </button>
+                
         </div>
     );
 };
