@@ -35,9 +35,9 @@ const Navbar = () => {
         ) : (
           <NavLink to="/calendar" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Calendario</NavLink>
         )}
-        {isLoggedIn && (
+        {/* {isLoggedIn && (
           <NavLink to="/my-events" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Mis eventos</NavLink>
-        )}
+        )} */}
         {isAdmin && (
           <>
             <NavLink to="/rankings" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Ranking</NavLink>
