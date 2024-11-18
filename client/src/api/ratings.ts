@@ -12,3 +12,7 @@ export const getRatingsByEvent = async (id_evento: number) => {
   return response.data;
 }
 
+export const postRating = async (id_evento: number, valoracion: number, comentario: string) => {
+  const response = await axios.post(API_URL, { id_evento, valoracion, comentario }, { withCredentials: true });
+  return response.data;
+}

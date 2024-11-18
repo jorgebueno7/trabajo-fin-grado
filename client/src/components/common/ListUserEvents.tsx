@@ -51,17 +51,9 @@ const ListUserEvents = () => {
         }
     };
 
-    // const handleRatingEvent = async (id_evento: number) => {
-    //     if (user) {
-    //         try {
-    //             await ratingEvent(id_evento); // Llama a la API para calificar el evento
-    //             alert('Gracias por calificar el evento.');
-    //         } catch (error) {
-    //             console.error('Error al calificar el evento:', error);
-    //             alert('Hubo un error al intentar calificar el evento.');
-    //         }
-    //     }
-    // }
+    const navigateCreateRatingEvent = (id_evento: number) => {
+        navigate(`/create-rating/${id_evento}`);
+    };
 
     return (
         <div className="p-5">
@@ -87,10 +79,10 @@ const ListUserEvents = () => {
                             + Información del evento
                         </button>
                         <button
-                            onClick={() => navigateToEventDetail(event.id_evento)}
-                            className="mt-3 ml-3 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                            onClick={() => navigateCreateRatingEvent(event.id_evento)}
+                            className="mt-3 ml-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                         >
-                            + Información del evento
+                            Valorar evento
                         </button>
                     </div>
                     

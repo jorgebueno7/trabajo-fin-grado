@@ -44,9 +44,13 @@ const RatingDetail = () => {
         return `${filledStars}${emptyStars}`;
     };
 
+    const nombreEvento = () => {
+        return ratings.length > 0 ? ratings[0].Event.nombre : '';
+    }
+    
     return (
         <div className="p-5">
-            <h1 className="text-2xl font-bold mb-4 ml-2">Valoraciones de eventos</h1>
+            <h1 className="text-2xl mb-4 ml-2">Valoraciones del evento: <strong>{nombreEvento()}</strong></h1>
                 {ratings.length > 0 ? 
                     (ratings.map((rating) => 
                         <div key={rating.id_evento} className="border p-4 mb-4 ml-2 rounded-lg bg-white shadow-md">
