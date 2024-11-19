@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import UserContext from '../../context/UsersContext';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getRatingsByEvent, deleteRating } from '../../api/ratings';
 
 const RatingDetail = () => {
@@ -20,7 +20,13 @@ const RatingDetail = () => {
 
     const [ratings, setRatings] = useState<Rating[]>([]);
     const { id_evento } = useParams<{ id_evento: string }>(); // Obtener el id_evento de la URL
-    const { isLoggedIn, user } = useContext(UserContext);
+    const { isLoggedIn, user } = useContext(UserContext);4
+
+    const navigate = useNavigate();
+
+    const navigateToUpdateRating = (id_rating: number) => {
+        navigate(`/ratings/update/${id_rating}`);
+    }
 
     useEffect(() => {
         if (id_evento) {
@@ -60,6 +66,7 @@ const RatingDetail = () => {
             alert('Hubo un error al intentar darte de baja.');
         }
     }
+
     return (
         <div className="p-5">
             <h1 className="text-2xl mb-4 ml-2">Valoraciones del evento: <strong>{nombreEvento()}</strong></h1>
@@ -73,12 +80,20 @@ const RatingDetail = () => {
                             <p><strong>Valoración:</strong> <span className="text-yellow-500">{renderStars(rating.valoracion)}</span></p>
                             <p><strong>Comentario:</strong> {rating.comentario}</p>
                             { isLoggedIn && user?.email === rating.user.email? 
-                                <button 
-                                    className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                                    onClick={() => handleDeleteRating(rating.id_rating)}
-                                >
-                                    Eliminar valoracion
-                                </button> 
+                                (<div>
+                                    <button 
+                                        className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                                        onClick={() => handleDeleteRating(rating.id_rating)}
+                                    >
+                                        Eliminar valoracion
+                                    </button> 
+                                    <button 
+                                        className="mt-3 px-4 py-2 ml-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                        onClick={() => navigateToUpdateRating(rating.id_rating)}
+                                    >
+                                        Actualizar valoracion
+                                    </button>
+                                </div>)
                                 : 
                                 <></>
                             }

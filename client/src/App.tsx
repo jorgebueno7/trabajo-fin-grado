@@ -25,6 +25,7 @@ import RatingEvent from './components/common/RatingsEvent';
 import RatingDetail from './components/common/RatingDetail';
 import CreateRatingEvent from './components/common/CreateRatingEvent';
 import EventsBySportList from './components/common/EventsBySportList';
+import UpdateRatingEvent from './components/common/UpdateRatingEvent';
 
 import './css/index.css'
 
@@ -81,6 +82,7 @@ function RoutesWithNavbar() {
         <Route path="/ratings/:id_evento" element={<RatingDetail />} />
         <Route path="/create-rating/:id_evento" element={<CreateRatingEvent />} />
         <Route path="/events-by-sport/:id_deporte" element={<EventsBySportList />} />
+        <Route path="/ratings/update/:id_rating" element={<UpdateRatingEvent />} />
       </Routes>
     </div>
   );
