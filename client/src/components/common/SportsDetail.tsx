@@ -65,7 +65,7 @@ const SportDetail = () => {
                 <a href={`/sports/${sport.id_deporte}`}>
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{sport.nombre}</h5>
                 </a>
-                <hr />
+                <hr className='mb-2'/>
                 <p className="text-gray-700 dark:text-gray-400">Descripción: <strong>{sport.descripcion}</strong></p>
                 <p className="text-gray-700 dark:text-gray-400">Información: <strong>{sport.informacion}</strong></p>
                 <p className="text-gray-700 dark:text-gray-400">Categoría: <strong>{sport.categoria}</strong></p>

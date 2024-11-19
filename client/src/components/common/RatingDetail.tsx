@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import UserContext from '../../context/UsersContext';
 import { useParams } from 'react-router-dom';
 import { getRatingsByEvent, deleteRating } from '../../api/ratings';
 
@@ -19,6 +20,7 @@ const RatingDetail = () => {
 
     const [ratings, setRatings] = useState<Rating[]>([]);
     const { id_evento } = useParams<{ id_evento: string }>(); // Obtener el id_evento de la URL
+    const { isLoggedIn, user } = useContext(UserContext);
 
     useEffect(() => {
         if (id_evento) {
@@ -70,12 +72,16 @@ const RatingDetail = () => {
                             <p><strong>Usuario:</strong> {rating.user.email}</p>
                             <p><strong>Valoración:</strong> <span className="text-yellow-500">{renderStars(rating.valoracion)}</span></p>
                             <p><strong>Comentario:</strong> {rating.comentario}</p>
-                            <button 
-                                className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                                onClick={() => handleDeleteRating(rating.id_rating)}
-                            >
-                                Eliminar valoracion
-                            </button>
+                            { isLoggedIn && user?.email === rating.user.email? 
+                                <button 
+                                    className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                                    onClick={() => handleDeleteRating(rating.id_rating)}
+                                >
+                                    Eliminar valoracion
+                                </button> 
+                                : 
+                                <></>
+                            }
                         </div>
                     )) 
                     : 
