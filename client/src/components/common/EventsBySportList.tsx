@@ -99,6 +99,7 @@ const EventsBySportList = () => {
             console.error('Error al unirse al evento:', error);
         }
     };
+    
     return (
         <div className="p-6 ml-3">
             <h1 className="text-2xl mb-4 ml-2">Eventos asociados al deporte: {sport ? <strong>{sport.nombre}</strong> : ''}</h1>
@@ -122,12 +123,14 @@ const EventsBySportList = () => {
                         >
                             {userEvents.includes(event.id_evento) ? 'Unirse al evento' : 'Unirse al evento'}
                         </button>
-                        <button 
-                            onClick={() => navigateToMyEvents()}
-                            className="ml-3 inline-flex items-center px-3 py-2 mt-3 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700"
-                        >
-                            Consultar mis eventos
-                        </button>
+                        { isLoggedIn ? (
+                            <button 
+                                onClick={() => navigateToMyEvents()}
+                                className="ml-3 inline-flex items-center px-3 py-2 mt-3 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700"
+                            >
+                                Consultar mis eventos
+                            </button>) : (<></>)
+                        }
                     </div>
                     
                 ))
