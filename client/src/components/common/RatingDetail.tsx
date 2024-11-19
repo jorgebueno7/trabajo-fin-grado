@@ -27,7 +27,9 @@ const RatingDetail = () => {
     const navigateToUpdateRating = (id_rating: number) => {
         navigate(`/ratings/update/${id_rating}`);
     }
-
+    const navigateToEventDetail = (eventId: number) => {
+        navigate(`/events/${eventId}`);
+    }
     useEffect(() => {
         if (id_evento) {
             fetchEvents(Number(id_evento));
@@ -92,6 +94,12 @@ const RatingDetail = () => {
                                         onClick={() => navigateToUpdateRating(rating.id_rating)}
                                     >
                                         Actualizar valoracion
+                                    </button>
+                                    <button 
+                                        onClick={() => navigateToEventDetail(rating.id_evento)}
+                                        className="mt-3 px-4 py-2 ml-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                    >
+                                        Información del evento
                                     </button>
                                 </div>)
                                 : 

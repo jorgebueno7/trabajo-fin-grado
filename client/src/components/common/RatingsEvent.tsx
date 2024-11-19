@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getRatings } from '../../api/ratings';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -20,7 +21,12 @@ const RatingEvent = () => {
     }
 
     const [ratings, setRatings] = useState<Rating[]>([]);
+    const navigate = useNavigate();
 
+    const navigateToEventDetail = (eventId: number) => {
+        navigate(`/events/${eventId}`);
+    }
+    
     useEffect(() => {
         fetchEvents(); 
     }, []);
@@ -54,6 +60,12 @@ const RatingEvent = () => {
                             <p><strong>Usuario:</strong> {rating.user.email}</p>
                             <p><strong>Valoración:</strong> <span className="text-yellow-500">{renderStars(rating.valoracion)}</span></p>
                             <p><strong>Comentario:</strong> {rating.comentario}</p>
+                            <button 
+                                onClick={() => navigateToEventDetail(rating.id_evento)}
+                                className="inline-flex items-center px-3 py-2 mt-3 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700"
+                            >
+                                Información del evento
+                            </button>
                         </div>
                     )) 
                     : 
