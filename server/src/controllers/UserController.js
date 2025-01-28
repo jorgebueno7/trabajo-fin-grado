@@ -29,8 +29,76 @@ const getUserById = async (req, res) => {
     }
 }
 
+// const registroUsers = async (req, res) => {
+//     const { dni, nombre, apellidos, email, password, isAdminUser = false, 
+//         fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca } = req.body;
+//     if (!dni || !nombre || !apellidos || !email || !password || !fecha_nacimiento || 
+//         !telefono || !direccion || !altura || !peso || !deporte || !mejor_marca) {
+//         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+//     }
+//     const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+//     if (!passwordRegex.test(password)) {
+//         return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres, incluyendo al menos una mayúscula y un número.' });
+//     }
+//     try {
+//         if(isAdminUser){
+//             const admin = await users.findOne({ where: { isAdminUser: true } });
+//             if (admin) {
+//                 return res.status(401).json({ error: 'Ya existe un usuario administrador.' });
+//             }
+//         }
+//         const hashedPassword = await bcrypt.hash(password, 10);
+//         const usuario = await users.create({ dni, nombre, apellidos, email, password: hashedPassword, isAdminUser,             
+//             fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca, profile_complete: true
+//         });
+
+//         res.status(201).json({
+//             user: {
+//                 id: usuario.id,
+//                 dni: usuario.dni,
+//                 email: usuario.email,
+//                 nombre: usuario.nombre,
+//                 apellidos: usuario.apellidos,
+//                 profile_complete: usuario.profile_complete,
+//                 isAdminUser: usuario.isAdminUser,
+//                 fecha_nacimiento: usuario.fecha_nacimiento,
+//                 telefono: usuario.telefono,
+//                 direccion: usuario.direccion,
+//                 altura: usuario.altura,
+//                 peso: usuario.peso,
+//                 deporte: usuario.deporte,
+//                 mejor_marca: usuario.mejor_marca
+//             }
+//         });
+        
+//         const email_options = {
+//             from: 'sportly@events.com',
+//             to: email,
+//             subject: 'Gracias por registrarte en Sportly Events!',
+//             html: `
+//                 <h1>Hola ${nombre} 🙌</h1>
+//                 <p>Gracias por registrarte en Sportly Events! 🚴 ⚽ </p>
+//                 <p>Estamos felices de contar con tu presencia 
+//                     y de que puedas comenzar una nueva etapa en el mundo de los eventos deportivos!</p>
+//                 <br />
+//                 <p>Por favor, haga click en el siguiente enlace para confirmar su dirección de correo electrónico: 
+//                 <a href="http://localhost:5173/login">Confirmar Email</a></p>`
+//         };
+//         transporter.sendMail(email_options, (error, info) => {
+//             if (error) { return console.log(error); }
+//                 console.log('Email sent: ' + info.response);
+//         });
+//     } catch (error) {
+//         console.error(error);
+//         if (error.name === 'SequelizeUniqueConstraintError') {
+//             return res.status(409).json({ message: 'El DNI o email ya están en uso' });
+//         }
+//         res.status(500).json({ error: `ERROR_CREATE_USERS: ${error}` });
+//     }
+// }
+
 const registroUsers = async (req, res) => {
-    const { dni, nombre, apellidos, email, password, isAdminUser = false, 
+    const { dni, nombre, apellidos, email, password, isAdminUser = false, role = 'participante', 
         fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca } = req.body;
     if (!dni || !nombre || !apellidos || !email || !password || !fecha_nacimiento || 
         !telefono || !direccion || !altura || !peso || !deporte || !mejor_marca) {
@@ -40,6 +108,10 @@ const registroUsers = async (req, res) => {
     if (!passwordRegex.test(password)) {
         return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres, incluyendo al menos una mayúscula y un número.' });
     }
+    const allowedRoles = ['administrador', 'organizador', 'participante'];
+    if (!allowedRoles.includes(role)) {
+        return res.status(400).json({ error: 'El rol especificado no es válido.' });
+    }
     try {
         if(isAdminUser){
             const admin = await users.findOne({ where: { isAdminUser: true } });
@@ -48,7 +120,8 @@ const registroUsers = async (req, res) => {
             }
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        const usuario = await users.create({ dni, nombre, apellidos, email, password: hashedPassword, isAdminUser,             
+        const usuario = await users.create({ 
+            dni, nombre, apellidos, email, password: hashedPassword, isAdminUser, role,
             fecha_nacimiento, telefono, direccion, altura, peso, deporte, mejor_marca, profile_complete: true
         });
 
@@ -61,6 +134,7 @@ const registroUsers = async (req, res) => {
                 apellidos: usuario.apellidos,
                 profile_complete: usuario.profile_complete,
                 isAdminUser: usuario.isAdminUser,
+                role: usuario.role,
                 fecha_nacimiento: usuario.fecha_nacimiento,
                 telefono: usuario.telefono,
                 direccion: usuario.direccion,
@@ -70,7 +144,7 @@ const registroUsers = async (req, res) => {
                 mejor_marca: usuario.mejor_marca
             }
         });
-        
+
         const email_options = {
             from: 'sportly@events.com',
             to: email,
@@ -86,7 +160,7 @@ const registroUsers = async (req, res) => {
         };
         transporter.sendMail(email_options, (error, info) => {
             if (error) { return console.log(error); }
-                console.log('Email sent: ' + info.response);
+            console.log('Email sent: ' + info.response);
         });
     } catch (error) {
         console.error(error);
@@ -95,7 +169,8 @@ const registroUsers = async (req, res) => {
         }
         res.status(500).json({ error: `ERROR_CREATE_USERS: ${error}` });
     }
-}
+};
+
 
 const userAdminExists = async (req, res) => {
     try {
