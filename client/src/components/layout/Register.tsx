@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { getUsers } from '../../api/users';
+// import { getUsers } from '../../api/users';
 import { useNavigate } from 'react-router-dom';
 import { addUser } from '../../api/users';
 import UserContext from '../../context/UsersContext';
@@ -12,6 +12,7 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [role, setRole] = useState('participante');
     const [telefono, setTelefono] = useState('');
     const [direccion, setDireccion] = useState('');
     const [altura, setAltura] = useState('');
@@ -24,8 +25,8 @@ const Register = () => {
     const [lowercaseRequirement, setLowercaseRequirement] = useState(false);
     const [uppercaseRequirement, setUppercaseRequirement] = useState(false);
     const [isPasswordInputFocused, setIsPasswordInputFocused] = useState(false);
-    const [isAdminUser, setIsAdminUser] = useState(false);
-    const [isAdminExists, setIsAdminExists] = useState(false);
+    // const [isAdminUser, setIsAdminUser] = useState(false);
+    // const [isAdminExists, setIsAdminExists] = useState(false);
     const [formError, setFormError] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -34,17 +35,19 @@ const Register = () => {
         navigate('/confirm_login');
     };
 
-    const { isAdmin, setIsAdmin, setUser } = useContext(UserContext);
+    // const { isAdmin, setIsAdmin, setUser } = useContext(UserContext);
 
-    interface User {
-        isAdminUser: boolean;
-    }
+    const { setUser } = useContext(UserContext);
 
-    const fetchUsers = async () => {
-        const users = await getUsers();
-        const adminExists = users.some((user: User) => user.isAdminUser);
-        setIsAdminExists(adminExists);
-    };
+    // interface User {
+    //     isAdminUser: boolean;
+    // }
+
+    // const fetchUsers = async () => {
+    //     const users = await getUsers();
+    //     const adminExists = users.some((user: User) => user.isAdminUser);
+    //     setIsAdminExists(adminExists);
+    // };
 
     const comparePasswords = (password: string, repeatPassword: string) => {
         if (password !== repeatPassword) {
@@ -60,14 +63,15 @@ const Register = () => {
         setLowercaseRequirement(/[a-z]/.test(password));
         setUppercaseRequirement(/[A-Z]/.test(password));
         comparePasswords(password, repeatPassword);
-        fetchUsers();
+        // fetchUsers();
     }, [password, repeatPassword]);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setFormError('');
-        
-        if (!dni || !nombre || !apellidos || !email || !password || !repeatPassword || !telefono || !direccion || !altura || !peso || !deporte || !mejorMarca || !fechaNacimiento) {
+
+        console.log("Datos del formulario: ", dni, nombre, apellidos, email, password, repeatPassword, role, telefono, direccion, altura, peso, deporte, mejorMarca, fechaNacimiento);
+        if (!dni || !nombre || !apellidos || !email || !password || !repeatPassword || !role || !telefono || !direccion || !altura || !peso || !deporte || !mejorMarca || !fechaNacimiento) {
             setFormError('Todos los campos son obligatorios.');
             return;
         }
@@ -83,7 +87,8 @@ const Register = () => {
                 apellidos,
                 email,
                 password,
-                isAdminUser,
+                // isAdminUser,
+                role,
                 telefono,
                 direccion,
                 altura,
@@ -95,9 +100,9 @@ const Register = () => {
             setUser(response);
             console.log("Respuesta del registro del usuario: ", response);
 
-            if (isAdminUser) {
-                setIsAdmin(true);
-            }
+            // if (isAdminUser) {
+            //     setIsAdmin(true);
+            // }
 
             navigateConfirmLogin();
         } catch (error: any) {
@@ -234,7 +239,39 @@ const Register = () => {
                                 <p className="text-red-600 text-sm mt-2">{passwordError}</p>
                             )}
                         </div>
+
                         <div className="mb-5">
+                            <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Selecciona tu rol
+                            </label>
+                            <select 
+                                id="role" 
+                                value={role} 
+                                onChange={e => setRole(e.target.value)} 
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            >
+                                <option value="participante">Participante</option>
+                                <option value="organizador">Organizador</option>
+                            </select>
+                        </div>
+
+
+
+                        {/* <div className="mb-4 border-b mx-auto border-gray-200 dark:border-gray-700">
+                            <label htmlFor="user-type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo de usuario</label>
+                            <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500 dark:text-gray-400">
+                                <li className="me-2">
+                                    <a href="#" className="inline-block px-4 py-3 text-white bg-blue-600 rounded-lg active" aria-current="page">Tab 1</a>
+                                </li>
+                                <li className="me-2">
+                                    <a href="#"  className="inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white">Tab 2</a>
+                                </li>
+                            </ul>
+                        </div> */}
+
+
+
+                        {/* <div className="mb-5">
                             <label className="inline-flex items-center cursor-pointer">
                                 <input 
                                     type="checkbox" 
@@ -253,7 +290,7 @@ const Register = () => {
                                 <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                                 <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900">Administrador</span>
                             </label>
-                        </div>
+                        </div> */}
                         <button 
                             type="button" 
                             onClick={handleNext} 
