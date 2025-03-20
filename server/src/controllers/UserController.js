@@ -219,6 +219,7 @@ const loginUsers = async (req, res) => {
         const { email, password } = req.body;
         const usuario = await users.findOne({ where: { email } });
         console.log("Usuario encontrado:", usuario);
+        console.log("Email del usuario que está cerrando la sesión: " + req.session);
         if(usuario && (await bcrypt.compare(password, usuario.password))){
             console.log("Inicio de sesión exitoso para:", email);
             req.session.userId = usuario.id;
@@ -231,6 +232,7 @@ const loginUsers = async (req, res) => {
                     apellidos: usuario.apellidos,
                     profile_complete: usuario.profile_complete,
                     isAdminUser: usuario.isAdminUser,
+                    role: usuario.role,
                     fecha_nacimiento: usuario.fecha_nacimiento,
                     telefono: usuario.telefono,
                     direccion: usuario.direccion,

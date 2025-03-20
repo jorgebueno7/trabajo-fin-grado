@@ -10,6 +10,7 @@ export interface User {
   email: string;
   password: string;
   isAdminUser: boolean;
+  role: string;
   fecha_nacimiento: string;
   telefono: number;
   direccion: string;
@@ -63,10 +64,11 @@ export const UserProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
           withCredentials: true,
         });
         if (response.status === 200 && response.data.user) {
-          setUser(response.data.user);
+          const userData = { ...response.data.user}
+          setUser(userData);
           setLoggedIn(true);
-          setIsAdmin(response.data.user.isAdminUser); // Actualiza el estado de isAdmin aquí
-          setProfileComplete(response.data.user.profile_complete); // Actualiza el estado de profileComplete
+          setIsAdmin(userData.isAdminUser); // Actualiza el estado de isAdmin aquí
+          setProfileComplete(userData.profile_complete); // Actualiza el estado de profileComplete
         } else {
           setError('No se encontró usuario.');
         }

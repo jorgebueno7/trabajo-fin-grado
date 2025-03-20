@@ -1,5 +1,7 @@
 const user_event = require('../models/UserEvent');
 const event = require('../models/Event')
+const sport = require('../models/Sports');
+const user = require('../models/User');
 let queue = {};
 
 const getAllUserEvents = async (req, res) => {
@@ -26,26 +28,76 @@ const getUsersByEventId = async (req, res) => {
     }
 }
 
+// const getEventByUserLoggedIn = async (req, res) => {
+//     try {
+//         const userId = req.session.userId;
+//         if (!userId) {
+//             return res.status(401).json({ error: 'Unauthorized' });
+//         }
+//         const userEvents = await user_event.findAll({
+//             where: { id_usuario: userId },
+//             include: [{ model: event, include: [{ model: sport }] }],
+//         });
+//         if (userEvents.length > 0) {
+//             res.status(200).json(userEvents);
+//         }
+//         else{
+//             res.status(404).json({error: 'UserEvents with that id does not exist'})
+//         }
+//     } catch (error) {
+//         res.status(500).json({error: `ERROR_GET_EVENT_BY_USER_ID: ${error}`})
+//     }
+// }
+
 const getEventByUserLoggedIn = async (req, res) => {
     try {
         const userId = req.session.userId;
         if (!userId) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
+
         const userEvents = await user_event.findAll({
             where: { id_usuario: userId },
-            include: [{ model: event }],
+            include: [{ model: event, include: [{ model: sport }] }],
         });
-        if (userEvents.length > 0) {
-            res.status(200).json(userEvents);
-        }
-        else{
-            res.status(404).json({error: 'UserEvents with that id does not exist'})
-        }
+        res.status(200).json(userEvents || []); 
     } catch (error) {
-        res.status(500).json({error: `ERROR_GET_EVENT_BY_USER_ID: ${error}`})
+        res.status(500).json({ error: `ERROR_GET_EVENT_BY_USER_ID: ${error}` });
     }
-}
+};
+
+const getEventByOrganizer = async (req, res) => {
+    try {
+        const id_usuario = req.session.userId; // Obtiene el ID del usuario logueado
+        if (!id_usuario) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        // Obtiene el email del usuario logueado
+        const usuario = await user.findByPk(id_usuario);
+
+        if (!usuario) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Realiza la búsqueda de los eventos donde el createdBy coincida con el email del organizador
+        const userEvents = await event.findAll({
+            where: { createdBy: usuario.email }, // Filtra solo los eventos creados por el organizador
+            include: [{ model: sport }], // Incluye el deporte asociado al evento
+        });
+
+        // Si no se encuentran eventos, se retorna un mensaje indicando que no hay eventos
+        if (userEvents.length === 0) {
+            return res.status(404).json({ error: 'No events found for this organizer' });
+        }
+
+        // Devuelve los eventos encontrados
+        return res.status(200).json(userEvents);
+    } catch (error) {
+        return res.status(500).json({ error: `ERROR_GET_EVENT_BY_USER_ID: ${error}` });
+    }
+};
+
 
 const postUserEvent = async (req, res) => {
     try {
@@ -158,4 +210,4 @@ const deleteUserEvent = async (req, res) => {
 }
 
 
-module.exports = { getAllUserEvents, getUsersByEventId, getEventByUserLoggedIn, postUserEvent, putUserEvent, deleteUserEvent};
+module.exports = { getAllUserEvents, getUsersByEventId, getEventByUserLoggedIn, postUserEvent, putUserEvent, deleteUserEvent, getEventByOrganizer };

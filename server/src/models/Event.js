@@ -45,8 +45,21 @@ Event.init({
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      clasificacion: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      estado: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: 'sin_comenzar',
+      },
       id_usuario_espera: {
         type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      createdBy: {
+        type: DataTypes.STRING,
         allowNull: true,
       }
 }, {

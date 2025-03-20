@@ -22,6 +22,11 @@ export const putEvent = async (id: number) => {
   return response.data;
 }
 
+export const putEventStatus = async (id: number, eventData: {estado: string}) => {
+  const response = await axios.put(`${API_URL}/${id}`, eventData);
+  return response.data;
+}
+
 export const deleteEvent = async (id: number) => {
   const response = await axios.delete(`${API_URL}/${id}`);
   return response.data;

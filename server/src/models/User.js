@@ -153,8 +153,9 @@ Users.init({
         type: DataTypes.STRING, 
         allowNull: false,
     },
-    role: {  // NUEVO CAMPO
-        type: DataTypes.ENUM('administrador', 'organizador', 'participante'),
+    role: {
+        // type: DataTypes.ENUM('administrador', 'organizador', 'participante'),
+        type: DataTypes.STRING, 
         allowNull: false,
         defaultValue: 'participante',
     },
