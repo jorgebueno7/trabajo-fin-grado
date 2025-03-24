@@ -51,6 +51,7 @@ const updateSport = async (req, res) => {
 const deleteSport = async (req, res) => {
     try {
         const { id } = req.params;
+        await event.destroy({ where: { id_deporte: id } }); // Elimina todos los eventos asociados a ese deporte
         await sport.destroy({ where: { id_deporte: id } });
         res.status(200).json({message: 'Sport deleted successfully'});
     } catch (error) {

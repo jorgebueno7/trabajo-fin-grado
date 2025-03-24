@@ -353,13 +353,31 @@ const logout = async (req, res) => {
 const updateUserById = async (req, res) => {
     try {
         const { id } = req.params;
-        const { dni, nombre, apellidos, email, password } = req.body;
-        users.update({ dni, nombre, apellidos, email, password }, { where: { id } });
-        res.status(200).json({message: 'User updated successfully'})
+        const { dni, nombre, apellidos, email, password, telefono, direccion, altura, peso, deporte, mejor_marca, role, fecha_nacimiento } = req.body;
+        await users.update(
+            { 
+                dni, 
+                nombre, 
+                apellidos, 
+                email, 
+                password, 
+                telefono, 
+                direccion, 
+                altura, 
+                peso, 
+                deporte, 
+                mejor_marca, 
+                role, 
+                fecha_nacimiento 
+            },
+            { where: { id } }
+        );
+        res.status(200).json({ message: 'User updated successfully' });
     } catch (error) {
         res.status(500).json({ error: `ERROR_UPDATE_USER: ${error}` });
     }
 }
+
 const deleteUserById = async (req, res) => {
     try {
         const { id } = req.params;

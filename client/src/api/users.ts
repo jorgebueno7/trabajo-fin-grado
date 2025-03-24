@@ -7,7 +7,7 @@ export const getUsers = async () => {
   return response.data;
 };
 
-export const getUserById = async (id: string) => {
+export const getUserById = async (id: number) => {
   const response = await axios.get(API_URL + '/users/' + id);
   return response.data;
 };
@@ -37,6 +37,16 @@ export const updateProfile = async (user: any) => {
 
 export const deleteProfile = async () => {
   const response = await axios.delete(API_URL + '/delete-profile', { withCredentials: true });
+  return response.data;
+}
+
+export const deleteUserById = async (id: number) => {
+  const response = await axios.delete(API_URL + '/users/' + id);
+  return response.data;
+}
+
+export const updateUserById = async (id: number, user: any) => {
+  const response = await axios.put(API_URL + '/users/' + id, user);
   return response.data;
 }
 

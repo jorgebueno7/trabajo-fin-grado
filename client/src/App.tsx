@@ -8,12 +8,15 @@ import Navbar from './components/layout/Navbar';
 import Users from './components/common/UsersList';
 import Sports from './components/common/SportsList';
 import Events from './components/common/EventsList';
+import UpdateEvent from './components/common/UpdateEvent'
 import UserEvents from './components/common/UserEventsList';
+import UpdateUser from './components/common/UpdateUser';
 import Ratings from './components/common/RatingList';
 import Rankings from './components/common/RankingList';
 import Login from './components/layout/Login';
 import Register from './components/layout/Register';
 import SportDetail from './components/common/SportsDetail';
+import UpdateSport from './components/common/UpdateSport';
 import EventDetail from './components/common/EventsDetail';
 import UserCalendar from './components/layout/UserCalendar';
 import GlobalCalendar from './components/layout/GlobalCalendar';
@@ -61,10 +64,13 @@ function RoutesWithNavbar() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/users" element={<Users />} />
+        <Route path="/update-user/:id" element={<UpdateUser />} />
         <Route path="/sports" element={<Sports />} />
         <Route path="/sports/:id" element={<SportDetail />} />
+        <Route path="/update-sport" element={<UpdateSport />} />
         <Route path="/events" element={<Events />} />
         <Route path="/events/:id" element={<EventDetail />} />
+        <Route path="/update-event" element={< UpdateEvent/>} />
         <Route path="/user_events" element={<UserEvents />} />
         <Route path="/ratings" element={<Ratings />} />
         <Route path="/rankings" element={<Rankings />} />

@@ -26,3 +26,8 @@ export const getEventsBySport = async (id_deporte: number) => {
   const response = await axios.get(`${API_URL}/events-from-sport/${id_deporte}`);
   return response.data;
 };
+
+export const deleteSport = async (id: number) => {
+  const response = await axios.delete(`${API_URL}/${id}`);
+  return response.data;
+}

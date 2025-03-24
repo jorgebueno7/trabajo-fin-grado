@@ -4,9 +4,10 @@ import UserContext from '../context/UsersContext';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
-import { deleteProfile } from '../api/users';
 import { getUserEvents, getEventsByOrganizer } from '../api/userEvent';
-import { putEventStatus } from '../api/events';
+import { putEventStatus, getEvents, deleteEvent } from '../api/events';
+import { getSports, deleteSport } from '../api/sports'
+import { getUsers, deleteUserById } from '../api/users'
 
 const ProfilePage = () => {  
     interface Event {
@@ -42,9 +43,39 @@ const ProfilePage = () => {
         };
     }
 
+    interface AdminEvent {
+        id_evento: number;
+        id_deporte: number;
+        nombre: string;
+    }
+
+    interface AdminSport {
+        id_deporte: number;
+        nombre: string;
+    }
+    interface User {
+        id: number;
+        dni: string;
+        nombre: string;
+        apellidos: string;
+        email: string;
+        role: string;
+        fecha_nacimiento: string;
+        telefono: number;
+        direccion: string;
+        altura: string;
+        peso: string;
+        deporte: string;
+        mejor_marca: string;
+    }
+
     const { user } = useContext(UserContext);
     const [events, setEvents] = useState<Event[]>([]);
     const [eventsOrganizer, setEventsOrganizer] = useState<EventOrganizer[]>([]);
+    const [allEvents, setAllEvents] = useState<AdminEvent[]>([]);
+    const [allSports, setAllSports] = useState<AdminSport[]>([]);
+    const [usuarios, setUsuarios] = useState<User[]>([]);
+    const [activeTab, setActiveTab] = useState<'eventos' | 'deportes'>('eventos');
 
     const rolUsuario = user?.role;
 
@@ -53,13 +84,33 @@ const ProfilePage = () => {
         navigate('/update-profile');
     };
 
+    const navigateToUpdateEvent = () => {
+        navigate('/update-event');
+    };
+
+    const navigateToUpdateSport = () => {
+        navigate('/update-sport');
+    };
+
+    const navigateToUpdateUser = (id: number) => {
+        navigate(`/update-user/${id}`);
+    };
+
+    const navigateToEventDetail = (id_evento: number) => {
+        navigate(`/events/${id_evento}`);
+    };
+
+    const navigateToSportDetail = (id_deporte: number) => {
+        navigate(`/sports/${id_deporte}`);
+    }
+
     const fetchUserEvents = async () => {
         try {
             const userEvents = await getUserEvents();
             setEvents(userEvents);
         } catch (error) {
             console.error('Error obteniendo eventos:', error);
-            alert('Hubo un error al obtener los eventos. Inténtalo de nuevo más tarde.');
+            // alert('Hubo un error al obtener los eventos. Inténtalo de nuevo más tarde.');
         }
     };
 
@@ -69,18 +120,90 @@ const ProfilePage = () => {
             setEventsOrganizer(userEvents);
         } catch (error) {
             console.error('Error obteniendo eventos:', error);
-            alert('Hubo un error al obtener los eventos. Inténtalo de nuevo más tarde.');
+            // alert('Hubo un error al obtener los eventos. Inténtalo de nuevo más tarde.');
         }
     };
+
+    const fetchAllEvents = async () => {
+        try {
+            const events = await getEvents();
+            setAllEvents(events);
+        } catch (error) {
+            console.error('Error obteniendo eventos:', error);
+        }
+    }
+
+    const fetchAllSports = async () => {
+        try {
+            const sports = await getSports();
+            setAllSports(sports);
+        } catch (error) {
+            console.error('Error obteniendo deportes:', error);
+        }
+    }
+
+    const fetchAllUsers = async () => {
+        try {
+            const users = await getUsers();
+            setUsuarios(users);
+        } catch (error) {
+            console.error('Error obteniendo usuarios:', error);
+        }
+    }
+
+    const handleDeleteEvent = async (id_evento: number) => {
+        if (window.confirm("¿Estás seguro de que deseas eliminar este evento?")) {
+            try {
+                await deleteEvent(id_evento);
+                setAllEvents(allEvents.filter(event => event.id_evento !== id_evento)); // Eliminar del estado
+            } catch (error) {
+                console.error("Error al eliminar evento:", error);
+                alert("Hubo un problema al eliminar el evento");
+            }
+        }
+    };
+
+    const handleDeleteSport = async (id_deporte: number) => {
+        if (window.confirm("¿Estás seguro de que deseas eliminar este deporte?")) {
+            try {
+                await deleteSport(id_deporte);
+                setAllSports(allSports.filter(sport => sport.id_deporte !== id_deporte));
+                setAllEvents(allEvents.filter(event => event.id_deporte !== id_deporte));
+                alert("Se han eliminado el deporte y los eventos asociados");
+            } catch (error) {
+                console.error("Error al eliminar deporte:", error);
+                alert("Hubo un problema al eliminar el deporte");
+            }
+        }
+    };
+
+    const handleDeleteUser = async (id: number) => {
+        if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+            try {
+                await deleteUserById(id);
+                setUsuarios(usuarios.filter(user => user.id !== id));
+            } catch (error) {
+                console.error("Error al eliminar usuario:", error);
+                alert("Hubo un problema al eliminar el usuario");
+            }
+        }
+    }
 
     useEffect(() => {
         if(rolUsuario === 'participante') {
             fetchUserEvents();
-        } else {
+        } else if (rolUsuario === 'organizador') {
             fetchEventsByOrganizer();
+        } else {
+            fetchAllEvents();
         }
     }, 
     [user]);
+
+    useEffect(() => {
+        fetchAllSports();
+        fetchAllUsers();
+    })
 
     const getNextState = (currentState: string) => {
         if (currentState === 'sin_comenzar') return 'en_curso';
@@ -123,28 +246,200 @@ const ProfilePage = () => {
             { rolUsuario === 'administrador' ? 
                 (
                     <>
-                        <div className="grid grid-cols-3 gap-4">
+                        <div className="grid grid-cols-3 gap-4 mt-8 p-2">
                             <div>
-                                <a className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm 
-                                    hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 grid-cols-1 ml-8">
-                                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{user?.nombre} {user?.apellidos}</h5>
-                                    <p className="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                                <a className="block max-w p-4 bg-white border border-gray-200 rounded-lg shadow-sm 
+                                    hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                                    <h3 className="mb-4 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{user?.nombre} {user?.apellidos}</h3>
+                                    <hr></hr>
+                                    <div className='mt-4'>
+                                        <p><strong>Email: </strong>{user?.email}</p>
+                                        <p><strong>Fecha de nacimiento: </strong>{dayjs.utc(user?.fecha_nacimiento).format('DD-MM-YYYY')}</p>
+                                        <p><strong>Teléfono: </strong>{user?.telefono}</p>
+                                        <p><strong>Dirección: </strong>{user?.direccion}</p>
+                                        <p><strong>Altura: </strong>{user?.altura} cm</p>
+                                        <p><strong>Peso: </strong>{user?.peso} kg</p>
+                                        <p><strong>Deporte favorito: </strong>{user?.deporte}</p>
+                                        <p><strong>Mejor marca: </strong>{user?.mejor_marca}</p>
+                                        <button 
+                                            onClick={navigateToUpdateProfile}
+                                            className="w-30 mt-3 text-white bg-green-700 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium 
+                                                rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" 
+                                        >
+                                            Actualizar perfil
+                                        </button>
+                                    </div>
                                 </a>
                             </div>
-                            <div>
-                                <a className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm 
-                                    hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 grid-cols-1 ml-8">
-                                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{user?.nombre} {user?.apellidos}</h5>
-                                    <p className="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                            <div className="col-span-2">
+                                <a className="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow-sm 
+                                    hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 mr-2">
+                                    {/* Selección de pestañas */}
+                                    <div className="flex border-b mb-4">
+                                        <button 
+                                            className={`px-4 py-2 ${activeTab === 'eventos' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'}`}
+                                            onClick={() => setActiveTab('eventos')}
+                                        >
+                                            Listado de eventos
+                                        </button>
+                                        <button 
+                                            className={`px-4 py-2 ml-4 ${activeTab === 'deportes' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'}`}
+                                            onClick={() => setActiveTab('deportes')}
+                                        >
+                                            Listado de deportes
+                                        </button>
+                                    </div>
+                                    {/* Eventos */}
+                                    {activeTab === 'eventos' && 
+                                        (<>
+                                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-3">
+                                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                    <tr>
+                                                        <th scope="col" className="px-6 py-3">Evento</th>
+                                                        <th scope="col" className="px-6 py-3">Modificar evento</th>
+                                                        <th scope="col" className="px-6 py-3">Eliminar evento</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {allEvents.map((event) => (
+                                                        <tr key={event.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                                            <button 
+                                                                onClick={() => navigateToEventDetail(event.id_evento)} 
+                                                                className="px-6 py-4 text-blue-600 hover:underline"
+                                                            >
+                                                                {event.nombre}
+                                                            </button>
+                                                            <td className="px-6 py-4">
+                                                                <button 
+                                                                    onClick={navigateToUpdateEvent}
+                                                                    className="w-30 text-white bg-blue-800 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
+                                                                        rounded-lg text-sm px-2 py-0.5 text-center dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-800" 
+                                                                >
+                                                                    Modificar evento
+                                                                </button>
+                                                            </td>
+                                                            <td className="px-6 py-4">
+                                                                <button 
+                                                                    onClick={() => handleDeleteEvent(event.id_evento)}
+                                                                    className="w-30 text-white bg-red-800 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium 
+                                                                        rounded-lg text-sm px-2 py-0.5 text-center dark:bg-red-700 dark:hover:bg-red-800 dark:focus:ring-red-800" 
+                                                                >
+                                                                    Eliminar evento
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </>)
+                                    }
+                                    {/* Deportes */}
+                                    {activeTab === 'deportes' &&
+                                        (<>
+                                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-3">
+                                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                    <tr>
+                                                        <th scope="col" className="px-6 py-3">Deporte</th>
+                                                        <th scope="col" className="px-6 py-3">Modificar deporte</th>
+                                                        <th scope="col" className="px-6 py-3">Eliminar deporte</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {allSports.map((sport) => (
+                                                        <tr key={sport.id_deporte} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                                            <button 
+                                                                onClick={() => navigateToSportDetail(sport.id_deporte)} 
+                                                                className="px-6 py-4 text-blue-600 hover:underline"
+                                                            >
+                                                                {sport.nombre}
+                                                            </button>
+                                                            <td className="px-6 py-4">
+                                                                <button 
+                                                                    onClick={navigateToUpdateSport}
+                                                                    className="w-30 text-white bg-blue-800 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
+                                                                        rounded-lg text-sm px-2 py-0.5 text-center dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-800" 
+                                                                >
+                                                                    Modificar deporte
+                                                                </button>
+                                                            </td>
+                                                            <td className="px-6 py-4">
+                                                                <button 
+                                                                    onClick={() => handleDeleteSport(sport.id_deporte)}
+                                                                    className="w-30 text-white bg-red-800 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium 
+                                                                        rounded-lg text-sm px-2 py-0.5 text-center dark:bg-red-700 dark:hover:bg-red-800 dark:focus:ring-red-800" 
+                                                                >
+                                                                    Eliminar deporte
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </>)
+                                    }
                                 </a>
                             </div>
-                            <div>
-                                <a className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm 
-                                    hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 grid-cols-1 ml-8">
-                                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{user?.nombre} {user?.apellidos}</h5>
-                                    <p className="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
-                                </a>
-                            </div>
+                        </div>
+                        {/* Listado de usuarios */}
+                        <div>
+                            <h1 className="mt-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white ml-8">Usuarios de la aplicación</h1>
+                            <hr></hr>
+                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ml-4 mt-3">
+                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3">DNI</th>
+                                        <th scope="col" className="px-6 py-3">Nombre</th>
+                                        <th scope="col" className="px-6 py-3">Apellido</th>
+                                        <th scope="col" className="px-6 py-3">Email</th>
+                                        <th scope="col" className="px-6 py-3">Fecha de nacimiento</th>
+                                        <th scope="col" className="px-6 py-3">Rol</th>
+                                        <th scope="col" className="px-6 py-3">Teléfono</th>
+                                        <th scope="col" className="px-6 py-3">Dirección</th>
+                                        <th scope="col" className="px-6 py-3">Altura (cm)</th>
+                                        <th scope="col" className="px-6 py-3">Peso (kg)</th>
+                                        <th scope="col" className="px-6 py-3">Deporte</th>
+                                        <th scope="col" className="px-6 py-3">Modificar usuario</th>
+                                        <th scope="col" className="px-6 py-3">Eliminar usuario</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {usuarios.map((user) => (
+                                        <tr key={user.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                            <td className="px-6 py-4">{user.dni}</td>
+                                            <td className="px-6 py-4">{user.nombre}</td>
+                                            <td className="px-6 py-4">{user.apellidos}</td>
+                                            <td className="px-6 py-4">{user.email}</td>
+                                            <td className="px-6 py-4">{dayjs.utc(user.fecha_nacimiento).format('DD-MM-YYYY')}</td>
+                                            <td className="px-6 py-4">{user.role}</td>
+                                            <td className="px-6 py-4">{user.telefono}</td>
+                                            <td className="px-6 py-4">{user.direccion}</td>
+                                            <td className="px-6 py-4">{user.altura}</td>
+                                            <td className="px-6 py-4">{user.peso}</td>
+                                            <td className="px-6 py-4">{user.deporte}</td>
+                                            <td className="px-6 py-4">
+                                                <button 
+                                                    onClick={() => navigateToUpdateUser(user.id)}
+                                                    className="w-30 text-white bg-blue-800 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
+                                                        rounded-lg text-sm px-2 py-0.5 text-center dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-800" 
+                                                    >
+                                                        Modificar usuario
+                                                </button>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <button 
+                                                    onClick={() => handleDeleteUser(user.id)}
+                                                    className="w-30 text-white bg-red-800 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium 
+                                                        rounded-lg text-sm px-2 py-0.5 text-center dark:bg-red-700 dark:hover:bg-red-800 dark:focus:ring-red-800" 
+                                                >
+                                                    Eliminar usuario
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </>
                 ) 
