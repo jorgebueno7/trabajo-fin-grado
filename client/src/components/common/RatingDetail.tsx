@@ -19,7 +19,7 @@ const RatingDetail = () => {
     }
 
     const [ratings, setRatings] = useState<Rating[]>([]);
-    const { id_evento } = useParams<{ id_evento: string }>(); // Obtener el id_evento de la URL
+    const { id_evento } = useParams(); // Obtener el id_evento de la URL
     const { isLoggedIn, user } = useContext(UserContext);4
 
     const navigate = useNavigate();

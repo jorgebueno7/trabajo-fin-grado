@@ -8,6 +8,7 @@ import { getUserEvents, getEventsByOrganizer } from '../api/userEvent';
 import { putEventStatus, getEvents, deleteEvent } from '../api/events';
 import { getSports, deleteSport } from '../api/sports'
 import { getUsers, deleteUserById } from '../api/users'
+import { getRatings, deleteRating } from '../api/ratings' 
 
 const ProfilePage = () => {  
     interface Event {
@@ -53,6 +54,17 @@ const ProfilePage = () => {
         id_deporte: number;
         nombre: string;
     }
+
+    interface AdminRating {
+        id_valoracion: number;
+        id_evento: number;
+        id_usuario: number;
+        valoracion: number;
+        comentario: string;
+        Event: {
+            nombre: string;
+        };
+    }
     interface User {
         id: number;
         dni: string;
@@ -73,9 +85,10 @@ const ProfilePage = () => {
     const [events, setEvents] = useState<Event[]>([]);
     const [eventsOrganizer, setEventsOrganizer] = useState<EventOrganizer[]>([]);
     const [allEvents, setAllEvents] = useState<AdminEvent[]>([]);
-    const [allSports, setAllSports] = useState<AdminSport[]>([]);
+    const [allSports, setAllSports] = useState<AdminSport[]>([]); 
+    const [allRatings, setAllRatings] = useState<AdminRating[]>([]); 
     const [usuarios, setUsuarios] = useState<User[]>([]);
-    const [activeTab, setActiveTab] = useState<'eventos' | 'deportes'>('eventos');
+    const [activeTab, setActiveTab] = useState<'eventos' | 'deportes' | 'valoraciones'>('eventos');
 
     const rolUsuario = user?.role;
 
@@ -96,12 +109,20 @@ const ProfilePage = () => {
         navigate(`/update-user/${id}`);
     };
 
+    const navigateToUpdateEventRating = (id: number) => {
+        navigate(`/ratings/update/${id}`)
+    }
+
     const navigateToEventDetail = (id_evento: number) => {
         navigate(`/events/${id_evento}`);
     };
 
     const navigateToSportDetail = (id_deporte: number) => {
         navigate(`/sports/${id_deporte}`);
+    }
+
+    const navigateToRatingDetail = (id_evento: number) => {
+        navigate(`/ratings/${id_evento}`);
     }
 
     const fetchUserEvents = async () => {
@@ -151,6 +172,15 @@ const ProfilePage = () => {
         }
     }
 
+    const fetchAllRatings = async () => {
+        try {
+            const ratings = await getRatings();
+            setAllRatings(ratings);
+        } catch (error) {
+            console.error('Error obteniendo valoraciones:', error);
+        }
+    }
+
     const handleDeleteEvent = async (id_evento: number) => {
         if (window.confirm("¿Estás seguro de que deseas eliminar este evento?")) {
             try {
@@ -189,6 +219,17 @@ const ProfilePage = () => {
         }
     }
 
+    const handleDeleteRating = async (id: number) => {
+        if (window.confirm("¿Estás seguro de que deseas eliminar esta valoración?")) {
+            try {
+                await deleteRating(id);
+                setAllRatings(allRatings.filter(rating => rating.id_valoracion !== id));
+            } catch (error) {
+                console.error("Error al eliminar valoración:", error);
+                alert("Hubo un problema al eliminar la valoración");
+            }
+        }
+    }
     useEffect(() => {
         if(rolUsuario === 'participante') {
             fetchUserEvents();
@@ -203,12 +244,21 @@ const ProfilePage = () => {
     useEffect(() => {
         fetchAllSports();
         fetchAllUsers();
+        fetchAllRatings();
     })
 
     const getNextState = (currentState: string) => {
         if (currentState === 'sin_comenzar') return 'en_curso';
         if (currentState === 'en_curso') return 'finalizado';
         return null; // Si ya está finalizado, no cambia
+    };
+
+    // Generar estrellas según la valoración
+    const renderStars = (ratingValue: number) => {
+        const maxStars = 5; // Máximo de estrellas
+        const filledStars = '★'.repeat(ratingValue); // Estrellas llenas
+        const emptyStars = '☆'.repeat(maxStars - ratingValue); // Estrellas vacías
+        return `${filledStars}${emptyStars}`;
     };
     
     const updateEventState = (updatedEvent: Event) => {
@@ -287,6 +337,12 @@ const ProfilePage = () => {
                                             onClick={() => setActiveTab('deportes')}
                                         >
                                             Listado de deportes
+                                        </button>
+                                        <button 
+                                            className={`px-4 py-2 ${activeTab === 'valoraciones' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'}`}
+                                            onClick={() => setActiveTab('valoraciones')}
+                                        >
+                                            Listado de valoraciones
                                         </button>
                                     </div>
                                     {/* Eventos */}
@@ -371,6 +427,55 @@ const ProfilePage = () => {
                                                                         rounded-lg text-sm px-2 py-0.5 text-center dark:bg-red-700 dark:hover:bg-red-800 dark:focus:ring-red-800" 
                                                                 >
                                                                     Eliminar deporte
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </>)
+                                    }
+                                    {/* Valoraciones */}
+                                    {activeTab === 'valoraciones' &&
+                                        (<>
+                                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-3">
+                                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                    <tr>
+                                                        <th scope="col" className="px-6 py-3">Evento</th>
+                                                        <th scope="col" className="px-6 py-3">Valoración</th>
+                                                        <th scope="col" className="px-6 py-3">Modificar valoración</th>
+                                                        <th scope="col" className="px-6 py-3">Eliminar valoración</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {allRatings.map((rating) => (
+                                                        <tr key={rating.id_valoracion} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                                            <td className="px-6 py-4">
+                                                                {rating.Event.nombre}
+                                                            </td>
+                                                            <button 
+                                                                onClick={() => navigateToRatingDetail(rating.id_evento)} 
+                                                                className="px-6 py-4 text-yellow-600 hover:underline"
+                                                            >
+                                                                {renderStars(rating.valoracion)}
+                                                            </button>
+                                                            <td className="px-6 py-4">
+                                                                <button 
+                                                                    onClick={() => navigateToUpdateEventRating(rating.id_evento)}
+                                                                    className="w-30 text-white bg-blue-800 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
+                                                                        rounded-lg text-sm px-2 py-0.5 text-center dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-800" 
+                                                                >
+                                                                    Modificar evento
+                                                                </button>
+                                                            </td>
+                                                            <td className="px-6 py-4">
+                                                                <button 
+                                                                    onClick={() => handleDeleteRating(rating.id_valoracion)}
+                                                                    className="w-30 text-white bg-red-800 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium 
+                                                                        rounded-lg text-sm px-2 py-0.5 text-center dark:bg-red-700 dark:hover:bg-red-800 dark:focus:ring-red-800" 
+                                                                >
+                                                                    Eliminar evento
                                                                 </button>
                                                             </td>
                                                         </tr>
