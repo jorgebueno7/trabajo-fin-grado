@@ -384,9 +384,8 @@ const ProfilePage = () => {
                         </div>
                         {/* Listado de usuarios */}
                         <div>
-                            <h1 className="mt-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white ml-8">Usuarios de la aplicación</h1>
-                            <hr></hr>
-                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ml-4 mt-3">
+                            <h1 className="mt-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white ml-4">Usuarios de la aplicación</h1>
+                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-3">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" className="px-6 py-3">DNI</th>
