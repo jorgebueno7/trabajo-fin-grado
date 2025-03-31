@@ -67,7 +67,7 @@ function RoutesWithNavbar() {
         <Route path="/update-user/:id" element={<UpdateUser />} />
         <Route path="/sports" element={<Sports />} />
         <Route path="/sports/:id" element={<SportDetail />} />
-        <Route path="/update-sport" element={<UpdateSport />} />
+        <Route path="/update-sport/:id_deporte" element={<UpdateSport />} />
         <Route path="/events" element={<Events />} />
         <Route path="/events/:id" element={<EventDetail />} />
         <Route path="/update-event" element={< UpdateEvent/>} />

@@ -101,8 +101,8 @@ const ProfilePage = () => {
         navigate('/update-event');
     };
 
-    const navigateToUpdateSport = () => {
-        navigate('/update-sport');
+    const navigateToUpdateSport = (id_deporte: number) => {
+        navigate(`/update-sport/${id_deporte}`);
     };
 
     const navigateToUpdateUser = (id: number) => {
@@ -288,8 +288,6 @@ const ProfilePage = () => {
             alert('Hubo un error al actualizar el evento. Inténtalo de nuevo más tarde.');
         }
     };
-
-    
     
     return (
         <>
@@ -333,7 +331,7 @@ const ProfilePage = () => {
                                             Listado de eventos
                                         </button>
                                         <button 
-                                            className={`px-4 py-2 ml-4 ${activeTab === 'deportes' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'}`}
+                                            className={`px-4 py-2 ${activeTab === 'deportes' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'}`}
                                             onClick={() => setActiveTab('deportes')}
                                         >
                                             Listado de deportes
@@ -413,7 +411,7 @@ const ProfilePage = () => {
                                                             </button>
                                                             <td className="px-6 py-4">
                                                                 <button 
-                                                                    onClick={navigateToUpdateSport}
+                                                                    onClick={() => navigateToUpdateSport(Number(sport.id_deporte))}
                                                                     className="w-30 text-white bg-blue-800 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
                                                                         rounded-lg text-sm px-2 py-0.5 text-center dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-800" 
                                                                 >
@@ -466,7 +464,7 @@ const ProfilePage = () => {
                                                                     className="w-30 text-white bg-blue-800 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
                                                                         rounded-lg text-sm px-2 py-0.5 text-center dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-800" 
                                                                 >
-                                                                    Modificar evento
+                                                                    Modificar valoración
                                                                 </button>
                                                             </td>
                                                             <td className="px-6 py-4">
@@ -475,7 +473,7 @@ const ProfilePage = () => {
                                                                     className="w-30 text-white bg-red-800 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium 
                                                                         rounded-lg text-sm px-2 py-0.5 text-center dark:bg-red-700 dark:hover:bg-red-800 dark:focus:ring-red-800" 
                                                                 >
-                                                                    Eliminar evento
+                                                                    Eliminar valoración
                                                                 </button>
                                                             </td>
                                                         </tr>
