@@ -56,7 +56,7 @@ const ProfilePage = () => {
     }
 
     interface AdminRating {
-        id_valoracion: number;
+        id_rating: number;
         id_evento: number;
         id_usuario: number;
         valoracion: number;
@@ -109,8 +109,8 @@ const ProfilePage = () => {
         navigate(`/update-user/${id}`);
     };
 
-    const navigateToUpdateEventRating = (id: number) => {
-        navigate(`/ratings/update/${id}`)
+    const navigateToUpdateEventRating = (id_rating: number) => {
+        navigate(`/ratings/update/${id_rating}`)
     }
 
     const navigateToEventDetail = (id_evento: number) => {
@@ -121,8 +121,8 @@ const ProfilePage = () => {
         navigate(`/sports/${id_deporte}`);
     }
 
-    const navigateToRatingDetail = (id_evento: number) => {
-        navigate(`/ratings/${id_evento}`);
+    const navigateToRatingDetail = (id_rating: number) => {
+        navigate(`/ratings/${id_rating}`);
     }
 
     const fetchUserEvents = async () => {
@@ -223,13 +223,14 @@ const ProfilePage = () => {
         if (window.confirm("¿Estás seguro de que deseas eliminar esta valoración?")) {
             try {
                 await deleteRating(id);
-                setAllRatings(allRatings.filter(rating => rating.id_valoracion !== id));
+                setAllRatings(allRatings.filter(rating => rating.id_rating !== id));
             } catch (error) {
                 console.error("Error al eliminar valoración:", error);
                 alert("Hubo un problema al eliminar la valoración");
             }
         }
     }
+
     useEffect(() => {
         if(rolUsuario === 'participante') {
             fetchUserEvents();
@@ -448,12 +449,12 @@ const ProfilePage = () => {
                                                 </thead>
                                                 <tbody>
                                                     {allRatings.map((rating) => (
-                                                        <tr key={rating.id_valoracion} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                                        <tr key={rating.id_rating} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                                             <td className="px-6 py-4">
                                                                 {rating.Event.nombre}
                                                             </td>
                                                             <button 
-                                                                onClick={() => navigateToRatingDetail(rating.id_evento)} 
+                                                                onClick={() => navigateToRatingDetail(rating.id_rating)} 
                                                                 className="px-6 py-4 text-yellow-600 hover:underline"
                                                             >
                                                                 {renderStars(rating.valoracion)}
@@ -469,7 +470,7 @@ const ProfilePage = () => {
                                                             </td>
                                                             <td className="px-6 py-4">
                                                                 <button 
-                                                                    onClick={() => handleDeleteRating(rating.id_valoracion)}
+                                                                    onClick={() => handleDeleteRating(rating.id_rating)}
                                                                     className="w-30 text-white bg-red-800 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium 
                                                                         rounded-lg text-sm px-2 py-0.5 text-center dark:bg-red-700 dark:hover:bg-red-800 dark:focus:ring-red-800" 
                                                                 >

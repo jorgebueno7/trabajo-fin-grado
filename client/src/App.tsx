@@ -16,6 +16,7 @@ import Rankings from './components/common/RankingList';
 import Login from './components/layout/Login';
 import Register from './components/layout/Register';
 import SportDetail from './components/common/SportsDetail';
+import RatingDetail from './components/common/RatingDetail';
 import UpdateSport from './components/common/UpdateSport';
 import EventDetail from './components/common/EventsDetail';
 import UserCalendar from './components/layout/UserCalendar';
@@ -25,7 +26,7 @@ import ListUserEvents from './components/common/ListUserEvents';
 import CreateEvent from './components/common/CreateEvent';
 import CreateSport from './components/common/CreateSport';
 import RatingEvent from './components/common/RatingsEvent';
-import RatingDetail from './components/common/RatingDetail';
+import RatingDetailFromEvents from './components/common/RatingDetailFromEvents';
 import CreateRatingEvent from './components/common/CreateRatingEvent';
 import EventsBySportList from './components/common/EventsBySportList';
 import UpdateRatingEvent from './components/common/UpdateRatingEvent';
@@ -85,7 +86,8 @@ function RoutesWithNavbar() {
         <Route path="/create-event" element={<CreateEvent />} />  
         <Route path="/create-sport" element={<CreateSport />} /> 
         <Route path="/ratings-event" element={<RatingEvent />} />
-        <Route path="/ratings/:id_evento" element={<RatingDetail />} />
+        <Route path="/ratings/:id_rating" element={<RatingDetail />} />
+        <Route path="/ratings/event/:id_evento" element={<RatingDetailFromEvents />} />
         <Route path="/create-rating/:id_evento" element={<CreateRatingEvent />} />
         <Route path="/events-by-sport/:id_deporte" element={<EventsBySportList />} />
         <Route path="/ratings/update/:id_rating" element={<UpdateRatingEvent />} />

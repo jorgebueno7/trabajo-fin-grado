@@ -10,20 +10,21 @@ const UpdateRatingEvent = () => {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchRating = async () => {
-            try {
-                if (id_rating) {
-                    const rating = await getRatingById(Number(id_rating)); // Obtener la valoración existente
-                    setValoracion(rating.valoracion);
-                    setComentario(rating.comentario);
-                    setIdEvento(rating.id_evento); // Guardar el id_evento
-                }
-            } catch (error) {
-                console.error('Error al obtener la valoración:', error);
-                alert('No se pudo cargar la valoración.');
+    const fetchRating = async () => {
+        try {
+            if (id_rating) {
+                const rating = await getRatingById(Number(id_rating)); // Obtener la valoración existente
+                setValoracion(rating.valoracion);
+                setComentario(rating.comentario);
+                setIdEvento(rating.id_evento); // Guardar el id_evento
             }
-        };
+        } catch (error) {
+            console.error('Error al obtener la valoración:', error);
+            alert('No se pudo cargar la valoración.');
+        }
+    };
+
+    useEffect(() => {
         fetchRating();
     }, [id_rating]);
 

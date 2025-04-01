@@ -42,7 +42,7 @@ const EventDetail = () => {
 
     const handleViewRatings = () => {
         if (event) {
-            navigate(`/ratings/${event.id_evento}`);
+            navigate(`/ratings/event/${event.id_evento}`);
         }
     };
 
