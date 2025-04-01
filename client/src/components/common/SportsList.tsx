@@ -14,9 +14,10 @@ const Deportes = () => {
     }
 
     const [sports, setSports] = useState<Sport[]>([]);
-    const { isAdmin } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
-    console.log("Valor de isAdmin", isAdmin);
+    console.log("Valor de user role", user?.role);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -36,11 +37,13 @@ const Deportes = () => {
         navigate('/create-sport');
     };
 
+    const rolUsuario = user?.role;
+
     return (
         <>
             <div className="flex mx-20 mt-6">
                 <div className="flex flex-col items-start mr-6">
-                    {isAdmin && (
+                    {rolUsuario !== 'participante' && rolUsuario !== 'organizador' &&
                         <button
                             type="submit"
                             onClick={handleCreateSportClick}
@@ -48,7 +51,7 @@ const Deportes = () => {
                         >
                             Crear deporte
                         </button>
-                    )}
+                    }
                 </div>
             </div>
             <div className="grid grid-cols-3 gap-x-6 mx-20">
