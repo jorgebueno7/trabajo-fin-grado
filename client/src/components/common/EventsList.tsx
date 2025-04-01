@@ -21,7 +21,7 @@ const Eventos = () => {
     }
 
     const [events, setEvents] = useState<Event[]>([]);
-    const { isLoggedIn } = useContext(UserContext);
+    const { user, isLoggedIn } = useContext(UserContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -41,14 +41,15 @@ const Eventos = () => {
         navigate('/create-event');
     };
 
-    const handleMyEventsClick = () => {
-        navigate('/my-events');  // Redirige a la página de eventos del usuario
-    };
+    // const handleMyEventsClick = () => {
+    //     navigate('/my-events'); 
+    // };
 
+    const rolUsuario = user?.role;
     return (
         <>
             <div className="flex mx-20 mt-6 justify-between">
-                {isLoggedIn && (
+                {isLoggedIn && rolUsuario !== 'participante' && (
                     <button
                         onClick={handleCreateEventClick}
                         className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
@@ -56,7 +57,7 @@ const Eventos = () => {
                         Crear evento
                     </button>
                 )}
-                <div className="flex flex-col items-center">
+                {/* <div className="flex flex-col items-center">
                     <div className="border-b border-gray-200 dark:border-gray-700">
                         <ul className="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
                             <li className="me-2">
@@ -88,6 +89,7 @@ const Eventos = () => {
                         </ul>
                     </div>
                 </div>
+                            */}
             </div>
 
             {/* Aquí se muestra la lista de eventos generales */}
