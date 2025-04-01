@@ -70,7 +70,7 @@ function RoutesWithNavbar() {
         <Route path="/update-sport/:id_deporte" element={<UpdateSport />} />
         <Route path="/events" element={<Events />} />
         <Route path="/events/:id" element={<EventDetail />} />
-        <Route path="/update-event" element={< UpdateEvent/>} />
+        <Route path="/update-event/:id_evento" element={< UpdateEvent/>} />
         <Route path="/user_events" element={<UserEvents />} />
         <Route path="/ratings" element={<Ratings />} />
         <Route path="/rankings" element={<Rankings />} />

@@ -13,8 +13,6 @@ export const getSportsById = async (id: number) => {
 };
 
 export const updateSport = async (id: number, sport: any) => {
-  console.log("Datos enviados:", sport);
-
   const response = await axios.put(`${API_URL}/update-sports/${id}`, sport);
   return response.data;
 };

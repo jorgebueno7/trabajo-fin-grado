@@ -17,8 +17,8 @@ export const postEvent = async (event: any) => {
   return response.data;
 }
 
-export const putEvent = async (id: number) => {
-  const response = await axios.put(`${API_URL}/${id}`);
+export const putEvent = async (id: number, event: any) => {
+  const response = await axios.put(`${API_URL}/${id}`, event);
   return response.data;
 }
 
