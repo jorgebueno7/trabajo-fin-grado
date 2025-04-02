@@ -1,6 +1,7 @@
 const rating = require('../models/Rating')
 const event = require('../models/Event')
 const user = require('../models/User')
+const sport = require('../models/Sports')
 
 const getAllRatings = async (req, res) => {
     try {
@@ -22,33 +23,38 @@ const getAllRatings = async (req, res) => {
     }
 }
 
-const getRatingById = async (req, res) => { // Función de Administrador
+const getRatingById = async (req, res) => {
     try {
         const { id_rating } = req.params;
-        const ratings = await rating.findByPk(id_rating);
-        if(ratings){
-            res.status(200).json(ratings);
-        }else{
-            res.status(404).json({error: 'Rating with that id does not exist'})
+
+        const ratingId = Number(id_rating);
+
+        if (isNaN(ratingId)) {
+            return res.status(400).json({ error: "Invalid rating ID" });
+        }
+
+        // Buscar la valoración con sus relaciones
+        const ratingData = await rating.findByPk(ratingId, {
+            include: [
+                { model: event, attributes: ['nombre'], 
+                    include: {
+                        model: sport,
+                        attributes: ['nombre']
+                    } 
+                },
+                { model: user, attributes: ['email'] }
+            ]
+        });
+
+        if (ratingData) {
+            res.status(200).json(ratingData);
+        } else {
+            res.status(404).json({ error: 'Rating with that id does not exist' });
         }
     } catch (error) {
-        res.status(500).json({error: `ERROR_GET_RATING_BY_ID: ${error}`})
+        res.status(500).json({ error: `ERROR_GET_RATING_BY_ID: ${error.message}` });
     }
-}
-
-// const getRatingByIdEvent = async (req, res) => {
-//     try {
-//         const { id_evento } = req.params;
-//         const ratings = await rating.findAll({ where: { id_evento } });
-//         if(ratings){
-//             res.status(200).json(ratings);
-//         }else{
-//             res.status(404).json({error: 'Rating with that id does not exist'})
-//         }
-//     } catch (error) {
-//         res.status(500).json({error: `ERROR_GET_RATING_BY_ID_EVENT: ${error}`})
-//     }
-// }
+};
 
 const postRating = async (req, res) => {
     try { 

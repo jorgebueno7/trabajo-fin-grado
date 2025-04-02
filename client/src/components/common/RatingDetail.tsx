@@ -6,10 +6,17 @@ import { getRatingById } from '../../api/ratings';
 const RatingDetail = () => {
     interface Rating {
         id_rating: number;
-        id_usuario: number;
-        id_evento: number;
         valoracion: number;
         comentario: string;
+        Event: {
+            nombre: string;
+            Sport: {
+                nombre: string;
+            }
+        };
+        user: {
+            email: string;
+        };
     }
 
     const [ratings, setRatings] = useState<Rating | null>(null);
@@ -42,11 +49,13 @@ const RatingDetail = () => {
 
     return (
         <div className="p-5">
-            <h1 className="text-2xl mb-4 ml-2">Valoración</h1>
+            <h1 className="text-2xl mb-4 ml-2">Valoración del evento <strong>{ratings?.Event.nombre}</strong></h1>
                 {ratings ? (
                     <div key={ratings.id_rating} className="border p-4 mb-4 ml-2 rounded-lg bg-white shadow-md">
                         <p><strong>Valoración:</strong> <span className="text-yellow-500">{renderStars(ratings.valoracion)}</span></p>
                         <p><strong>Comentario:</strong> {ratings.comentario}</p>
+                        <p><strong>Deporte:</strong> {ratings.Event.Sport.nombre}</p>
+                        <p><strong>Usuario de la valoración:</strong> {ratings.user.email}</p>
                     </div>
                 ) : (
                     <p className="ml-2">No hay valoraciones disponibles.</p>
