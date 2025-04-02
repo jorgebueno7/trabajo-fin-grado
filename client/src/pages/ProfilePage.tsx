@@ -10,6 +10,8 @@ import { getSports, deleteSport } from '../api/sports'
 import { getUsers, deleteUserById } from '../api/users'
 import { getRatings, deleteRating } from '../api/ratings' 
 
+const ITEMS_PER_PAGE = 3;
+
 const ProfilePage = () => {  
     interface Event {
         id_evento: number;
@@ -89,6 +91,51 @@ const ProfilePage = () => {
     const [allRatings, setAllRatings] = useState<AdminRating[]>([]); 
     const [usuarios, setUsuarios] = useState<User[]>([]);
     const [activeTab, setActiveTab] = useState<'eventos' | 'deportes' | 'valoraciones'>('eventos');
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+
+    const currentEvents = allEvents.slice(startIndex, endIndex);
+    const currentSports = allSports.slice(startIndex, endIndex);
+    const currentRatings = allRatings.slice(startIndex, endIndex);
+
+
+    const nextPageEvents = () => {
+        if (endIndex < allEvents.length) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const prevPageEvents = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const nextPageSports = () => {
+        if (endIndex < allSports.length) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const prevPageSports = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const nextPageRatings = () => {
+        if (endIndex < allRatings.length) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const prevPageRatings = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
 
     const rolUsuario = user?.role;
 
@@ -357,7 +404,7 @@ const ProfilePage = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {allEvents.map((event) => (
+                                                    {currentEvents.map((event) => (
                                                         <tr key={event.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                                             <button 
                                                                 onClick={() => navigateToEventDetail(event.id_evento)} 
@@ -387,6 +434,29 @@ const ProfilePage = () => {
                                                     ))}
                                                 </tbody>
                                             </table>
+                                            <div className="flex justify-center mt-2">
+                                                {currentPage === 1 ? <></> 
+                                                    : 
+                                                    (<>
+                                                        <button
+                                                            onClick={prevPageEvents}
+                                                            disabled={currentPage === 1}
+                                                            className="text-blue-600 hover:underline"
+                                                        >
+                                                            Anterior
+                                                        </button>
+                                                        <span className="text-gray-700 ml-3 mr-3">{currentPage}</span>
+                                                        <button
+                                                            onClick={nextPageEvents}
+                                                            disabled={endIndex >= allEvents.length}
+                                                            className=" text-blue-600 hover:underline"
+                                                        >
+                                                            Siguiente
+                                                        </button>
+                                                    </>
+                                                    )
+                                                }
+                                            </div>
                                         </>)
                                     }
                                     {/* Deportes */}
@@ -402,7 +472,7 @@ const ProfilePage = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {allSports.map((sport) => (
+                                                    {currentSports.map((sport) => (
                                                         <tr key={sport.id_deporte} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                                             <button 
                                                                 onClick={() => navigateToSportDetail(sport.id_deporte)} 
@@ -432,6 +502,29 @@ const ProfilePage = () => {
                                                     ))}
                                                 </tbody>
                                             </table>
+                                            <div className="flex justify-center mt-2">
+                                                {currentPage === 1 ? <></> 
+                                                    : 
+                                                    (<>
+                                                        <button
+                                                            onClick={prevPageSports}
+                                                            disabled={currentPage === 1}
+                                                            className="text-blue-600 hover:underline"
+                                                        >
+                                                            Anterior
+                                                        </button>
+                                                        <span className="text-gray-700 ml-3 mr-3">{currentPage}</span>
+                                                        <button
+                                                            onClick={nextPageSports}
+                                                            disabled={endIndex >= allSports.length}
+                                                            className=" text-blue-600 hover:underline"
+                                                        >
+                                                            Siguiente
+                                                        </button>
+                                                    </>
+                                                    )
+                                                }
+                                            </div>
                                         </>)
                                     }
                                     {/* Valoraciones */}
@@ -448,7 +541,7 @@ const ProfilePage = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {allRatings.map((rating) => (
+                                                    {currentRatings.map((rating) => (
                                                         <tr key={rating.id_rating} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                                             <td className="px-6 py-4">
                                                                 {rating.Event.nombre}
@@ -481,6 +574,29 @@ const ProfilePage = () => {
                                                     ))}
                                                 </tbody>
                                             </table>
+                                            <div className="flex justify-center mt-2">
+                                                {currentPage === 1 ? <></> 
+                                                    : 
+                                                    (<>
+                                                        <button
+                                                            onClick={prevPageRatings}
+                                                            disabled={currentPage === 1}
+                                                            className="text-blue-600 hover:underline"
+                                                        >
+                                                            Anterior
+                                                        </button>
+                                                        <span className="text-gray-700 ml-3 mr-3">{currentPage}</span>
+                                                        <button
+                                                            onClick={nextPageRatings}
+                                                            disabled={endIndex >= allRatings.length}
+                                                            className=" text-blue-600 hover:underline"
+                                                        >
+                                                            Siguiente
+                                                        </button>
+                                                    </>
+                                                    )
+                                                }
+                                            </div>
                                         </>)
                                     }
                                 </a>
