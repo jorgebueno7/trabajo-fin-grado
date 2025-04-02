@@ -20,7 +20,7 @@ const RatingDetail = () => {
     }
 
     const [ratings, setRatings] = useState<Rating | null>(null);
-    const { id_rating } = useParams(); // Obtener el id_evento de la URL
+    const { id_rating } = useParams();
 
     const fetchRating = async (id_rating: number) => {
         try {
@@ -48,10 +48,11 @@ const RatingDetail = () => {
     };
 
     return (
-        <div className="p-5">
-            <h1 className="text-2xl mb-4 ml-2">Valoración del evento <strong>{ratings?.Event.nombre}</strong></h1>
+        <div className="flex flex-col items-center justify-center min-h-screen">
+            <h1 className="text-2xl mb-4">Valoración del evento: <strong>{ratings?.Event.nombre}</strong></h1>
+            <div className="max-w-lg p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 {ratings ? (
-                    <div key={ratings.id_rating} className="border p-4 mb-4 ml-2 rounded-lg bg-white shadow-md">
+                    <div key={ratings.id_rating} className="p-4 mb-4 ml-2 rounded-l">
                         <p><strong>Valoración:</strong> <span className="text-yellow-500">{renderStars(ratings.valoracion)}</span></p>
                         <p><strong>Comentario:</strong> {ratings.comentario}</p>
                         <p><strong>Deporte:</strong> {ratings.Event.Sport.nombre}</p>
@@ -60,6 +61,8 @@ const RatingDetail = () => {
                 ) : (
                     <p className="ml-2">No hay valoraciones disponibles.</p>
                 )}
+
+            </div>
         </div>
     );
 

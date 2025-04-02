@@ -74,12 +74,9 @@ const RatingDetailFromEvents = () => {
                 {ratings.length > 0 ? 
                     (ratings.map((rating) => 
                         <div key={rating.id_evento} className="border p-4 mb-4 ml-2 rounded-lg bg-white shadow-md">
-                            <h3 className="text-xl font-bold mb-1">{rating.Event.nombre}</h3>
-                            <hr className='mb-2' />
-                            <p><strong>Evento:</strong> {rating.Event.nombre}</p>
-                            <p><strong>Usuario:</strong> {rating.user.email}</p>
                             <p><strong>Valoración:</strong> <span className="text-yellow-500">{renderStars(rating.valoracion)}</span></p>
                             <p><strong>Comentario:</strong> {rating.comentario}</p>
+                            <p><strong>Usuario:</strong> {rating.user.email}</p>
                             { isLoggedIn && user?.email === rating.user.email? 
                                 (<div>
                                     <button 
