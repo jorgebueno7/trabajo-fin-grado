@@ -120,13 +120,13 @@ const EventDetail = () => {
     return (
         <div className="flex items-center justify-center min-h-screen">
             <div className="max-w-lg p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <a href={`/sports/${event.id_deporte}`}>
+                <a>
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{event.nombre}</h5>
                 </a>
                 <hr />
                 <br />
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    Deporte: {eventSport ? <strong>{eventSport.nombre}</strong> : 'Deporte no disponible'}
+                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 hover:underline">
+                    Deporte: <a className="font-normal text-blue-700 dark:text-blue-400 hover:underline" href={`/sports/${event.id_deporte}`}>{eventSport && <strong>{eventSport.nombre}</strong>}</a>
                 </p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha inicio del evento: <strong>{event.fecha_ini}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Hora de inicio del evento: <strong>{event.hora_ini}</strong></p>

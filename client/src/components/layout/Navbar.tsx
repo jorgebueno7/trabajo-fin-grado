@@ -6,7 +6,7 @@ import axios from 'axios';
 
 
 const Navbar = () => {
-  const { isLoggedIn, setLoggedIn, isAdmin } = useContext(UserContext);
+  const { user, isLoggedIn, setLoggedIn } = useContext(UserContext);
   const navigate = useNavigate();
     const navigateHome = () => {
         navigate('/');
@@ -21,6 +21,9 @@ const Navbar = () => {
       console.error('Error al cerrar sesión:', error);
     }
   };
+
+  const rolUsuario = user?.role;
+  console.log("rol de usuario navbar: ", rolUsuario);
 
   return (
     <nav className="flex justify-between items-center mt-4 px-4">
@@ -38,10 +41,11 @@ const Navbar = () => {
         {/* {isLoggedIn && (
           <NavLink to="/my-events" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Mis eventos</NavLink>
         )} */}
-        {isAdmin ? (
+        {isLoggedIn && rolUsuario === 'administrador' ? (
           <>
             <NavLink to="/rankings" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Ranking</NavLink>
             <NavLink to="/news" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Noticias</NavLink>
+            <NavLink to="/ratings" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Valoraciones</NavLink>
           </>
         ) : (
         <>

@@ -384,12 +384,12 @@ const ProfilePage = () => {
                                         >
                                             Listado de deportes
                                         </button>
-                                        <button 
+                                        {/* <button 
                                             className={`px-4 py-2 ${activeTab === 'valoraciones' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'}`}
                                             onClick={() => setActiveTab('valoraciones')}
                                         >
                                             Listado de valoraciones
-                                        </button>
+                                        </button> */}
                                     </div>
                                     {/* Eventos */}
                                     {activeTab === 'eventos' && 
