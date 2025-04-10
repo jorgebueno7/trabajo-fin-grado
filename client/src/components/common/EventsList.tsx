@@ -48,12 +48,12 @@ const Eventos = () => {
     const rolUsuario = user?.role;
     return (
         <>
-            <div className="flex mx-20 mt-6 justify-between">
+            <div className="flex mx-20 mt-6">
                 {isLoggedIn && rolUsuario !== 'participante' && (
                     <button
                         onClick={handleCreateEventClick}
-                        className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
-                    >
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
+                        >
                         Crear evento
                     </button>
                 )}
