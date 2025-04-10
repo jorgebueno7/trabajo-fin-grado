@@ -8,7 +8,7 @@ import { getUserEvents, getEventsByOrganizer } from '../api/userEvent';
 import { putEventStatus, getEvents, deleteEvent } from '../api/events';
 import { getSports, deleteSport } from '../api/sports'
 import { getUsers, deleteUserById } from '../api/users'
-import { deleteRating } from '../api/ratings' 
+// import { deleteRating } from '../api/ratings' 
 
 const ITEMS_PER_PAGE = 3;
 
@@ -58,16 +58,16 @@ const ProfilePage = () => {
         nombre: string;
     }
 
-    interface AdminRating {
-        id_rating: number;
-        id_evento: number;
-        id_usuario: number;
-        valoracion: number;
-        comentario: string;
-        Event: {
-            nombre: string;
-        };
-    }
+    // interface AdminRating {
+    //     id_rating: number;
+    //     id_evento: number;
+    //     id_usuario: number;
+    //     valoracion: number;
+    //     comentario: string;
+    //     Event: {
+    //         nombre: string;
+    //     };
+    // }
     interface User {
         id: number;
         dni: string;
@@ -89,7 +89,7 @@ const ProfilePage = () => {
     const [eventsOrganizer, setEventsOrganizer] = useState<EventOrganizer[]>([]);
     const [allEvents, setAllEvents] = useState<AdminEvent[]>([]);
     const [allSports, setAllSports] = useState<AdminSport[]>([]); 
-    const [allRatings, setAllRatings] = useState<AdminRating[]>([]); 
+    // const [allRatings, setAllRatings] = useState<AdminRating[]>([]); 
     const [usuarios, setUsuarios] = useState<User[]>([]);
     const [activeTab, setActiveTab] = useState<'eventos' | 'deportes' | 'valoraciones'>('eventos');
     const [currentPage, setCurrentPage] = useState(1);
@@ -99,7 +99,7 @@ const ProfilePage = () => {
 
     const currentEvents = allEvents.slice(startIndex, endIndex);
     const currentSports = allSports.slice(startIndex, endIndex);
-    const currentRatings = allRatings.slice(startIndex, endIndex);
+    // const currentRatings = allRatings.slice(startIndex, endIndex);
 
 
     const nextPageEvents = () => {
@@ -126,17 +126,17 @@ const ProfilePage = () => {
         }
     };
 
-    const nextPageRatings = () => {
-        if (endIndex < allRatings.length) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
+    // const nextPageRatings = () => {
+    //     if (endIndex < allRatings.length) {
+    //         setCurrentPage(currentPage + 1);
+    //     }
+    // };
 
-    const prevPageRatings = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
+    // const prevPageRatings = () => {
+    //     if (currentPage > 1) {
+    //         setCurrentPage(currentPage - 1);
+    //     }
+    // };
 
     const rolUsuario = user?.role;
 
@@ -157,9 +157,9 @@ const ProfilePage = () => {
         navigate(`/update-user/${id}`);
     };
 
-    const navigateToUpdateEventRating = (id_rating: number) => {
-        navigate(`/ratings/update/${id_rating}`)
-    }
+    // const navigateToUpdateEventRating = (id_rating: number) => {
+    //     navigate(`/ratings/update/${id_rating}`)
+    // }
 
     const navigateToEventDetail = (id_evento: number) => {
         navigate(`/events/${id_evento}`);
@@ -169,9 +169,9 @@ const ProfilePage = () => {
         navigate(`/sports/${id_deporte}`);
     }
 
-    const navigateToRatingDetail = (id_rating: number) => {
-        navigate(`/ratings/${id_rating}`);
-    }
+    // const navigateToRatingDetail = (id_rating: number) => {
+    //     navigate(`/ratings/${id_rating}`);
+    // }
 
     const fetchUserEvents = async () => {
         try {
@@ -267,17 +267,17 @@ const ProfilePage = () => {
         }
     }
 
-    const handleDeleteRating = async (id: number) => {
-        if (window.confirm("¿Estás seguro de que deseas eliminar esta valoración?")) {
-            try {
-                await deleteRating(id);
-                setAllRatings(allRatings.filter(rating => rating.id_rating !== id));
-            } catch (error) {
-                console.error("Error al eliminar valoración:", error);
-                alert("Hubo un problema al eliminar la valoración");
-            }
-        }
-    }
+    // const handleDeleteRating = async (id: number) => {
+    //     if (window.confirm("¿Estás seguro de que deseas eliminar esta valoración?")) {
+    //         try {
+    //             await deleteRating(id);
+    //             setAllRatings(allRatings.filter(rating => rating.id_rating !== id));
+    //         } catch (error) {
+    //             console.error("Error al eliminar valoración:", error);
+    //             alert("Hubo un problema al eliminar la valoración");
+    //         }
+    //     }
+    // }
 
     useEffect(() => {
         if(rolUsuario === 'participante') {
@@ -303,38 +303,29 @@ const ProfilePage = () => {
     };
 
     // Generar estrellas según la valoración
-    const renderStars = (ratingValue: number) => {
-        const maxStars = 5; // Máximo de estrellas
-        const filledStars = '★'.repeat(ratingValue); // Estrellas llenas
-        const emptyStars = '☆'.repeat(maxStars - ratingValue); // Estrellas vacías
-        return `${filledStars}${emptyStars}`;
-    };
-    
-    const updateEventState = (updatedEvent: Event) => {
-        setEvents((prevEvents) =>
-            prevEvents.map((event) =>
-                event.id_evento === updatedEvent.id_evento ? updatedEvent : event
-            )
-        );
-    };
+    // const renderStars = (ratingValue: number) => {
+    //     const maxStars = 5; // Máximo de estrellas
+    //     const filledStars = '★'.repeat(ratingValue); // Estrellas llenas
+    //     const emptyStars = '☆'.repeat(maxStars - ratingValue); // Estrellas vacías
+    //     return `${filledStars}${emptyStars}`;
+    // };
 
-    const updateStatusFromEvent = async (id_evento: number, currentState: string) => {
+    const updateStatusFromEvent = async (id_evento: number, currentStatus: string) => {
         try {
-            // Obtén el siguiente estado
-            const newState = getNextState(currentState);
-            if (!newState) {
-                console.log('No hay siguiente estado disponible');
-                return;
-            }
+            const nextStatus = getNextState(currentStatus);
+            if (!nextStatus) return;
+            
+            await putEventStatus(id_evento, nextStatus);
     
-            // Envía la solicitud para actualizar el evento con el nuevo estado
-            const response = await putEventStatus(id_evento, { estado: newState });
-            console.log('Estado del evento actualizado:', response.evento);
-
-            updateEventState(response.evento);
+            setEventsOrganizer((prevEvents) =>
+                prevEvents.map((event) =>
+                    event.id_evento === id_evento
+                        ? { ...event, estado: nextStatus }
+                        : event
+                )
+            );
         } catch (error) {
-            console.error('Error actualizando evento:', error);
-            alert('Hubo un error al actualizar el evento. Inténtalo de nuevo más tarde.');
+            console.error('Error actualizando el estado:', error);
         }
     };
     
@@ -529,7 +520,7 @@ const ProfilePage = () => {
                                         </>)
                                     }
                                     {/* Valoraciones */}
-                                    {activeTab === 'valoraciones' &&
+                                    {/* {activeTab === 'valoraciones' &&
                                         (<>
                                             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-3">
                                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -599,7 +590,7 @@ const ProfilePage = () => {
                                                 }
                                             </div>
                                         </>)
-                                    }
+                                    } */}
                                 </a>
                             </div>
                         </div>

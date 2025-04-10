@@ -70,6 +70,24 @@ const updateEvent = async (req, res) => {
     }
 }
 
+const updateEventStatus = async (req, res) => {
+    try {
+        const { id_evento } = req.params;
+        const { estado } = req.body;
+
+        const evento = await event.findByPk(id_evento);
+        if (!evento) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+
+        await evento.update({ estado });
+        res.status(200).json({ message: 'Estado actualizado correctamente', evento });
+    } catch (error) {
+        res.status(500).json({ error: `ERROR_UPDATE_EVENT_STATUS: ${error}` });
+    }
+};
+
+
 const deleteEvent = async (req, res) => {
     try {
         const { id_evento } = req.params;
@@ -80,4 +98,4 @@ const deleteEvent = async (req, res) => {
     }
 }
 
-module.exports = { getAllEvents, getEventById, postEvent, updateEvent, deleteEvent };
+module.exports = { getAllEvents, getEventById, postEvent, updateEvent, updateEventStatus, deleteEvent };

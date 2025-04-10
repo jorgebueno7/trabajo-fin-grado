@@ -22,8 +22,8 @@ export const putEvent = async (id: number, event: any) => {
   return response.data;
 }
 
-export const putEventStatus = async (id: number, eventData: {estado: string}) => {
-  const response = await axios.put(`${API_URL}/${id}`, eventData);
+export const putEventStatus = async (id: number, estado: string) => {
+  const response = await axios.put(`${API_URL}/update-status/${id}`, { estado });
   return response.data;
 }
 
