@@ -23,7 +23,6 @@ const Navbar = () => {
   };
 
   const rolUsuario = user?.role;
-  console.log("rol de usuario navbar: ", rolUsuario);
 
   return (
     <nav className="flex justify-between items-center mt-4 px-4">

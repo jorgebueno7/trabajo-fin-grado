@@ -1,18 +1,30 @@
 import { useEffect, useState } from 'react';
-import { getRatings } from '../../api/ratings';
+import { useNavigate } from 'react-router-dom';
+import { getRatings, deleteRating } from '../../api/ratings';
 
 const Valoraciones = () => {
     interface Rating {
         id_rating: number;
-        id_usuario: number;
-        id_deporte: number;
-        id_evento: number;
         valoracion: number;
         comentario: string;
+        Event: {
+            id_evento: number;
+            nombre: string;
+            Sport: {
+                nombre: string;
+            }
+        };
+        user: {
+            email: string;
+        };
     }
       
     const [ratings, setRatings] = useState<Rating[]>([]);
+    const navigate = useNavigate();
 
+    const navigateToUpdateRating = (id_rating: number) => {
+        navigate(`/ratings/update/${id_rating}`)
+    }
     useEffect(() => {
         fetchRatings();
     }, []);
@@ -26,35 +38,52 @@ const Valoraciones = () => {
         }
     };
 
+    const renderStars = (ratingValue: number) => {
+        const maxStars = 5;
+        const filledStars = '★'.repeat(ratingValue); 
+        const emptyStars = '☆'.repeat(maxStars - ratingValue); 
+        return `${filledStars}${emptyStars}`;
+    };
+
+    const handleDeleteRating = async (id: number) => {
+        if (window.confirm("¿Estás seguro de que deseas eliminar esta valoración?")) {
+            try {
+                await deleteRating(id);
+                setRatings(ratings.filter(rating => rating.id_rating !== id));
+            } catch (error) {
+                console.error("Error al eliminar valoración:", error);
+                alert("Hubo un problema al eliminar la valoración");
+            }
+        }
+    }
+
     return (
-        <div>
-            <h1>Valoraciones</h1>
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" className="px-6 py-3">Usuario</th>
-                        <th scope="col" className="px-6 py-3">Deporte</th>
-                        <th scope="col" className="px-6 py-3">Evento</th>
-                        <th scope="col" className="px-6 py-3">Valoración</th>
-                        <th scope="col" className="px-6 py-3">Comentario</th>
-                        <th scope="col" className="px-6 py-3">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {ratings.map((rating) => (
-                        <tr key={rating.id_rating} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{rating.id_usuario}</th>
-                            <td className="px-6 py-4">{rating.id_deporte}</td>
-                            <td className="px-6 py-4">{rating.id_evento}</td>
-                            <td className="px-6 py-4">{rating.valoracion}</td>
-                            <td className="px-6 py-4">{rating.comentario}</td>
-                            <td className="px-6 py-4">
-                                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <div className="p-5">
+            <h1 className="text-2xl font-bold mb-4 ml-2">Listado de valoraciones</h1>
+                {ratings.length > 0 ? 
+                    (ratings.map((rating) => 
+                        <div key={rating.id_rating} className="border p-4 mb-4 ml-2 rounded-lg bg-white shadow-md">
+                            <h3 className="text-xl font-bold mb-1">{rating.Event.nombre}</h3>
+                            <hr className='mb-2' />
+                            <p><strong>Evento:</strong> <a className="font-normal text-blue-700 dark:text-blue-400 hover:underline" href={`/events/${rating.Event.id_evento}`}>{rating.Event.nombre}</a></p>
+                            <p><strong>Deporte:</strong> {rating.Event.Sport.nombre}</p>
+                            <p><strong>Usuario:</strong> {rating.user.email}</p>
+                            <p><strong>Valoración:</strong> <span className="text-yellow-500">{renderStars(rating.valoracion)}</span></p>
+                            <p><strong>Comentario:</strong> {rating.comentario}</p>
+                            <button
+                                className="mt-4 mr-4 w-50 text-white bg-blue-800 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
+                                    rounded-lg text-sm px-2.5 py-2.5 text-center dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-800" 
+                                onClick={() => navigateToUpdateRating(rating.id_rating)}>Modificar valoración</button>
+                            <button
+                                className="w-50 text-white bg-red-800 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium 
+                                    rounded-lg text-sm px-2.5 py-2.5 text-center dark:bg-red-700 dark:hover:bg-red-800 dark:focus:ring-red-800" 
+                                onClick={() => handleDeleteRating(rating.id_rating)}>Eliminar valoración</button>
+
+                        </div>
+                    )) 
+                    : 
+                    (<p className="ml-2">No hay valoraciones disponibles.</p>)
+                }
         </div>
     );
 };

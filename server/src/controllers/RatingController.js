@@ -9,7 +9,11 @@ const getAllRatings = async (req, res) => {
             include: [
                 {
                     model: event,
-                    attributes: ['nombre'],
+                    attributes: ['id_evento','nombre'],
+                    include: {
+                        model: sport,
+                        attributes: ['nombre']
+                    }
                 },
                 {
                     model: user,

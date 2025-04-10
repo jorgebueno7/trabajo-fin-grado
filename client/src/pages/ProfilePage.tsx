@@ -8,7 +8,7 @@ import { getUserEvents, getEventsByOrganizer } from '../api/userEvent';
 import { putEventStatus, getEvents, deleteEvent } from '../api/events';
 import { getSports, deleteSport } from '../api/sports'
 import { getUsers, deleteUserById } from '../api/users'
-import { getRatings, deleteRating } from '../api/ratings' 
+import { deleteRating } from '../api/ratings' 
 
 const ITEMS_PER_PAGE = 3;
 
@@ -18,6 +18,7 @@ const ProfilePage = () => {
         id_usuario: number;
         createdBy: string;
         Event: {
+            id_evento: number;
             nombre: string;
             fecha_ini: string;
             hora_ini: string;
@@ -219,14 +220,14 @@ const ProfilePage = () => {
         }
     }
 
-    const fetchAllRatings = async () => {
-        try {
-            const ratings = await getRatings();
-            setAllRatings(ratings);
-        } catch (error) {
-            console.error('Error obteniendo valoraciones:', error);
-        }
-    }
+    // const fetchAllRatings = async () => {
+    //     try {
+    //         const ratings = await getRatings();
+    //         setAllRatings(ratings);
+    //     } catch (error) {
+    //         console.error('Error obteniendo valoraciones:', error);
+    //     }
+    // }
 
     const handleDeleteEvent = async (id_evento: number) => {
         if (window.confirm("¿Estás seguro de que deseas eliminar este evento?")) {
@@ -292,7 +293,7 @@ const ProfilePage = () => {
     useEffect(() => {
         fetchAllSports();
         fetchAllUsers();
-        fetchAllRatings();
+        // fetchAllRatings();
     })
 
     const getNextState = (currentState: string) => {
@@ -710,7 +711,11 @@ const ProfilePage = () => {
                                         <tbody>
                                             {events.filter(event => event.Event.estado === 'sin_comenzar').map((userEvent) => (
                                                 <tr key={userEvent.id_usuario} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                                    <td className="px-6 py-4">{userEvent.Event.nombre}</td>
+                                                    <td className="px-6 py-4">
+                                                        <button onClick={ () => navigateToEventDetail(userEvent.Event.id_evento)} className="text-blue-600 hover:underline">
+                                                            {userEvent.Event.nombre}
+                                                        </button>
+                                                    </td>
                                                     <td className="px-6 py-4">{dayjs(userEvent.Event.fecha_ini).format('DD-MM-YYYY')}</td>
                                                     <td className="px-6 py-4">{userEvent.Event.lugar}</td>
                                                 </tr>
