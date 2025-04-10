@@ -20,7 +20,11 @@ UserEvent.init({
           model: User,
           key: 'id_usuario'
         }
-      }
+      },
+      clasificacion: {
+        type: DataTypes.NUMBER,
+        allowNull: true
+      },
 }, {
     sequelize,
     tableName: "user_events",

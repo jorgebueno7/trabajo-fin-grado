@@ -6,7 +6,11 @@ let queue = {};
 
 const getAllUserEvents = async (req, res) => {
     try {
-        const user_events = await user_event.findAll();
+        const user_events = await user_event.findAll({
+            include: [
+                { model: user }, 
+                { model: event, include: [{ model: sport }] }]
+    });
         res.status(200).json(user_events);
     } catch (error) {
         res.status(500).json({error: `ERROR_GET_ALL_USER_EVENTS: ${error}`})
@@ -102,7 +106,7 @@ const getEventByOrganizer = async (req, res) => {
 const postUserEvent = async (req, res) => {
     try {
         const id_usuario = req.session.userId;
-        const { id_evento } = req.body;
+        const { id_evento, clasificacion } = req.body;
         // Obtener el evento a través de la clave primaria
         const evento = await event.findByPk(id_evento);
         if (!evento) { // Si el evento no existe, devolver un 404
@@ -112,7 +116,7 @@ const postUserEvent = async (req, res) => {
         const currentUsersCount = await user_event.count({ where: { id_evento } });
         if (currentUsersCount < evento.maximo_usuarios) { // Si el número de usuarios de los eventos, es menor al máximo permitido por el evento
             // Crear un nuevo usuario en el evento
-            const newUserEvent = await user_event.create({ id_usuario, id_evento });
+            const newUserEvent = await user_event.create({ id_usuario, id_evento, clasificacion });
             return res.status(201).json(newUserEvent);
         } else { // Si el evento está lleno, añadir el usuario a la cola
             if (!queue[id_evento]) {
@@ -135,10 +139,13 @@ const postUserEvent = async (req, res) => {
 
 const putUserEvent = async (req, res) => {
     try {
-        const { id_usuario } = req.body;
+        const { clasificacion } = req.body;
         const { id_evento } = req.params;
-        await user_event.update({ id_usuario },
-            { where: { id_evento } });
+        const id_usuario = req.session.userId;
+        await user_event.update(
+            { clasificacion },
+            { where: { id_evento, id_usuario } }
+        );
         res.status(200).json({ message: 'UserEvent updated successfully' });
     } catch (error) {
         res.status(500).json({ error: `ERROR_UPDATE_USER_EVENT: ${error}` })
