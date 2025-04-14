@@ -12,5 +12,6 @@ router.post('/user-events', verifySession, userEvent.postUserEvent);
 
 router.put('/user-events/:id_evento', userEvent.putUserEvent);
 router.delete('/user-events/event/:id_evento', verifySession, userEvent.deleteUserEvent);
+router.put('/user-events/:id_evento/stats', userEvent.addUserEventStats);
 
 module.exports = router;

@@ -20,7 +20,10 @@ const getAllUserEvents = async (req, res) => {
 const getUsersByEventId = async (req, res) => {
     try {
         const { id_evento } = req.params;
-        const user_events = await user_event.findAll({ where: {id_evento} });
+        const user_events = await user_event.findAll({ 
+            include: [{ model: user }, 
+                { model: event, include: [{ model: sport }]}],
+            where: {id_evento} });
         if (user_events){
             res.status(200).json(user_events);
         }
@@ -106,7 +109,7 @@ const getEventByOrganizer = async (req, res) => {
 const postUserEvent = async (req, res) => {
     try {
         const id_usuario = req.session.userId;
-        const { id_evento, clasificacion } = req.body;
+        const { id_evento } = req.body;
         // Obtener el evento a través de la clave primaria
         const evento = await event.findByPk(id_evento);
         if (!evento) { // Si el evento no existe, devolver un 404
@@ -116,7 +119,7 @@ const postUserEvent = async (req, res) => {
         const currentUsersCount = await user_event.count({ where: { id_evento } });
         if (currentUsersCount < evento.maximo_usuarios) { // Si el número de usuarios de los eventos, es menor al máximo permitido por el evento
             // Crear un nuevo usuario en el evento
-            const newUserEvent = await user_event.create({ id_usuario, id_evento, clasificacion });
+            const newUserEvent = await user_event.create({ id_usuario, id_evento });
             return res.status(201).json(newUserEvent);
         } else { // Si el evento está lleno, añadir el usuario a la cola
             if (!queue[id_evento]) {
@@ -216,5 +219,43 @@ const deleteUserEvent = async (req, res) => {
     }
 }
 
+const addUserEventStats = async (req, res) => {
+    try {
+        const { id_evento } = req.params;
+        const {
+            clasificacion,
+            puntos,
+            tiempo,
+            resultado,
+            observaciones,
+            estadisticas_extra,
+            participacion_confirmada
+        } = req.body;
 
-module.exports = { getAllUserEvents, getUsersByEventId, getEventByUserLoggedIn, postUserEvent, putUserEvent, deleteUserEvent, getEventByOrganizer };
+        const userEvent = await user_event.findOne({
+            where: { id_evento }
+        });
+
+        if (!userEvent) {
+            return res.status(404).json({ error: 'User is not registered in the event' });
+        }
+
+        await userEvent.update({
+            clasificacion,
+            puntos,
+            tiempo,
+            resultado,
+            observaciones,
+            estadisticas_extra,
+            participacion_confirmada
+        });
+
+        res.status(200).json({ message: 'Estadísticas actualizadas correctamente', userEvent });
+    } catch (error) {
+        res.status(500).json({ error: `ERROR_ADD_STATS_USER_EVENT: ${error}` });
+    }
+};
+
+
+module.exports = { getAllUserEvents, getUsersByEventId, getEventByUserLoggedIn, 
+    postUserEvent, putUserEvent, deleteUserEvent, getEventByOrganizer, addUserEventStats };

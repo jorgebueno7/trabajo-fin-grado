@@ -21,10 +21,12 @@ UserEvent.init({
           key: 'id_usuario'
         }
       },
-      clasificacion: {
-        type: DataTypes.NUMBER,
-        allowNull: true
-      },
+      clasificacion: { type: DataTypes.NUMBER, allowNull: true },
+      puntos: { type: DataTypes.INTEGER, allowNull: true },
+      tiempo: { type: DataTypes.FLOAT, allowNull: true },
+      resultado: { type: DataTypes.STRING, allowNull: true },
+      observaciones: { type: DataTypes.STRING, allowNull: true },
+      estadisticas_extra: { type: DataTypes.JSON, allowNull: true },
 }, {
     sequelize,
     tableName: "user_events",

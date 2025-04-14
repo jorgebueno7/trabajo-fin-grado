@@ -173,6 +173,10 @@ const ProfilePage = () => {
     //     navigate(`/ratings/${id_rating}`);
     // }
 
+    const navigateToAddStats = (id_evento: number) => {
+        navigate(`/add-stats/${id_evento}`);
+    }
+
     const fetchUserEvents = async () => {
         try {
             const userEvents = await getUserEvents();
@@ -828,6 +832,7 @@ const ProfilePage = () => {
                                                     <td className="px-6 py-4">{userEvent.lugar}</td>
                                                     <td className="px-6 py-4">
                                                         <button 
+                                                            onClick={() => navigateToAddStats(userEvent.id_evento)}
                                                             className="text-blue-600 dark:text-blue-400 hover:underline">
                                                             Añadir estadísticas
                                                         </button>
