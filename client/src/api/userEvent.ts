@@ -38,6 +38,6 @@ export const deleteUserEvent = async (eventId: number) => {
 };
 
 export const addEventStats = async (eventId: number, userId: number, statsData: any) => {
-  const response = await axios.put(`${API_URL}/user-events/${eventId}/stats/${userId}`, statsData);
+  const response = await axios.put(`${API_URL}/${eventId}/stats/${userId}`, statsData);
   return response.data;
 }

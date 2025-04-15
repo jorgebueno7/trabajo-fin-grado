@@ -221,7 +221,9 @@ const deleteUserEvent = async (req, res) => {
 
 const addUserEventStats = async (req, res) => {
     try {
-        const { id_evento } = req.params;
+        // const { id_evento } = req.params;
+        const { id_evento, id_usuario } = req.params;
+
         const {
             clasificacion,
             puntos,
@@ -229,11 +231,10 @@ const addUserEventStats = async (req, res) => {
             resultado,
             observaciones,
             estadisticas_extra,
-            participacion_confirmada
         } = req.body;
 
         const userEvent = await user_event.findOne({
-            where: { id_evento }
+            where: { id_evento, id_usuario }
         });
 
         if (!userEvent) {
@@ -247,7 +248,6 @@ const addUserEventStats = async (req, res) => {
             resultado,
             observaciones,
             estadisticas_extra,
-            participacion_confirmada
         });
 
         res.status(200).json({ message: 'Estadísticas actualizadas correctamente', userEvent });

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { getUsers, addUser } from '../../api/users';
+import { useEffect, useState } from 'react';
+import { getUsers } from '../../api/users';
 
 const Usuarios = () => {
     interface User {
