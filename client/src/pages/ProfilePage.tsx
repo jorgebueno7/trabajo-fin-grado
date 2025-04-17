@@ -480,28 +480,24 @@ const ProfilePage = () => {
                                                     ))}
                                                 </tbody>
                                             </table>
-                                            <div className="flex justify-center mt-2">
-                                                {currentPage === 1 ? <></> 
-                                                    : 
-                                                    (<>
-                                                        <button
-                                                            onClick={prevPageEvents}
-                                                            disabled={currentPage === 1}
-                                                            className="text-blue-600 hover:underline"
-                                                        >
-                                                            Anterior
-                                                        </button>
-                                                        <span className="text-gray-700 ml-3 mr-3">{currentPage}</span>
-                                                        <button
-                                                            onClick={nextPageEvents}
-                                                            disabled={endIndex >= allEvents.length}
-                                                            className=" text-blue-600 hover:underline"
-                                                        >
-                                                            Siguiente
-                                                        </button>
-                                                    </>
-                                                    )
-                                                }
+                                            <div className="flex justify-center mt-2 space-x-4">
+                                                {currentPage > 1 && (
+                                                    <button
+                                                        onClick={prevPageEvents}
+                                                        className="text-blue-600 hover:underline"
+                                                    >
+                                                        Anterior
+                                                    </button>
+                                                )}
+                                                <span className="text-gray-700 ml-3 mr-3">{currentPage}</span>
+                                                {endIndex < allEvents.length && (
+                                                    <button
+                                                        onClick={nextPageEvents}
+                                                        className="text-blue-600 hover:underline"
+                                                    >
+                                                        Siguiente
+                                                    </button>
+                                                )}
                                             </div>
                                         </>)
                                     }
@@ -548,28 +544,24 @@ const ProfilePage = () => {
                                                     ))}
                                                 </tbody>
                                             </table>
-                                            <div className="flex justify-center mt-2">
-                                                {currentPage === 1 ? <></> 
-                                                    : 
-                                                    (<>
-                                                        <button
-                                                            onClick={prevPageSports}
-                                                            disabled={currentPage === 1}
-                                                            className="text-blue-600 hover:underline"
-                                                        >
-                                                            Anterior
-                                                        </button>
-                                                        <span className="text-gray-700 ml-3 mr-3">{currentPage}</span>
-                                                        <button
-                                                            onClick={nextPageSports}
-                                                            disabled={endIndex >= allSports.length}
-                                                            className=" text-blue-600 hover:underline"
-                                                        >
-                                                            Siguiente
-                                                        </button>
-                                                    </>
-                                                    )
-                                                }
+                                            <div className="flex justify-center mt-2 space-x-4">
+                                                {currentPage > 1 && (
+                                                    <button
+                                                        onClick={prevPageSports}
+                                                        className="text-blue-600 hover:underline"
+                                                    >
+                                                        Anterior
+                                                    </button>
+                                                )}
+                                                <span className="text-gray-700 ml-3 mr-3">{currentPage}</span>
+                                                {endIndex < allSports.length && (
+                                                    <button
+                                                        onClick={nextPageSports}
+                                                        className="text-blue-600 hover:underline"
+                                                    >
+                                                        Siguiente
+                                                    </button>
+                                                )}
                                             </div>
                                         </>)
                                     }
@@ -798,7 +790,7 @@ const ProfilePage = () => {
                         </div>
                         {/* Listado de eventos que ha finalizado el usuario */}
                         <div>
-                            <h1 className="mt-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white ml-8">Eventos participados</h1>
+                            <h1 className="mt-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white ml-8">Eventos inscritos</h1>
                             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ml-4 mt-3">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
@@ -811,10 +803,11 @@ const ProfilePage = () => {
                                         <th scope="col" className="px-6 py-3">Tiempo</th>
                                         <th scope="col" className="px-6 py-3">Resultado</th>
                                         <th scope="col" className="px-6 py-3">Observaciones</th>
+                                        <th scope="col" className="px-6 py-3">Estado</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {userEvents.filter(e => e.Event.estado === 'finalizado').map((userEvent) => (
+                                    {userEvents.map((userEvent) => (
                                         <tr key={userEvent.id_usuario} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{userEvent.Event.nombre}</th>
                                             <td className="px-6 py-4">{userEvent.Event.Sport.nombre}</td>
@@ -825,6 +818,18 @@ const ProfilePage = () => {
                                             <td className="px-6 py-4">{userEvent.tiempo}</td>
                                             <td className="px-6 py-4">{userEvent.resultado}</td>
                                             <td className="px-6 py-4">{userEvent.observaciones}</td>
+                                            <td className="px-6 py-4">
+                                                <span 
+                                                    className={`px-3 py-1 rounded-lg text-white font-semibold
+                                                        ${userEvent.Event.estado === 'sin_comenzar' ? 'bg-blue-500' : ''}
+                                                        ${userEvent.Event.estado === 'en_curso' ? 'bg-green-500' : ''}
+                                                        ${userEvent.Event.estado === 'finalizado' ? 'bg-red-500' : ''}`}
+                                                    >
+                                                    {userEvent.Event.estado === 'sin_comenzar' ? 'Sin comenzar' : ''}
+                                                    {userEvent.Event.estado === 'en_curso' ? 'En curso' : ''}
+                                                    {userEvent.Event.estado === 'finalizado' ? 'Finalizado' : ''}
+                                                </span>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
