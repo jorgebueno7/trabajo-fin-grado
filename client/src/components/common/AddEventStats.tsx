@@ -74,7 +74,7 @@ const AddEventStats = () => {
                         resultado: selectedUser.resultado || '',
                         tiempo: selectedUser.tiempo?.toString() || '',
                         observaciones: selectedUser.observaciones || '',
-                        estadisticas_extra: selectedUser.estadisticas_extra || ''
+                        estadisticas_extra: []
                     }
                 }));
             }
@@ -90,6 +90,31 @@ const AddEventStats = () => {
           }
         }));
     };
+
+    const handleExtraStatChange = (userId: number, index: number, field: 'key' | 'value', value: string) => {
+      setFormDataMap(prev => {
+          const updatedStats = [...(prev[userId]?.estadisticas_extra || [])];
+          updatedStats[index] = { ...updatedStats[index], [field]: value };
+          return {
+              ...prev,
+              [userId]: {
+                  ...prev[userId],
+                  estadisticas_extra: updatedStats
+              }
+          };
+      });
+    };
+
+    const addExtraStatField = (userId: number) => {
+      setFormDataMap(prev => ({
+          ...prev,
+          [userId]: {
+              ...prev[userId],
+              estadisticas_extra: [...(prev[userId]?.estadisticas_extra || []), { key: '', value: '' }]
+          }
+      }));
+    };
+  
     const fecthUsers = async () => {
         if (id_evento) {
             try {
@@ -104,136 +129,289 @@ const AddEventStats = () => {
         fecthUsers();
     }, [id_evento]);
 
+    // return (
+    //     <div className="mt-5">
+    //         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    //             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    //                 <tr>
+    //                     <th scope="col" className="px-6 py-3">Usuario</th>
+    //                     <th scope="col" className="px-6 py-3">Email</th>
+    //                     <th scope="col" className="px-6 py-3">Deporte favorito</th>
+    //                     <th scope="col" className="px-6 py-3">Deporte del evento</th>   
+    //                     <th scope="col" className="px-6 py-3">Evento</th>
+    //                     <th scope="col" className="px-6 py-3"></th>      
+    //                     <th scope="col" className="px-6 py-3"></th>                                      
+    //                 </tr>
+    //             </thead>
+    //             <tbody>
+    //                 {users.map((userEvent) => (
+    //                   <>
+    //                       <tr key={userEvent.id_usuario} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+    //                           <td className="px-6 py-4">{userEvent.user.nombre} {userEvent.user.apellidos}</td>
+    //                           <td className="px-6 py-4">{userEvent.user.email}</td>
+    //                           <td className="px-6 py-4">{userEvent.user.deporte}</td>
+    //                           <td className="px-6 py-4">{userEvent.Event.Sport.nombre}</td>
+    //                           <td className="px-6 py-4">{userEvent.Event.nombre}</td>
+    //                           <td className="px-6 py-4">
+    //                               <button
+    //                                   onClick={() => toggleExpandRow(userEvent.id_usuario)}
+    //                                   className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+    //                               >
+    //                                   {expandedRow === userEvent.id_usuario ? 'Ocultar' : 'Añadir Estadísticas'}
+    //                               </button>
+    //                           </td>
+    //                           <td className="px-6 py-4">
+    //                               <button
+    //                                   onClick={() => openStatsModal(userEvent)}
+    //                                   className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+    //                               >
+    //                                   Consultar estadísticas
+    //                               </button>
+    //                           </td>
+    //                       </tr>
+    //                       {expandedRow === userEvent.id_usuario && (
+    //                         <tr className="bg-gray-100">
+    //                           <td colSpan={7} className="px-6 py-4">
+    //                             <form
+    //                               onSubmit={async (e) => {
+    //                                 e.preventDefault();
+    //                                 try {
+    //                                   await addEventStats(userEvent.id_evento, userEvent.id_usuario, formDataMap[userEvent.id_usuario]);
+    //                                   alert('Estadísticas añadidas con éxito');
+    //                                   toggleExpandRow(userEvent.id_usuario);
+    //                                 } catch (error) {
+    //                                   console.error('Error al guardar estadísticas', error);
+    //                                   alert('Error al guardar estadísticas');
+    //                                 }
+    //                               }}
+    //                               className="grid grid-cols-2 gap-4"
+    //                             >
+    //                               <input
+    //                                 type="number"
+    //                                 placeholder="Clasificación"
+    //                                 className="border p-2 rounded"
+    //                                 value={formDataMap[userEvent.id_usuario]?.clasificacion || ''}
+    //                                 onChange={(e) => handleInputChange(userEvent.id_usuario, 'clasificacion', e.target.value)}
+    //                               />
+    //                               <input
+    //                                 type="number"
+    //                                 placeholder="Puntos"
+    //                                 className="border p-2 rounded"
+    //                                 value={formDataMap[userEvent.id_usuario]?.puntos || ''}
+    //                                 onChange={(e) => handleInputChange(userEvent.id_usuario, 'puntos', e.target.value)}
+    //                               />
+    //                               <input
+    //                                 type="text"
+    //                                 placeholder="Resultado"
+    //                                 className="border p-2 rounded"
+    //                                 value={formDataMap[userEvent.id_usuario]?.resultado || ''}
+    //                                 onChange={(e) => handleInputChange(userEvent.id_usuario, 'resultado', e.target.value)}
+    //                               />
+    //                               <input
+    //                                 type="text"
+    //                                 placeholder="Tiempo"
+    //                                 className="border p-2 rounded"
+    //                                 value={formDataMap[userEvent.id_usuario]?.tiempo || ''}
+    //                                 onChange={(e) => handleInputChange(userEvent.id_usuario, 'tiempo', e.target.value)}
+    //                               />
+    //                               <input
+    //                                 type="text"
+    //                                 placeholder="Observaciones"
+    //                                 className="border p-2 rounded"
+    //                                 value={formDataMap[userEvent.id_usuario]?.observaciones || ''}
+    //                                 onChange={(e) => handleInputChange(userEvent.id_usuario, 'observaciones', e.target.value)}
+    //                               />
+    //                               <button
+    //                                 type="submit"
+    //                                 className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+    //                               >
+    //                                 Añadir estadísticas
+    //                               </button>
+    //                             </form>
+    //                           </td>
+    //                         </tr>
+    //                       )}
+    //                   </>
+    //                 ))}
+    //             </tbody>
+    //         </table>
+    //         {isModalOpen && selectedStatsUser && (
+    //           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    //               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg w-11/12 max-w-2xl relative shadow-lg">
+    //                   <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Estadísticas del Usuario</h2>
+    //                   <p><strong>Usuario:</strong> {selectedStatsUser.user.nombre} {selectedStatsUser.user.apellidos}</p>
+    //                   <p><strong>Evento:</strong> {selectedStatsUser.Event.nombre}</p>
+    //                   <p><strong>Deporte:</strong> {selectedStatsUser.Event.Sport.nombre}</p>
+    //                   <hr className="my-4" />
+    //                   <p><strong>Clasificación:</strong> {selectedStatsUser.clasificacion ?? 'No disponible'}</p>
+    //                   <p><strong>Puntos:</strong> {selectedStatsUser.puntos ?? 'No disponible'}</p>
+    //                   <p><strong>Resultado:</strong> {selectedStatsUser.resultado || 'No disponible'}</p>
+    //                   <p><strong>Tiempo:</strong> {selectedStatsUser.tiempo || 'No disponible'}</p>
+    //                   <p><strong>Observaciones:</strong> {selectedStatsUser.observaciones || 'No disponible'}</p>
+    //                   <button
+    //                     onClick={closeStatsModal}
+    //                     className="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+    //                   >
+    //                     Cerrar
+    //                   </button>
+    //               </div>
+    //           </div>
+    //         )}
+    //     </div>
+    // );
     return (
-        <div className="mt-5">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" className="px-6 py-3">Usuario</th>
-                        <th scope="col" className="px-6 py-3">Email</th>
-                        <th scope="col" className="px-6 py-3">Deporte favorito</th>
-                        <th scope="col" className="px-6 py-3">Deporte del evento</th>   
-                        <th scope="col" className="px-6 py-3">Evento</th>
-                        <th scope="col" className="px-6 py-3"></th>      
-                        <th scope="col" className="px-6 py-3"></th>                                      
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((userEvent) => (
+      <div className="mt-5">
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                      <th className="px-6 py-3">Usuario</th>
+                      <th className="px-6 py-3">Email</th>
+                      <th className="px-6 py-3">Deporte favorito</th>
+                      <th className="px-6 py-3">Deporte del evento</th>
+                      <th className="px-6 py-3">Evento</th>
+                      <th className="px-6 py-3"></th>
+                      <th className="px-6 py-3"></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {users.map((userEvent) => (
                       <>
-                          <tr key={userEvent.id_usuario} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                          <tr key={userEvent.id_usuario} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700 dark:bg-gray-800">
                               <td className="px-6 py-4">{userEvent.user.nombre} {userEvent.user.apellidos}</td>
                               <td className="px-6 py-4">{userEvent.user.email}</td>
                               <td className="px-6 py-4">{userEvent.user.deporte}</td>
                               <td className="px-6 py-4">{userEvent.Event.Sport.nombre}</td>
                               <td className="px-6 py-4">{userEvent.Event.nombre}</td>
                               <td className="px-6 py-4">
-                                  <button
-                                      onClick={() => toggleExpandRow(userEvent.id_usuario)}
-                                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                  >
+                                  <button onClick={() => toggleExpandRow(userEvent.id_usuario)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                       {expandedRow === userEvent.id_usuario ? 'Ocultar' : 'Añadir Estadísticas'}
                                   </button>
                               </td>
                               <td className="px-6 py-4">
-                                  <button
-                                      onClick={() => openStatsModal(userEvent)}
-                                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                  >
+                                  <button onClick={() => openStatsModal(userEvent)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                       Consultar estadísticas
                                   </button>
                               </td>
                           </tr>
+
                           {expandedRow === userEvent.id_usuario && (
-                            <tr className="bg-gray-100">
-                              <td colSpan={7} className="px-6 py-4">
-                                <form
-                                  onSubmit={async (e) => {
-                                    e.preventDefault();
-                                    try {
-                                      await addEventStats(userEvent.id_evento, userEvent.id_usuario, formDataMap[userEvent.id_usuario]);
-                                      alert('Estadísticas añadidas con éxito');
-                                      toggleExpandRow(userEvent.id_usuario);
-                                    } catch (error) {
-                                      console.error('Error al guardar estadísticas', error);
-                                      alert('Error al guardar estadísticas');
-                                    }
-                                  }}
-                                  className="grid grid-cols-2 gap-4"
-                                >
-                                  <input
-                                    type="number"
-                                    placeholder="Clasificación"
-                                    className="border p-2 rounded"
-                                    value={formDataMap[userEvent.id_usuario]?.clasificacion || ''}
-                                    onChange={(e) => handleInputChange(userEvent.id_usuario, 'clasificacion', e.target.value)}
-                                  />
-                                  <input
-                                    type="number"
-                                    placeholder="Puntos"
-                                    className="border p-2 rounded"
-                                    value={formDataMap[userEvent.id_usuario]?.puntos || ''}
-                                    onChange={(e) => handleInputChange(userEvent.id_usuario, 'puntos', e.target.value)}
-                                  />
-                                  <input
-                                    type="text"
-                                    placeholder="Resultado"
-                                    className="border p-2 rounded"
-                                    value={formDataMap[userEvent.id_usuario]?.resultado || ''}
-                                    onChange={(e) => handleInputChange(userEvent.id_usuario, 'resultado', e.target.value)}
-                                  />
-                                  <input
-                                    type="text"
-                                    placeholder="Tiempo"
-                                    className="border p-2 rounded"
-                                    value={formDataMap[userEvent.id_usuario]?.tiempo || ''}
-                                    onChange={(e) => handleInputChange(userEvent.id_usuario, 'tiempo', e.target.value)}
-                                  />
-                                  <input
-                                    type="text"
-                                    placeholder="Observaciones"
-                                    className="border p-2 rounded"
-                                    value={formDataMap[userEvent.id_usuario]?.observaciones || ''}
-                                    onChange={(e) => handleInputChange(userEvent.id_usuario, 'observaciones', e.target.value)}
-                                  />
-                                  <button
-                                    type="submit"
-                                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                                  >
-                                    Añadir estadísticas
-                                  </button>
-                                </form>
-                              </td>
-                            </tr>
+                              <tr className="bg-gray-100">
+                                  <td colSpan={7} className="px-6 py-4">
+                                      <form
+                                          onSubmit={async (e) => {
+                                              e.preventDefault();
+                                              const originalData = formDataMap[userEvent.id_usuario];
+                                              const estadisticas_extra_obj: { [key: string]: any } = {};
+
+                                              originalData.estadisticas_extra.forEach((item: { key: string, value: string }) => {
+                                                  if (item.key.trim()) {
+                                                      estadisticas_extra_obj[item.key.trim()] = isNaN(Number(item.value)) ? item.value : Number(item.value);
+                                                  }
+                                              });
+
+                                              const dataToSend = {
+                                                  ...originalData,
+                                                  estadisticas_extra: estadisticas_extra_obj
+                                              };
+
+                                              try {
+                                                  await addEventStats(userEvent.id_evento, userEvent.id_usuario, dataToSend);
+                                                  alert('Estadísticas añadidas con éxito');
+                                                  toggleExpandRow(userEvent.id_usuario);
+                                              } catch (error) {
+                                                  console.error('Error al guardar estadísticas', error);
+                                                  alert('Error al guardar estadísticas');
+                                              }
+                                          }}
+                                          className="grid grid-cols-2 gap-4"
+                                      >
+                                          <input type="number" placeholder="Clasificación" className="border p-2 rounded"
+                                              value={formDataMap[userEvent.id_usuario]?.clasificacion || ''}
+                                              onChange={(e) => handleInputChange(userEvent.id_usuario, 'clasificacion', e.target.value)} />
+
+                                          <input type="number" placeholder="Puntos" className="border p-2 rounded"
+                                              value={formDataMap[userEvent.id_usuario]?.puntos || ''}
+                                              onChange={(e) => handleInputChange(userEvent.id_usuario, 'puntos', e.target.value)} />
+
+                                          <input type="text" placeholder="Resultado" className="border p-2 rounded"
+                                              value={formDataMap[userEvent.id_usuario]?.resultado || ''}
+                                              onChange={(e) => handleInputChange(userEvent.id_usuario, 'resultado', e.target.value)} />
+
+                                          <input type="text" placeholder="Tiempo" className="border p-2 rounded"
+                                              value={formDataMap[userEvent.id_usuario]?.tiempo || ''}
+                                              onChange={(e) => handleInputChange(userEvent.id_usuario, 'tiempo', e.target.value)} />
+
+                                          <input type="text" placeholder="Observaciones" className="border p-2 rounded col-span-2"
+                                              value={formDataMap[userEvent.id_usuario]?.observaciones || ''}
+                                              onChange={(e) => handleInputChange(userEvent.id_usuario, 'observaciones', e.target.value)} />
+
+                                          <div className="col-span-2">
+                                              <h4 className="font-semibold mb-2">Estadísticas extra:</h4>
+                                              {formDataMap[userEvent.id_usuario]?.estadisticas_extra.map((item: any, index: number) => (
+                                                  <div key={index} className="flex gap-2 mb-2">
+                                                      <input type="text" placeholder="Nombre" className="border p-2 rounded w-1/2"
+                                                          value={item.key}
+                                                          onChange={(e) => handleExtraStatChange(userEvent.id_usuario, index, 'key', e.target.value)} />
+                                                      <input type="text" placeholder="Valor" className="border p-2 rounded w-1/2"
+                                                          value={item.value}
+                                                          onChange={(e) => handleExtraStatChange(userEvent.id_usuario, index, 'value', e.target.value)} />
+                                                  </div>
+                                              ))}
+                                              <button type="button" onClick={() => addExtraStatField(userEvent.id_usuario)} className="text-sm text-blue-600 hover:underline mt-1">
+                                                  + Añadir estadística extra
+                                              </button>
+                                          </div>
+
+                                          <button type="submit" className="col-span-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                              Añadir estadísticas
+                                          </button>
+                                      </form>
+                                  </td>
+                              </tr>
                           )}
                       </>
-                    ))}
-                </tbody>
-            </table>
-            {isModalOpen && selectedStatsUser && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                  <div className="bg-white dark:bg-gray-800 p-6 rounded-lg w-11/12 max-w-2xl relative shadow-lg">
-                      <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Estadísticas del Usuario</h2>
-                      <p><strong>Usuario:</strong> {selectedStatsUser.user.nombre} {selectedStatsUser.user.apellidos}</p>
-                      <p><strong>Evento:</strong> {selectedStatsUser.Event.nombre}</p>
-                      <p><strong>Deporte:</strong> {selectedStatsUser.Event.Sport.nombre}</p>
-                      <hr className="my-4" />
-                      <p><strong>Clasificación:</strong> {selectedStatsUser.clasificacion ?? 'No disponible'}</p>
-                      <p><strong>Puntos:</strong> {selectedStatsUser.puntos ?? 'No disponible'}</p>
-                      <p><strong>Resultado:</strong> {selectedStatsUser.resultado || 'No disponible'}</p>
-                      <p><strong>Tiempo:</strong> {selectedStatsUser.tiempo || 'No disponible'}</p>
-                      <p><strong>Observaciones:</strong> {selectedStatsUser.observaciones || 'No disponible'}</p>
-                      <button
-                        onClick={closeStatsModal}
-                        className="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                      >
+                  ))}
+              </tbody>
+          </table>
+          {isModalOpen && selectedStatsUser && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg w-11/12 max-w-2xl relative shadow-lg">
+                    <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Estadísticas del Usuario</h2>
+                    
+                    <p><strong>Usuario:</strong> {selectedStatsUser.user.nombre} {selectedStatsUser.user.apellidos}</p>
+                    <p><strong>Evento:</strong> {selectedStatsUser.Event.nombre}</p>
+                    <p><strong>Deporte:</strong> {selectedStatsUser.Event.Sport.nombre}</p>
+
+                    <hr className="my-4" />
+
+                    <p><strong>Clasificación:</strong> {selectedStatsUser.clasificacion ?? 'No disponible'}</p>
+                    <p><strong>Puntos:</strong> {selectedStatsUser.puntos ?? 'No disponible'}</p>
+                    <p><strong>Resultado:</strong> {selectedStatsUser.resultado || 'No disponible'}</p>
+                    <p><strong>Tiempo:</strong> {selectedStatsUser.tiempo || 'No disponible'}</p>
+                    <p><strong>Observaciones:</strong> {selectedStatsUser.observaciones || 'No disponible'}</p>
+
+                    {selectedStatsUser.estadisticas_extra && Object.keys(selectedStatsUser.estadisticas_extra).length > 0 && (
+                        <>
+                            <hr className="my-4" />
+                            <h3 className="text-lg font-semibold mb-2">Estadísticas extra</h3>
+                            <ul className="space-y-1">
+                                {Object.entries(selectedStatsUser.estadisticas_extra).map(([key, value], idx) => (
+                                    <li key={idx} className="flex justify-between border-b py-1">
+                                        <span className="font-medium text-black-700 dark:text-gray-300">{key}</span>
+                                        <span className="text-black-600 dark:text-gray-400">{value.toString()}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </>
+                    )}
+                    <button onClick={closeStatsModal} className="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                         Cerrar
-                      </button>
-                  </div>
-              </div>
-            )}
-        </div>
-    );
+                    </button>
+                </div>
+            </div>
+        )}
+      </div>
+  );
 }
 
 export default AddEventStats;
