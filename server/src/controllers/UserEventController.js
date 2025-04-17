@@ -67,6 +67,11 @@ const getEventByUserLoggedIn = async (req, res) => {
             where: { id_usuario: userId },
             include: [{ model: event, include: [{ model: sport }] }],
         });
+
+        if (!userEvents.length) {
+            return res.status(404).json({ error: 'No events found for the logged-in user' });
+        }
+        
         res.status(200).json(userEvents || []); 
     } catch (error) {
         res.status(500).json({ error: `ERROR_GET_EVENT_BY_USER_ID: ${error}` });

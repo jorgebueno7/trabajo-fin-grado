@@ -1,9 +1,12 @@
 const event = require('../models/Event');
 const user = require('../models/User');
+const sport = require('../models/Sports');
 
 const getAllEvents = async (req, res) => {
     try {
-        const events = await event.findAll();
+        const events = await event.findAll(
+            { include: [{ model: sport }] }
+        );
         res.status(200).json(events);
     } catch (error) {
         res.status(500).json({error: `ERROR_GET_ALL_EVENTS: ${error}`})

@@ -27,6 +27,11 @@ export const getUserEvents = async () => {
   return response.data;
 };
 
+export const getUserEventsLoggedIn = async () => {
+  const response = await axios.get(`${API_URL}/events-logged-in`, { withCredentials: true });
+  return response.data;
+};
+
 export const getEventsByOrganizer = async () => {
   const response = await axios.get(`${API_URL}/organizer`, { withCredentials: true });
   return response.data;

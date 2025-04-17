@@ -4,7 +4,7 @@ import UserContext from '../context/UsersContext';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
-import { getUserEvents, getEventsByOrganizer } from '../api/userEvent';
+import { getEventsByOrganizer, getUserEventsLoggedIn } from '../api/userEvent';
 import { putEventStatus, getEvents, deleteEvent } from '../api/events';
 import { getSports, deleteSport } from '../api/sports'
 import { getUsers, deleteUserById } from '../api/users'
@@ -15,21 +15,57 @@ const ITEMS_PER_PAGE = 3;
 const ProfilePage = () => {  
     interface Event {
         id_evento: number;
-        id_usuario: number;
+        // id_usuario: number;
         createdBy: string;
-        Event: {
-            id_evento: number;
+        nombre: string;
+        fecha_ini: string;
+        hora_ini: string;
+        lugar: string;
+        clasificacion: string;
+        estado: string;
+        Sport: {
             nombre: string;
-            fecha_ini: string;
-            hora_ini: string;
-            lugar: string;
-            clasificacion: string;
-            estado: string;
-            Sport: {
-                nombre: string;
-            };
         }; 
     }
+
+    interface UserEvent {
+        id_evento: number,
+        id_usuario: number,
+        clasificacion: number,
+        puntos: number,
+        tiempo: number,
+        resultado: string,
+        observaciones: string,
+        estadisticas_extra: JSON,
+        user: {
+            id_usuario: number,
+            nombre: string,
+            apellidos: string,
+            fecha_nacimiento: string,
+            email: string,
+            telefono: string,
+            role: string,
+            deporte: string,
+            mejor_marca: string
+        }
+        Event: {
+            id_evento: number,
+            nombre: string,
+            fecha_limite: string
+            lugar: string
+            maximo_usuarios: number,
+            estado: string,
+            fecha_ini: string,
+            Sport: {
+                id_deporte: number,
+                nombre: string,
+                descripcion: string
+                informacion: string
+                categoria: string,
+                equipamiento: string,
+            }
+        }
+    };
 
     interface EventOrganizer {
         id_evento: number;
@@ -87,6 +123,7 @@ const ProfilePage = () => {
     const { user } = useContext(UserContext);
     const [events, setEvents] = useState<Event[]>([]);
     const [eventsOrganizer, setEventsOrganizer] = useState<EventOrganizer[]>([]);
+    const [userEvents, setUserEvents] = useState<UserEvent[]>([]);
     const [allEvents, setAllEvents] = useState<AdminEvent[]>([]);
     const [allSports, setAllSports] = useState<AdminSport[]>([]); 
     // const [allRatings, setAllRatings] = useState<AdminRating[]>([]); 
@@ -179,8 +216,9 @@ const ProfilePage = () => {
 
     const fetchUserEvents = async () => {
         try {
-            const userEvents = await getUserEvents();
-            setEvents(userEvents);
+            const events = await getEvents();
+            console.log("EVENTOS OBTENIDOS", events)
+            setEvents(events);
         } catch (error) {
             console.error('Error obteniendo eventos:', error);
             // alert('Hubo un error al obtener los eventos. Inténtalo de nuevo más tarde.');
@@ -191,6 +229,16 @@ const ProfilePage = () => {
         try {
             const userEvents = await getEventsByOrganizer();
             setEventsOrganizer(userEvents);
+        } catch (error) {
+            console.error('Error obteniendo eventos:', error);
+            // alert('Hubo un error al obtener los eventos. Inténtalo de nuevo más tarde.');
+        }
+    };
+
+    const fetchUserEventsLoggedIn = async () => {
+        try {
+            const userEvents = await getUserEventsLoggedIn();
+            setUserEvents(userEvents);
         } catch (error) {
             console.error('Error obteniendo eventos:', error);
             // alert('Hubo un error al obtener los eventos. Inténtalo de nuevo más tarde.');
@@ -224,6 +272,7 @@ const ProfilePage = () => {
         }
     }
 
+        
     // const fetchAllRatings = async () => {
     //     try {
     //         const ratings = await getRatings();
@@ -286,6 +335,7 @@ const ProfilePage = () => {
     useEffect(() => {
         if(rolUsuario === 'participante') {
             fetchUserEvents();
+            fetchUserEventsLoggedIn();
         } else if (rolUsuario === 'organizador') {
             fetchEventsByOrganizer();
         } else {
@@ -693,7 +743,7 @@ const ProfilePage = () => {
                             <div>
                                 <a className="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow-sm 
                                     hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                                    <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Proximos eventos</h3>
+                                    <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Eventos disponibles</h3>
                                     <hr></hr>
                                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-3">
                                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -704,15 +754,15 @@ const ProfilePage = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {events.filter(event => event.Event.estado === 'sin_comenzar').map((userEvent) => (
-                                                <tr key={userEvent.id_usuario} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                            {events.filter(event => event.estado === 'sin_comenzar').map((userEvent) => (
+                                                <tr key={userEvent.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                                     <td className="px-6 py-4">
-                                                        <button onClick={ () => navigateToEventDetail(userEvent.Event.id_evento)} className="text-blue-600 hover:underline">
-                                                            {userEvent.Event.nombre}
+                                                        <button onClick={ () => navigateToEventDetail(userEvent.id_evento)} className="text-blue-600 hover:underline">
+                                                            {userEvent.nombre}
                                                         </button>
                                                     </td>
-                                                    <td className="px-6 py-4">{dayjs(userEvent.Event.fecha_ini).format('DD-MM-YYYY')}</td>
-                                                    <td className="px-6 py-4">{userEvent.Event.lugar}</td>
+                                                    <td className="px-6 py-4">{dayjs(userEvent.fecha_ini).format('DD-MM-YYYY')}</td>
+                                                    <td className="px-6 py-4">{userEvent.lugar}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -727,8 +777,8 @@ const ProfilePage = () => {
                                         <div className="block">
                                             <strong><h1>Deportes favoritos</h1></strong>
                                             <div className="mt-2">
-                                                {events.map((userEvent) => (
-                                                    <p key={userEvent.id_usuario}>{userEvent.Event.Sport.nombre}</p>
+                                                {events.map((event) => (
+                                                    <p key={event.id_evento}>{event.Sport.nombre}</p>
                                                 ))}
                                             </div>
                                         </div>
@@ -748,7 +798,7 @@ const ProfilePage = () => {
                         </div>
                         {/* Listado de eventos que ha finalizado el usuario */}
                         <div>
-                            <h1 className="mt-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white ml-8">Eventos finalizados</h1>
+                            <h1 className="mt-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white ml-8">Eventos participados</h1>
                             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ml-4 mt-3">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
@@ -757,19 +807,24 @@ const ProfilePage = () => {
                                         <th scope="col" className="px-6 py-3">Fecha de evento</th>
                                         <th scope="col" className="px-6 py-3">Lugar del evento</th>
                                         <th scope="col" className="px-6 py-3">Clasificación</th>
-
-                                        <th scope="col" className="px-6 py-3">Mejor resultado obtenido</th>
+                                        <th scope="col" className="px-6 py-3">Puntos</th>
+                                        <th scope="col" className="px-6 py-3">Tiempo</th>
+                                        <th scope="col" className="px-6 py-3">Resultado</th>
+                                        <th scope="col" className="px-6 py-3">Observaciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {events.filter(event => event.Event.estado === 'finalizado').map((userEvent) => (
+                                    {userEvents.filter(e => e.Event.estado === 'finalizado').map((userEvent) => (
                                         <tr key={userEvent.id_usuario} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{userEvent.Event.nombre}</th>
                                             <td className="px-6 py-4">{userEvent.Event.Sport.nombre}</td>
                                             <td className="px-6 py-4">{dayjs(userEvent.Event.fecha_ini).format('DD-MM-YYYY')}</td>
                                             <td className="px-6 py-4">{userEvent.Event.lugar}</td>
-                                            <td className="px-6 py-4">{userEvent.Event.clasificacion}</td>
-                                            {/* <td className="px-6 py-4">{userEvent.mejor_resultado}</td> */}
+                                            <td className="px-6 py-4">{userEvent.clasificacion}</td>
+                                            <td className="px-6 py-4">{userEvent.puntos}</td>
+                                            <td className="px-6 py-4">{userEvent.tiempo}</td>
+                                            <td className="px-6 py-4">{userEvent.resultado}</td>
+                                            <td className="px-6 py-4">{userEvent.observaciones}</td>
                                         </tr>
                                     ))}
                                 </tbody>
