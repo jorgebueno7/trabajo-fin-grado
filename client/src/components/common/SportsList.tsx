@@ -14,7 +14,7 @@ const Deportes = () => {
     }
 
     const [sports, setSports] = useState<Sport[]>([]);
-    const { user } = useContext(UserContext);
+    const { user, isLoggedIn } = useContext(UserContext);
 
     console.log("Valor de user role", user?.role);
 
@@ -43,7 +43,7 @@ const Deportes = () => {
         <>
             <div className="flex mx-20 mt-6">
                 <div className="flex flex-col items-start mr-6">
-                    {rolUsuario !== 'participante' && rolUsuario !== 'organizador' &&
+                    {isLoggedIn && rolUsuario !== 'participante' && rolUsuario !== 'organizador' &&
                         <button
                             type="submit"
                             onClick={handleCreateSportClick}
