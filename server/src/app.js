@@ -4,6 +4,7 @@ const cors = require('cors');
 const db = require('./database/database');
 const session = require('express-session');
 require('dotenv').config();
+require('./models/associations');
 
 const app = express();
 const PORT = process.env.PORT_SERVER || 5000 ;

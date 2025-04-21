@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 import { getEventsByOrganizer, getUserEventsLoggedIn } from '../api/userEvent';
-import { putEventStatus, getEvents, deleteEvent } from '../api/events';
+import { putEventStatus, getEvents, deleteEvent, getEventsAvailableByUserLoggedIn } from '../api/events';
 import { getSports, deleteSport } from '../api/sports'
 import { getUsers, deleteUserById } from '../api/users'
 // import { deleteRating } from '../api/ratings' 
@@ -26,6 +26,9 @@ const ProfilePage = () => {
         Sport: {
             nombre: string;
         }; 
+        UserEvents: {
+            esta_inscrito: boolean;
+        }[];
     }
 
     interface UserEvent {
@@ -37,6 +40,7 @@ const ProfilePage = () => {
         resultado: string,
         observaciones: string,
         estadisticas_extra: JSON,
+        esta_inscrito: boolean,
         user: {
             id_usuario: number,
             nombre: string,
@@ -216,7 +220,8 @@ const ProfilePage = () => {
 
     const fetchUserEvents = async () => {
         try {
-            const events = await getEvents();
+            // const events = await getEvents();
+            const events = await getEventsAvailableByUserLoggedIn();
             console.log("EVENTOS OBTENIDOS", events)
             setEvents(events);
         } catch (error) {
@@ -746,7 +751,8 @@ const ProfilePage = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {events.filter(event => event.estado === 'sin_comenzar').map((userEvent) => (
+                                            {events.filter(event => event.estado === 'sin_comenzar' && event.UserEvents.length === 0
+                                                ).map((userEvent) => (
                                                 <tr key={userEvent.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                                     <td className="px-6 py-4">
                                                         <button onClick={ () => navigateToEventDetail(userEvent.id_evento)} className="text-blue-600 hover:underline">
@@ -807,7 +813,7 @@ const ProfilePage = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {userEvents.map((userEvent) => (
+                                    {userEvents.filter(userEvent => userEvent.esta_inscrito == true).map((userEvent) => (
                                         <tr key={userEvent.id_usuario} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{userEvent.Event.nombre}</th>
                                             <td className="px-6 py-4">{userEvent.Event.Sport.nombre}</td>

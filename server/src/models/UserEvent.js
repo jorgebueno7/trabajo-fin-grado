@@ -8,19 +8,22 @@ UserEvent.init({
     id_evento: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        references: {
-          model: Event,
-          key: 'id_evento'
-        }
+        // references: {
+        //   model: Event,
+        //   key: 'id_evento'
+        // }
+        allowNull: false
       },
       id_usuario: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        references: {
-          model: User,
-          key: 'id_usuario'
-        }
+        // references: {
+        //   model: User,
+        //   key: 'id_usuario'
+        // }
+        allowNull: false
       },
+      esta_inscrito: { type: DataTypes.BOOLEAN, allowNull: true, defaultValue: false },
       clasificacion: { type: DataTypes.NUMBER, allowNull: true },
       puntos: { type: DataTypes.INTEGER, allowNull: true },
       tiempo: { type: DataTypes.FLOAT, allowNull: true },

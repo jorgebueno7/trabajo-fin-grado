@@ -1,15 +1,44 @@
 const event = require('../models/Event');
 const user = require('../models/User');
 const sport = require('../models/Sports');
+const user_event = require('../models/UserEvent');
 
 const getAllEvents = async (req, res) => {
     try {
         const events = await event.findAll(
-            { include: [{ model: sport }] }
+            { include: [{ model: sport }, 
+                {
+                    model: user_event,
+                    required: false
+                }
+            ]}
         );
         res.status(200).json(events);
     } catch (error) {
         res.status(500).json({error: `ERROR_GET_ALL_EVENTS: ${error}`})
+    }
+}
+
+const getAllEventsAndUserEventsFromUserLoggedIn = async (req, res) => {
+    const id_usuario = req.session.userId;
+
+    if (!id_usuario) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    try {
+        const events = await event.findAll({
+            include: [
+                { model: sport },
+                {
+                    model: user_event,
+                    where: { id_usuario: id_usuario },
+                    required: false
+                }
+            ]
+        });
+        res.status(200).json(events);
+    } catch (error) {
+        res.status(500).json({ error: `ERROR_GET_ALL_EVENTS: ${error}` });
     }
 }
 
@@ -101,4 +130,5 @@ const deleteEvent = async (req, res) => {
     }
 }
 
-module.exports = { getAllEvents, getEventById, postEvent, updateEvent, updateEventStatus, deleteEvent };
+module.exports = { getAllEvents, getEventById, postEvent, updateEvent, 
+    updateEventStatus, deleteEvent, getAllEventsAndUserEventsFromUserLoggedIn };

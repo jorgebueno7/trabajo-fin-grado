@@ -124,7 +124,7 @@ const postUserEvent = async (req, res) => {
         const currentUsersCount = await user_event.count({ where: { id_evento } });
         if (currentUsersCount < evento.maximo_usuarios) { // Si el número de usuarios de los eventos, es menor al máximo permitido por el evento
             // Crear un nuevo usuario en el evento
-            const newUserEvent = await user_event.create({ id_usuario, id_evento });
+            const newUserEvent = await user_event.create({ id_usuario, id_evento, esta_inscrito: true });
             return res.status(201).json(newUserEvent);
         } else { // Si el evento está lleno, añadir el usuario a la cola
             if (!queue[id_evento]) {
