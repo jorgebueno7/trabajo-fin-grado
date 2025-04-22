@@ -20,6 +20,7 @@ const EventDetail = () => {
         lugar: string;
         hora_ini: string;
         maximo_usuarios: number;
+        estado: string;
         id_usuario_espera: number;
     }
     interface Sport {
@@ -129,6 +130,18 @@ const EventDetail = () => {
                     Deporte: <a className="font-normal text-blue-700 dark:text-blue-400 hover:underline" href={`/sports/${event.id_deporte}`}>{eventSport && <strong>{eventSport.nombre}</strong>}</a>
                 </p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha inicio del evento: <strong>{event.fecha_ini}</strong></p>
+                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Estado del evento: 
+                    <span 
+                        className={`ml-1 font-bold
+                            ${event.estado === 'sin_comenzar' ? 'text-blue-500' : ''}
+                            ${event.estado === 'en_curso' ? 'text-green-500' : ''}
+                            ${event.estado === 'finalizado' ? 'text-red-500' : ''}`}
+                    >
+                        {event.estado === 'sin_comenzar' ? 'Sin comenzar' : ''}
+                        {event.estado === 'en_curso' ? 'En curso' : ''}
+                        {event.estado === 'finalizado' ? 'Finalizado' : ''}
+                    </span>
+                </p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Hora de inicio del evento: <strong>{event.hora_ini}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Hora final del evento: <strong>{event.fecha_fin}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Lugar del evento: <strong>{event.lugar}</strong></p>
@@ -142,8 +155,9 @@ const EventDetail = () => {
                 </div>
                 <button
                     onClick={handleJoinEvent}
+                    disabled={!isLoggedIn || (user && users.includes(user.id)) || (event.estado === 'en_curso' || event.estado === 'finalizado')}
                     className={`inline-flex items-center px-3 py-2 mt-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 
-                        ${(!isLoggedIn || (user && users.includes(user.id))) ? 'opacity-60 cursor-not-allowed' : ''}`}
+                        ${(!isLoggedIn || (user && users.includes(user.id)) || (event.estado === 'en_curso' || event.estado === 'finalizado')) ? 'opacity-60 cursor-not-allowed' : ''}`}
                 >
                     {user && users.includes(user.id) ? 'Unirse al evento' : 'Unirse al evento'}
                 </button>
