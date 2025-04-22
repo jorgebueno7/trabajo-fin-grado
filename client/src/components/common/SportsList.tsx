@@ -15,8 +15,8 @@ const Deportes = () => {
 
     const [sports, setSports] = useState<Sport[]>([]);
     const { user, isLoggedIn } = useContext(UserContext);
-
-    console.log("Valor de user role", user?.role);
+    const [selectedSport, setSelectedSport] = useState<string>('all');
+    const deportes = [...new Set(sports.map(e => e.nombre))]; // Lista de deportes únicos
 
     const navigate = useNavigate();
 
@@ -39,15 +39,34 @@ const Deportes = () => {
 
     const rolUsuario = user?.role;
 
+    const filteredSports = sports.filter(sport => {
+        const matchesDeporte = selectedSport === 'all' || sport.nombre === selectedSport;
+        return matchesDeporte ;
+    });
     return (
         <>
-            <div className="flex mx-20 mt-6">
-                <div className="flex flex-col items-start mr-6">
+            <div className="flex items-end gap-6 mx-20 mt-6">
+                <div className="flex flex-col">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Filtrar por deporte:</label>
+                    <select
+                        value={selectedSport}
+                        onChange={(e) => setSelectedSport(e.target.value)}
+                        className="mt-1 w-48 py-2 px-3 border border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-md shadow-sm"
+                    >
+                        <option value="all">Todos</option>
+                        {deportes.map((nombre) => (
+                            <option key={nombre} value={nombre}>
+                                {nombre}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="flex items-end h-full">
                     {isLoggedIn && rolUsuario !== 'participante' && rolUsuario !== 'organizador' &&
                         <button
                             type="submit"
                             onClick={handleCreateSportClick}
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-lg"
                         >
                             Crear deporte
                         </button>
@@ -55,7 +74,7 @@ const Deportes = () => {
                 </div>
             </div>
             <div className="grid grid-cols-3 gap-x-6 mx-20">
-                {sports.map((sport, index) => (
+                {filteredSports.map((sport, index) => (
                     <Link key={sport.id_deporte} to={`/sports/${sport.id_deporte}`}>
                         <figure  className="mt-4 relative hover:filter hover:grayscale">
                             <figcaption className="absolute inset-0 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
