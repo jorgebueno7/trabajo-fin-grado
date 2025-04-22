@@ -153,17 +153,21 @@ const EventDetail = () => {
                         {percentage}%
                     </div>
                 </div>
-                <button
-                    onClick={handleJoinEvent}
-                    disabled={!isLoggedIn || (user && users.includes(user.id)) || (event.estado === 'en_curso' || event.estado === 'finalizado')}
-                    className={`inline-flex items-center px-3 py-2 mt-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 
-                        ${(!isLoggedIn || (user && users.includes(user.id)) || (event.estado === 'en_curso' || event.estado === 'finalizado')) ? 'opacity-60 cursor-not-allowed' : ''}`}
-                >
-                    {user && users.includes(user.id) ? 'Unirse al evento' : 'Unirse al evento'}
-                </button>
+                {
+                    isLoggedIn && user && 
+                    !users.includes(user.id) && 
+                    event.estado !== 'en_curso' && 
+                    event.estado !== 'finalizado' && (
+                        <button
+                            onClick={handleJoinEvent}
+                            className="inline-flex items-center px-3 py-2 mt-6 mr-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700"
+                        >
+                            Unirse al evento
+                        </button>
+                )}
                 <button
                     onClick={handleViewRatings}
-                    className="inline-flex items-center px-3 py-2 mt-6 ml-2 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600"
+                    className="inline-flex items-center px-3 py-2 mt-6 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600"
                 >
                     Ver valoraciones
                 </button>
