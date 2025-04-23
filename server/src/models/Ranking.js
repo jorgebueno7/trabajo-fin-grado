@@ -35,19 +35,25 @@ Ranking.init({
             key: 'id_evento',
         },
     }, 
-    resultado: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-    },
-    posicion: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    fecha: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-    },
+    // resultado: {
+    //     type: DataTypes.STRING(255),
+    //     allowNull: false,
+    // },
+    // posicion: {
+    //     type: DataTypes.INTEGER,
+    //     allowNull: false,
+    // },
+    // fecha: {
+    //     type: DataTypes.DATE,
+    //     allowNull: false,
+    //     defaultValue: DataTypes.NOW,
+    // },
+    clasificacion: { type: DataTypes.NUMBER, allowNull: true },
+    puntos: { type: DataTypes.INTEGER, allowNull: true },
+    tiempo: { type: DataTypes.FLOAT, allowNull: true },
+    resultado: { type: DataTypes.STRING, allowNull: true },
+    observaciones: { type: DataTypes.STRING, allowNull: true },
+    estadisticas_extra: { type: DataTypes.JSON, allowNull: true },
 }, {
     sequelize,
     tableName: "ranking",

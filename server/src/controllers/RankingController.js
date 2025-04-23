@@ -1,8 +1,13 @@
 const ranking = require('../models/Ranking');
+const events = require('../models/Event');
+const sport = require('../models/Sports');
+const user = require('../models/User');
 
 const getAllRankings = async (req, res) => {
     try {
-        const rankings = await ranking.findAll();
+        const rankings = await ranking.findAll(
+            { include: [{ model: events }, { model: sport }, { model: user }]}
+        );
         res.status(200).json(rankings);
     } catch (error) {
         res.status(500).json({error: `ERROR_GET_ALL_RANKINGS: ${error}`})
@@ -25,10 +30,14 @@ const getRankingById = async (req, res) => {
 
 const postRanking = async (req, res) => {
     try { 
-        const { id_usuario, id_deporte, id_evento, resultado, posicion } = req.body;
-        const newRanking = await ranking.create({ id_usuario, id_deporte, id_evento, resultado, posicion });
-        if (id_usuario && id_deporte && id_evento && resultado && posicion){
+        const { id_usuario, id_deporte, id_evento, clasificacion, puntos, tiempo, resultado, observaciones, estadisticas_extra } = req.body;
+        if (id_usuario && id_deporte && id_evento && clasificacion &&
+            puntos && tiempo && resultado && observaciones && estadisticas_extra){
+            const newRanking = await ranking.create({ id_usuario, id_deporte, id_evento, 
+                    clasificacion, puntos, tiempo, resultado, observaciones, estadisticas_extra });
             res.status(201).json(newRanking);
+        } else {
+            res.status(400).json({error: 'Missing required fields'});
         }
     } catch (error) {
         res.status(500).json({error: `ERROR_POST_RANKING: ${error}`})
@@ -38,8 +47,8 @@ const postRanking = async (req, res) => {
 const putRanking = async (req, res) => {
     try {
         const { id_ranking } = req.params;
-        const { resultado, posicion } = req.body;
-        await ranking.update({ resultado, posicion }, 
+        const { clasificacion, puntos, tiempo, resultado, observaciones, estadisticas_extra } = req.body;
+        await ranking.update({ clasificacion, puntos, tiempo, resultado, observaciones, estadisticas_extra }, 
             { where: { id_ranking: id_ranking } });
         res.status(200).json({message: 'Ranking updated successfully'});
     } catch (error) {

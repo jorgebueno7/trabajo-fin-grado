@@ -2,6 +2,7 @@ const user_event = require('../models/UserEvent');
 const event = require('../models/Event')
 const sport = require('../models/Sports');
 const user = require('../models/User');
+const ranking = require('../models/Ranking');
 let queue = {};
 
 const getAllUserEvents = async (req, res) => {
@@ -228,6 +229,10 @@ const addUserEventStats = async (req, res) => {
     try {
         // const { id_evento } = req.params;
         const { id_evento, id_usuario } = req.params;
+        const evento = await event.findByPk(id_evento);
+        if (!evento) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
 
         const {
             clasificacion,
@@ -254,6 +259,35 @@ const addUserEventStats = async (req, res) => {
             observaciones,
             estadisticas_extra,
         });
+
+        const existingRanking = await ranking.findOne({
+            where: { id_evento, id_usuario }
+        });
+
+        if (!existingRanking) {
+            // Almacenar la información en ranking también
+            await ranking.create({
+                id_usuario,
+                id_evento,
+                id_deporte: evento.id_deporte,
+                clasificacion,
+                puntos,
+                tiempo,
+                resultado,
+                observaciones,
+                estadisticas_extra,
+            });
+        } else {
+            // Actualizar la información en ranking
+            await existingRanking.update({
+                clasificacion,
+                puntos,
+                tiempo,
+                resultado,
+                observaciones,
+                estadisticas_extra,
+            });
+        }
 
         res.status(200).json({ message: 'Estadísticas actualizadas correctamente', userEvent });
     } catch (error) {
