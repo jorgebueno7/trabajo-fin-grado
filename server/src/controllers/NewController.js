@@ -1,6 +1,24 @@
 const event = require('../models/Event');
 const news = require('../models/News');
 
+const getNewImage = async (req, res) => {
+    try {
+        const { id_noticia } = req.params;
+        const noticia = await news.findByPk(id_noticia);
+
+        if (!noticia || !noticia.imagen) {
+            return res.status(404).send('Imagen no encontrada');
+        }
+
+        // O puedes detectar el tipo de imagen si lo guardas (por ahora asumimos JPEG)
+        res.set('Content-Type', 'image/jpeg');
+        res.send(noticia.imagen);
+    } catch (error) {
+        res.status(500).json({ error: `ERROR_GET_NEW_IMAGE: ${error}` });
+    }
+};
+
+
 const getAllNews = async (req, res) => {
     try {
         const newsList = await news.findAll({
@@ -28,7 +46,14 @@ const getNewById = async (req, res) => {
 
 const postNew = async (req, res) => {
     try {
-        const { id_evento, titulo, subtitulo, imagen } = req.body;
+        const id_usuario = req.session.userId;
+        if (!id_usuario) {
+            return res.status(400).json({ error: 'User is not logged in' });
+        }
+        const { id_evento, titulo, subtitulo } = req.body;
+
+        const imagen = req.file ? req.file.buffer : null; // nombre del archivo
+
         const newNoticia = await news.create({ id_evento, titulo, subtitulo, imagen });
         res.status(201).json(newNoticia);
     } catch (error) {
@@ -70,4 +95,4 @@ const deleteNew = async (req, res) => {
     }
 }
 
-module.exports = { getAllNews, getNewById, postNew, putNew, deleteNew }
+module.exports = { getNewImage, getAllNews, getNewById, postNew, putNew, deleteNew }

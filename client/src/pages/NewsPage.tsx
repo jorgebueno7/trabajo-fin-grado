@@ -1,91 +1,44 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { getAllNews } from '../api/news';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 const NewsPage = () => {
-
-    interface Noticias {
-        id: string;
-        newsHeadline: string;
-        newsDate: string;
-        fullNewsDate: string;
-        newsTime: string;
-        newsSource: string;
-        newsTeaser: string;
-        newsFirstImage: string;
-        newsSpotlightFirstImage: string;
-        newsSecondImage: string;
-        newsStartPageFlag: string;
-        newsShortMessageFlag: string;
+    interface News {
+        id_noticia: number;
+        titulo: string;
+        subtitulo: string;
+        imagen: string;
+        id_evento: number;
+        fecha_creacion: string;
     }
 
-    const [news, setNews] = useState<Noticias[]>([]);
-    const fetchTransfers = async () => {
-        const url = 'https://transfermarket.p.rapidapi.com/news/list-latest';
-        const params = {
-            // offset: 0,
-            // competitionIds: 'IT1,GB1',
-            // orderByLatestUpdate: true,
-            domain: 'es',
-        };
+    const [news, setNews] = useState<News[]>([]);
 
+    const fetchNews = async () => {
         try {
-            const response = await axios.get(url, {
-                params,
-                headers: {
-                    'X-Rapidapi-Key': 'a3fc638527msh333bbd97ad3c51bp1fbf5cjsnbb0738ac8b16',
-                    'X-Rapidapi-Host': 'transfermarket.p.rapidapi.com',
-                },
-            });
-            console.log(response.data.news);
-            setNews(response.data.news);
+            const response = await getAllNews();
+            setNews(response);
         } catch (error) {
-            console.error('Error fetching transfers:', error);
+            console.error('Error fetching news:', error);
         }
-    };
-
+    }
     useEffect(() => {   
-        fetchTransfers();
+        fetchNews();
     }, []);
     
     return (
         <div className="p-5">
             <h1 className="text-2xl font-bold ml-2 mb-4">Últimas noticias</h1>
                 <ul>
-                    {news.map(noticia => (
-                        <div key={noticia.id} className="border p-5 mb-4 ml-2 rounded-md bg-white shadow-md">
-                            <h2 className="text-xl font-bold mb-2">{noticia.newsHeadline}</h2>
-                            <p className="text-sm text-gray-500 mb-2">
-                                <strong>Fecha:</strong> {noticia.newsDate} ({noticia.fullNewsDate})<br />
-                                <strong>Hora:</strong> {noticia.newsTime}
-                            </p>
-                            <p className="text-sm text-gray-600 mb-4">
-                                <strong>Fuente:</strong> {noticia.newsSource}
-                            </p>
-                            <p className="text-lg mb-4">
-                                <strong>Resumen:</strong> {noticia.newsTeaser}
-                            </p>
-                            {noticia.newsSpotlightFirstImage ? (
-                                <img
-                                src={noticia.newsSpotlightFirstImage}
-                                alt="Imagen Secundaria"
-                                className="w-full rounded mb-4"
-                                />
-                            ) : noticia.newsFirstImage ? (
-                                <img
-                                src={noticia.newsFirstImage}
-                                alt="Imagen Principal"
-                                className="w-1/4 rounded mb-4"
-                                />
-                            ) : null}
-
-                            {noticia.newsSecondImage && (
-                                <img
-                                src={noticia.newsSecondImage}
-                                alt="Imagen del Club"
-                                className="w-20 h-20 rounded-md mb-4"
-                                />
-                            )}
-                    </div>
+                    {news.map((item) => (
+                        <li key={item.id_noticia} className="mb-4 p-4 border rounded shadow">
+                            <h2 className="text-xl font-semibold">{item.titulo}</h2>
+                            <p className="text-gray-600">{item.subtitulo}</p>
+                            <img src={`http://localhost:5000/sportly/news/${item.id_noticia}/imagen`} alt={item.titulo} className="mt-2 w-full h-auto"/>
+                            <p className="text-gray-500 mt-2">Fecha: {dayjs.utc(item.fecha_creacion).format('DD-MM-YYYY HH:mm:ss')}</p>
+                        </li>
                     ))}
                 </ul>
         </div>
