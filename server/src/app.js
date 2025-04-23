@@ -32,6 +32,7 @@ app.use('/sportly', require('./routes/events'));
 app.use('/sportly', require('./routes/user-events'));
 app.use('/sportly', require('./routes/ratings'));
 app.use('/sportly', require('./routes/rankings'));
+app.use('/sportly', require('./routes/news'));
 
 app.listen(PORT, (error) => {
     if(!error)
