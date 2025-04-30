@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import UserContext from '../../context/UsersContext';
 import { useParams } from 'react-router-dom';
 import { getEventsById } from '../../api/events';
-import { getUserEventsByEventId, postUserEvent } from '../../api/userEvent';
+import { getUserEventsByEventId, postUserEvent, deleteUserEvent } from '../../api/userEvent';
 import { getSports } from '../../api/sports';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -60,6 +60,19 @@ const EventDetail = () => {
         fetchSports();
     }, []);
 
+    const handleLeaveEvent = async () => {
+        if (user && event) {
+            try {
+                await deleteUserEvent(event.id_evento); // Llama a la API
+                alert('Te has dado de baja del evento.');
+                fetchEvent(); // Refresca los datos del evento
+            } catch (error) {
+                console.error('Error al darse de baja del evento:', error);
+                alert('Hubo un error al intentar darte de baja.');
+            }
+        }
+    };
+    
     // Obtener datos del evento y usuarios inscritos
     const fetchEvent = async () => {
         try {
@@ -91,6 +104,10 @@ const EventDetail = () => {
             if (user && event) {
                 await postUserEvent(event.id_evento);
                 alert('Te has unido al evento exitosamente');
+                if(event.maximo_usuarios < users.length) {
+                    alert('Has entrado en la cola de espera del evento.');
+                    return;
+                }
                 fetchEvent(); // Refresca los datos del evento después de unirse
             }
         } catch (error) {
@@ -157,13 +174,27 @@ const EventDetail = () => {
                     isLoggedIn && user && 
                     !users.includes(user.id) && 
                     event.estado !== 'en_curso' && 
-                    event.estado !== 'finalizado' && (
+                    event.estado !== 'finalizado' &&
+                    user.role === 'participante' && (
                         <button
                             onClick={handleJoinEvent}
                             className="inline-flex items-center px-3 py-2 mt-6 mr-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700"
                         >
-                            Unirse al evento
+                            {users.length >= event.maximo_usuarios ? 'Unirse a la cola' : 'Unirse al evento'}
                         </button>
+                )}
+                {
+                    isLoggedIn && user && 
+                    users.includes(user.id) && 
+                    event.estado !== 'en_curso' && 
+                    event.estado !== 'finalizado' && 
+                    user.role === 'participante' && (
+                    <button
+                        onClick={handleLeaveEvent}
+                        className="inline-flex items-center px-3 py-2 mt-6 mr-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600"
+                    >
+                        Darse de baja del evento
+                    </button>
                 )}
                 <button
                     onClick={handleViewRatings}

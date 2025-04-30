@@ -46,6 +46,7 @@ const Usuarios = () => {
                             <th scope="col" className="px-6 py-3">Apellidos</th>
                             <th scope="col" className="px-6 py-3">Email</th>
                             <th scope="col" className="px-6 py-3">Fecha Nacimiento</th>
+                            <th scope="col" className="px-6 py-3">Rol</th>
                             <th scope="col" className="px-6 py-3">Telefono</th>
                             <th scope="col" className="px-6 py-3">Dirección</th>
                             <th scope="col" className="px-6 py-3">Altura</th>
@@ -63,6 +64,7 @@ const Usuarios = () => {
                                 <td className="px-6 py-4">{user.apellidos}</td>
                                 <td className="px-6 py-4">{user.email}</td>
                                 <td className="px-6 py-4">{user.fecha_nacimiento}</td>
+                                <td className="px-6 py-4">{user.role}</td>
                                 <td className="px-6 py-4">{user.telefono}</td>
                                 <td className="px-6 py-4">{user.direccion}</td>
                                 <td className="px-6 py-4">{user.altura}</td>

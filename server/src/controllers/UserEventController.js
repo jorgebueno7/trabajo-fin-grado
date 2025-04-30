@@ -206,7 +206,7 @@ const deleteUserEvent = async (req, res) => {
         if (queue[id_evento] && queue[id_evento].length > 0) {
             // Si hay usuarios en la cola de espera
             const nextUser = queue[id_evento].shift();
-            await user_event.create({ id_usuario: nextUser, id_evento });
+            await user_event.create({ id_usuario: nextUser, id_evento, esta_inscrito: true});
 
             const firstUserInQueue = queue[id_evento][0] || null;
             await event.update(
