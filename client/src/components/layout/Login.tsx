@@ -13,7 +13,8 @@ const Login = () => {
 
     const navigate = useNavigate();
     const navigateProfile = () => {
-        navigate('/perfil');
+        // navigate('/perfil');
+        navigate('/perfil', { state: { joinedEvent: true } });
     };
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();

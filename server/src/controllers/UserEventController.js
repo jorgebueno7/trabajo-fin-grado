@@ -186,16 +186,55 @@ const putUserEvent = async (req, res) => {
 //         res.status(500).json({ error: `ERROR_DELETE_USER_EVENT: ${error}` });
 //     }
 // }
+
+// const deleteUserEvent = async (req, res) => {
+//     try {
+//         const id_usuario = req.session.userId; // Usamos la sesión para obtener el id del usuario
+//         if (!id_usuario) {
+//             return res.status(400).json({ error: 'User is not logged in' });
+//         }
+
+//         const { id_evento } = req.params;
+
+//         // Asegurarse de que el evento y el usuario existan
+//         const userEvent = await user_event.findOne({ where: { id_usuario, id_evento } });
+//         if (!userEvent) {
+//             return res.status(404).json({ error: 'User not found for this event' });
+//         }
+
+//         await user_event.destroy({ where: { id_usuario, id_evento } });
+
+//         if (queue[id_evento] && queue[id_evento].length > 0) {
+//             // Si hay usuarios en la cola de espera
+//             const nextUser = queue[id_evento].shift();
+//             await user_event.create({ id_usuario: nextUser, id_evento, esta_inscrito: true, notificar_union: true });
+
+//             const firstUserInQueue = queue[id_evento][0] || null;
+//             await event.update(
+//                 { id_usuario_espera: firstUserInQueue },
+//                 { where: { id_evento } }
+//             );
+//             console.log(`User ${nextUser} added to the event from the waiting list`);
+//         } else {
+//             await event.update({ id_usuario_espera: null }, { where: { id_evento } });
+//         }
+
+//         res.status(200).json({ message: 'UserEvent deleted successfully' });
+//     } catch (error) {
+//         console.error('ERROR_DELETE_USER_EVENT:', error);
+//         res.status(500).json({ error: `ERROR_DELETE_USER_EVENT: ${error.message}` });
+//     }
+// }
+
 const deleteUserEvent = async (req, res) => {
     try {
         const id_usuario = req.session.userId; // Usamos la sesión para obtener el id del usuario
+        const { id_evento } = req.params;
         if (!id_usuario) {
-            return res.status(400).json({ error: 'User is not logged in' });
+            return res.status(400).json({ error: 'Unauthorized' });
         }
 
-        const { id_evento } = req.params;
-
-        // Asegurarse de que el evento y el usuario existan
+        // Verificar que exista el registro del usuario en el evento
         const userEvent = await user_event.findOne({ where: { id_usuario, id_evento } });
         if (!userEvent) {
             return res.status(404).json({ error: 'User not found for this event' });
@@ -203,27 +242,57 @@ const deleteUserEvent = async (req, res) => {
 
         await user_event.destroy({ where: { id_usuario, id_evento } });
 
+        // console.log(`User ${id_usuario} removed from event ${id_evento}`);
+
         if (queue[id_evento] && queue[id_evento].length > 0) {
             // Si hay usuarios en la cola de espera
             const nextUser = queue[id_evento].shift();
-            await user_event.create({ id_usuario: nextUser, id_evento, esta_inscrito: true});
+            const existingUserEvent = await user_event.findOne({ where: { id_usuario: nextUser, id_evento } });
+
+            if (existingUserEvent) {
+                // Actualiza su estado a inscrito
+                await user_event.update(
+                    { esta_inscrito: true, notificar_union: true },
+                    { where: { id_usuario: nextUser, id_evento } }
+                );
+            } else {
+                // Si no existe, crea uno nuevo
+                await user_event.create({
+                    id_usuario: nextUser,
+                    id_evento,
+                    esta_inscrito: true,
+                    notificar_union: true
+                });
+                console.log(`Created new user_event for user ${nextUser}`);
+            }
 
             const firstUserInQueue = queue[id_evento][0] || null;
             await event.update(
                 { id_usuario_espera: firstUserInQueue },
                 { where: { id_evento } }
             );
-            console.log(`User ${nextUser} added to the event from the waiting list`);
+
+            console.log(`Updated event ${id_evento} waiting user to ${firstUserInQueue}`);
         } else {
-            await event.update({ id_usuario_espera: null }, { where: { id_evento } });
+            // Si ya no hay nadie en la cola, limpia el campo
+            await event.update(
+                { id_usuario_espera: null },
+                { where: { id_evento } }
+            );
         }
 
-        res.status(200).json({ message: 'UserEvent deleted successfully' });
+        // Si la cola queda vacía, elimínala para limpiar memoria
+        if (queue[id_evento] && queue[id_evento].length === 0) {
+            delete queue[id_evento];
+        }
+
+        res.status(200).json({ message: 'UserEvent updated successfully' });
     } catch (error) {
         console.error('ERROR_DELETE_USER_EVENT:', error);
         res.status(500).json({ error: `ERROR_DELETE_USER_EVENT: ${error.message}` });
     }
-}
+};
+
 
 const addUserEventStats = async (req, res) => {
     try {
@@ -295,6 +364,42 @@ const addUserEventStats = async (req, res) => {
     }
 };
 
+const getNotificationsFromUserEvent = async (req, res) => {
+    try {
+        const id_usuario = req.session.userId;
+        if (!id_usuario) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const pendingNotifications = await user_event.findAll({
+            where: { id_usuario, notificar_union: true },
+            include: [{ model: event, include: [{ model: sport }] }],
+        });
+        if (pendingNotifications.length > 0) {
+            res.status(200).json(pendingNotifications);
+        } else {
+            res.status(404).json({ error: 'No notifications found for the user' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: `ERROR_GET_NOTIFICATIONS_FROM_USER_EVENT: ${error}` });
+    }
+}
+
+const putNotificarUnionFalse = async (req, res) => {
+    try {
+        const id_usuario = req.session.userId;
+        if (!id_usuario) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const { id_evento } = req.params;
+        await user_event.update(
+            { notificar_union: false },
+            { where: { id_usuario, id_evento } }
+        );
+        res.status(200).json({ message: 'Notification marked as seen' });
+    } catch (error) {
+        res.status(500).json({ error: `ERROR_PUT_NOTIFICAR_UNION_FALSE: ${error}` });
+    }
+}
 
 module.exports = { getAllUserEvents, getUsersByEventId, getEventByUserLoggedIn, 
-    postUserEvent, putUserEvent, deleteUserEvent, getEventByOrganizer, addUserEventStats };
+    postUserEvent, putUserEvent, deleteUserEvent, getEventByOrganizer, addUserEventStats, getNotificationsFromUserEvent, putNotificarUnionFalse };

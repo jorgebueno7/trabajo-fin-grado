@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import UserContext from '../context/UsersContext';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
-import { getEventsByOrganizer, getUserEventsLoggedIn } from '../api/userEvent';
+import { getEventsByOrganizer, getUserEventsLoggedIn, getNotifications, markNotificationAsRead } from '../api/userEvent';
 import { putEventStatus, getEvents, deleteEvent, getEventsAvailableByUserLoggedIn } from '../api/events';
 import { getSports, deleteSport } from '../api/sports'
 import { getUsers, deleteUserById } from '../api/users'
@@ -134,6 +135,8 @@ const ProfilePage = () => {
     const [usuarios, setUsuarios] = useState<User[]>([]);
     const [activeTab, setActiveTab] = useState<'eventos' | 'deportes' | 'valoraciones'>('eventos');
     const [currentPage, setCurrentPage] = useState(1);
+    const [notifications, setNotifications] = useState<UserEvent[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -141,6 +144,8 @@ const ProfilePage = () => {
     const currentEvents = allEvents.slice(startIndex, endIndex);
     const currentSports = allSports.slice(startIndex, endIndex);
     // const currentRatings = allRatings.slice(startIndex, endIndex);
+    const location = useLocation();
+    const joinedEvent = location.state?.joinedEvent;
 
 
     const nextPageEvents = () => {
@@ -339,6 +344,9 @@ const ProfilePage = () => {
 
     useEffect(() => {
         if(rolUsuario === 'participante') {
+            if(joinedEvent){
+                checkNotifications();
+            }
             fetchUserEvents();
             fetchUserEventsLoggedIn();
         } else if (rolUsuario === 'organizador') {
@@ -347,7 +355,7 @@ const ProfilePage = () => {
             fetchAllEvents();
         }
     }, 
-    [user]);
+    [user, location.key]);
 
     useEffect(() => {
         fetchAllSports();
@@ -388,6 +396,28 @@ const ProfilePage = () => {
         }
     };
     
+    const checkNotifications = async () => {
+        try {
+            const response = await getNotifications();
+            setNotifications(response);
+            setIsModalOpen(true);
+        } catch (error) {
+            console.error("Error al obtener las notificaciones: ", error);
+        }
+    }
+
+    const handleCloseModal = async () => {
+        try {
+            await Promise.all(
+                notifications.map((n) => markNotificationAsRead(n.id_evento))
+            );
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error('Error al marcar notificar_union como false:', error);
+        }
+    };    
+    
+
     return (
         <>
             { rolUsuario === 'administrador' ? 
@@ -841,6 +871,26 @@ const ProfilePage = () => {
                                 </tbody>
                             </table>
                         </div>
+                        {isModalOpen && (
+                            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                                <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-lg">
+                                    <h2 className="text-xl font-bold mb-4">¡Te hemos inscrito en nuevos eventos!</h2>
+                                    <ul className="list-disc list-inside mb-4">
+                                        {notifications.map((n) => (
+                                            <li key={n.id_evento}>
+                                                Evento: {n.Event?.nombre || 'Evento sin nombre'}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <button
+                                        onClick={handleCloseModal}
+                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full"
+                                    >
+                                        Cerrar
+                                    </button>
+                                </div>
+                            </div>
+                        )}                
                     </>
                 ) 
                 : 

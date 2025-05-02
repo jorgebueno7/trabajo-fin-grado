@@ -24,6 +24,7 @@ UserEvent.init({
         allowNull: false
       },
       esta_inscrito: { type: DataTypes.BOOLEAN, allowNull: true, defaultValue: false },
+      notificar_union: { type: DataTypes.BOOLEAN, allowNull: true, defaultValue: false },
       clasificacion: { type: DataTypes.NUMBER, allowNull: true },
       puntos: { type: DataTypes.INTEGER, allowNull: true },
       tiempo: { type: DataTypes.FLOAT, allowNull: true },

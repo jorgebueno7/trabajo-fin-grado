@@ -13,5 +13,7 @@ router.post('/user-events', verifySession, userEvent.postUserEvent);
 router.put('/user-events/:id_evento', userEvent.putUserEvent);
 router.delete('/user-events/event/:id_evento', verifySession, userEvent.deleteUserEvent);
 router.put('/user-events/:id_evento/stats/:id_usuario', userEvent.addUserEventStats);
+router.get('/user-events/notifications', verifySession, userEvent.getNotificationsFromUserEvent);
+router.put('/user-events/notifications/:id_evento', verifySession, userEvent.putNotificarUnionFalse);
 
 module.exports = router;

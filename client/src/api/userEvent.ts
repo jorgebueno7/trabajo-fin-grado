@@ -46,3 +46,13 @@ export const addEventStats = async (eventId: number, userId: number, statsData: 
   const response = await axios.put(`${API_URL}/${eventId}/stats/${userId}`, statsData);
   return response.data;
 }
+
+export const getNotifications = async () => {
+  const response = await axios.get(`${API_URL}/notifications`, { withCredentials: true });
+  return response.data;
+}
+
+export const markNotificationAsRead = async (id_evento: number) => {
+  const response = await axios.put(`${API_URL}/notifications/${id_evento}`, {}, { withCredentials: true });
+  return response.data;
+}
