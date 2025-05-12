@@ -7,10 +7,10 @@ dayjs.extend(utc);
 const NewsPage = () => {
     interface News {
         id_noticia: number;
+        id_evento: number;
         titulo: string;
         subtitulo: string;
         imagen: string;
-        id_evento: number;
         fecha_creacion: string;
     }
 

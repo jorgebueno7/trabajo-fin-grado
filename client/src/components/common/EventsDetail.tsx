@@ -22,6 +22,7 @@ const EventDetail = () => {
         maximo_usuarios: number;
         estado: string;
         id_usuario_espera: number;
+        createdBy: string;
     }
     interface Sport {
         id_deporte: number;
@@ -46,6 +47,10 @@ const EventDetail = () => {
             navigate(`/ratings/event/${event.id_evento}`);
         }
     };
+
+    const navigateToPostNew = (id_evento: number) => {
+        navigate(`/create-news/${id_evento}`)
+    }
 
     // Obtener deportes
     useEffect(() => {
@@ -201,6 +206,12 @@ const EventDetail = () => {
                     className="inline-flex items-center px-3 py-2 mt-6 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600"
                 >
                     Ver valoraciones
+                </button>
+                <button
+                    onClick={() => navigateToPostNew(event.id_evento)}
+                    className="inline-flex items-center px-3 py-2 ml-2 mt-6 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+                >
+                    Crear noticia
                 </button>
             </div>
         </div>

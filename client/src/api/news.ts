@@ -27,4 +27,7 @@ export const deleteNews = async (id: number) => {
     return response.data;
 }
 
-
+export const postNewFromEvent = async (id_evento: number, news: any) => {
+    const response = await axios.post(`${API_URL}/event/${id_evento}`, news, { withCredentials: true });
+    return response.data;
+}

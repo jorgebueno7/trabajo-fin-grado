@@ -61,6 +61,29 @@ const postNew = async (req, res) => {
     }
 }
 
+const postNewFromEvent = async (req, res) => {
+    try {
+        const id_usuario = req.session.userId;
+        if (!id_usuario) {
+            return res.status(400).json({ error: 'User is not logged in' });
+        }
+        const { titulo, subtitulo } = req.body;
+        
+        const { id_evento } = req.params; // Obtener el id_evento de los parámetros de la ruta
+        const evento = await event.findByPk(id_evento);
+        if (!evento) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+
+        const imagen = req.file ? req.file.buffer : null; // nombre del archivo
+
+        const newNoticia = await news.create({ id_evento, titulo, subtitulo, imagen });
+        res.status(201).json(newNoticia);
+    } catch (error) {
+        res.status(500).json({ error: `ERROR_POST_NEW: ${error}` });
+    }
+}
+
 const putNew = async (req, res) => {
     try {
         const { id_noticia } = req.params;
@@ -95,4 +118,4 @@ const deleteNew = async (req, res) => {
     }
 }
 
-module.exports = { getNewImage, getAllNews, getNewById, postNew, putNew, deleteNew }
+module.exports = { getNewImage, getAllNews, getNewById, postNew, putNew, deleteNew, postNewFromEvent }

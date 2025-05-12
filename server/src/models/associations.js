@@ -14,4 +14,5 @@ Ranking.belongsTo(Event, { foreignKey: 'id_evento' });
 Ranking.belongsTo(Sport, { foreignKey: 'id_deporte' });
 Ranking.belongsTo(User, { foreignKey: 'id_usuario' });
 
+Event.hasMany(News, { foreignKey: 'id_evento' });
 News.belongsTo(Event, { foreignKey: 'id_evento' });
