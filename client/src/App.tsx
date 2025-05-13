@@ -34,6 +34,7 @@ import UpdateRating from './components/common/UpdateRating';
 import NewsPage from './pages/NewsPage';
 import AddStats from './components/common/AddEventStats';
 import CreateNewsFromEvent from './components/common/CreateNewsFromEvent';
+import CreateNew from './components/common/CreateNews';
 import './css/index.css'
 
 function App() {
@@ -98,6 +99,7 @@ function RoutesWithNavbar() {
         <Route path="/news" element={<NewsPage />} />
         <Route path="/add-stats/:id_evento" element={<AddStats />} />
         <Route path="/create-news/:id_evento" element={<CreateNewsFromEvent />} />
+        <Route path="/create-new" element={<CreateNew />} />
       </Routes>
     </div>
   );
