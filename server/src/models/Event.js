@@ -61,7 +61,8 @@ Event.init({
       createdBy: {
         type: DataTypes.STRING,
         allowNull: true,
-      }
+      },
+      imagen: { type: DataTypes.BLOB('long') }
 }, {
     sequelize,
     tableName: "events",

@@ -20,6 +20,7 @@ const Eventos = () => {
         hora_ini: string;
         maximo_usuarios: number;
         estado: string;
+        imagen: string;
         Sport: {
             nombre: string;
         }
@@ -146,7 +147,7 @@ const Eventos = () => {
 
             {/* Aquí se muestra la lista de eventos generales */}
             <div className="grid grid-cols-4 gap-x-6 mx-20">
-                {currentEvents.map((event, index) => (
+                {currentEvents.map((event) => (
                     <Link key={event.id_evento} to={`/events/${event.id_evento}`}>
                         <figure className="mt-4 relative hover:filter hover:grayscale">
                             <figcaption className="absolute inset-0 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
@@ -165,14 +166,19 @@ const Eventos = () => {
                                 </strong>
                             </figcaption>
                             <img
-                                className="h-auto w-[630px] rounded-lg transition-all duration-300 cursor-pointer"
-                                src={`https://flowbite.s3.amazonaws.com/docs/gallery/square/image-${index % 3 + 1}.jpg`}
-                                alt=""
+                                className="w-[480px] h-[390px] object-cover rounded-lg transition-all duration-300 cursor-pointer"
+                                src={
+                                    event.imagen
+                                        ? `http://localhost:5000/sportly/events/${event.id_evento}/imagen`
+                                        : `https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg`
+                                }
+                                alt="Imagen del evento"
                             />
                         </figure>
                     </Link>
                 ))}
             </div>
+
             <div className="flex justify-center mt-2 space-x-4">
                 {currentPage > 1 && (
                     <button

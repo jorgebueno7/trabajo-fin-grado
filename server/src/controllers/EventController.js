@@ -72,7 +72,10 @@ const postEvent = async (req, res) => {
         }
 
         const createdBy = usuario.email; // Obtener el email del usuario desde la BD
-        const newEvent = await event.create({ id_deporte, nombre, fecha_ini, fecha_fin, fecha_limite, lugar, hora_ini, maximo_usuarios, clasificacion, estado, createdBy });
+        const imagen = req.file ? req.file.buffer : null; // nombre del archivo
+
+        const newEvent = await event.create({ id_deporte, nombre, fecha_ini, fecha_fin, 
+            fecha_limite, lugar, hora_ini, maximo_usuarios, clasificacion, estado, createdBy, imagen });
 
         if(id_deporte && fecha_ini && fecha_limite && lugar 
             && hora_ini && maximo_usuarios){
@@ -130,5 +133,22 @@ const deleteEvent = async (req, res) => {
     }
 }
 
+const getEventImage = async (req, res) => {
+    try {
+        const { id_evento } = req.params;
+        const evento = await event.findByPk(id_evento);
+
+        if (!evento || !evento.imagen) {
+            return res.status(404).send('Imagen no encontrada');
+        }
+
+        // O puedes detectar el tipo de imagen si lo guardas (por ahora asumimos JPEG)
+        res.set('Content-Type', 'image/jpeg');
+        res.send(evento.imagen);
+    } catch (error) {
+        res.status(500).json({ error: `ERROR_GET_EVENT_IMAGE: ${error}` });
+    }
+};
+
 module.exports = { getAllEvents, getEventById, postEvent, updateEvent, 
-    updateEventStatus, deleteEvent, getAllEventsAndUserEventsFromUserLoggedIn };
+    updateEventStatus, deleteEvent, getAllEventsAndUserEventsFromUserLoggedIn, getEventImage};

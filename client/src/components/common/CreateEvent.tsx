@@ -19,6 +19,7 @@ const CreateEvent = () => {
     }
 
     const [sports, setSports] = useState<Sport[]>([]);
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     useEffect(() => {
         const fetchSports = async () => {
@@ -43,13 +44,38 @@ const CreateEvent = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!imageFile) {
+            alert('Por favor, selecciona una imagen');
+            return;
+        }
+    
+        const form = new FormData();
+        form.append('id_deporte', formData.id_deporte);
+        form.append('nombre', formData.nombre);
+        form.append('fecha_ini', formData.fecha_ini);
+        form.append('fecha_fin', formData.fecha_fin);
+        form.append('fecha_limite', formData.fecha_limite);
+        form.append('lugar', formData.lugar);
+        form.append('hora_ini', formData.hora_ini);
+        form.append('maximo_usuarios', formData.maximo_usuarios);
+        form.append('imagen', imageFile as Blob); // <-- Aquí va la imagen
+    
         try {
-            await postEvent(formData);
+            await postEvent(form); // Asegúrate de que `postEvent` acepte `FormData`
             alert('Evento creado con éxito');
         } catch (error) {
             console.error('Error al crear el evento:', error);
             alert('Hubo un error al crear el evento');
         }
+
+        // Lo de antes
+        // try {
+        //     await postEvent(formData);
+        //     alert('Evento creado con éxito');
+        // } catch (error) {
+        //     console.error('Error al crear el evento:', error);
+        //     alert('Hubo un error al crear el evento');
+        // }
     };
 
     return (
@@ -152,6 +178,18 @@ const CreateEvent = () => {
                             required
                         />
                     </div>
+                    <div>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen del evento:</label>
+                        <input
+                            type="file"
+                            name="imagen"
+                            accept="image/*"
+                            onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            required
+                        />
+                    </div>
+
                     <button
                         type="submit"
                         className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"

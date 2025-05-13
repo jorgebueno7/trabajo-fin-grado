@@ -17,7 +17,13 @@ export const getEventsById = async (id: number) => {
   return response.data;
 }
 
-export const postEvent = async (event: any) => {
+// Sin imagenes
+// export const postEvent = async (event: any) => {
+//   const response = await axios.post(API_URL, event, { withCredentials: true });
+//   return response.data;
+// }
+
+export const postEvent = async (event: FormData) => {
   const response = await axios.post(API_URL, event, { withCredentials: true });
   return response.data;
 }
