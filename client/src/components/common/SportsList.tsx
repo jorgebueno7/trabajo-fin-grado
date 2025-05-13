@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getSports } from '../../api/sports';
 import UserContext from "../../context/UsersContext";
 
+const ITEMS_PER_PAGE = 8;
+
 const Deportes = () => {
     interface Sport {
         id_deporte: number;
@@ -18,6 +20,19 @@ const Deportes = () => {
     const [selectedSport, setSelectedSport] = useState<string>('all');
     const deportes = [...new Set(sports.map(e => e.nombre))]; // Lista de deportes únicos
 
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const nextPageSports = () => {
+        if (endIndex < sports.length) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const prevPageSports = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,6 +58,11 @@ const Deportes = () => {
         const matchesDeporte = selectedSport === 'all' || sport.nombre === selectedSport;
         return matchesDeporte ;
     });
+
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const currentSports = filteredSports.slice(startIndex, endIndex);
+
     return (
         <>
             <div className="flex items-end gap-6 mx-20 mt-6">
@@ -73,8 +93,8 @@ const Deportes = () => {
                     }
                 </div>
             </div>
-            <div className="grid grid-cols-3 gap-x-6 mx-20">
-                {filteredSports.map((sport, index) => (
+            <div className="grid grid-cols-4 gap-x-6 mx-20">
+                {currentSports.map((sport, index) => (
                     <Link key={sport.id_deporte} to={`/sports/${sport.id_deporte}`}>
                         <figure  className="mt-4 relative hover:filter hover:grayscale">
                             <figcaption className="absolute inset-0 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
@@ -88,6 +108,25 @@ const Deportes = () => {
                         </figure>
                     </Link>
                 ))}
+            </div>
+            <div className="flex justify-center mt-2 space-x-4">
+                {currentPage > 1 && (
+                    <button
+                        onClick={prevPageSports}
+                        className="mt-3 text-blue-600 hover:underline"
+                    >
+                        Anterior
+                    </button>
+                )}
+                <span className="text-gray-700 ml-3 mr-3 mt-3">{currentPage}</span>
+                {endIndex < sports.length && (
+                    <button
+                        onClick={nextPageSports}
+                        className="mt-3 text-blue-600 hover:underline"
+                    >
+                        Siguiente
+                    </button>
+                )}
             </div>
         </>
     );

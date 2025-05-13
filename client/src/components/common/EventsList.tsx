@@ -6,6 +6,8 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 
+const ITEMS_PER_PAGE = 8;
+
 const Eventos = () => {
     interface Event {
         id_evento: number;
@@ -29,12 +31,26 @@ const Eventos = () => {
     const [selectedEstado, setSelectedEstado] = useState<string>('all');
     const [searchQuery, setSearchQuery] = useState<string>('');
     const deportes = [...new Set(events.map(e => e.Sport.nombre))]; // Lista de deportes únicos
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const nextPageEvents = () => {
+        if (endIndex < events.length) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const prevPageEvents = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
 
     const navigate = useNavigate();
 
     useEffect(() => {
         fetchEvents();
-    }, []);
+        setCurrentPage(1);
+    }, [selectedEstado, selectedSport, searchQuery]);
 
     const fetchEvents = async () => {
         try {
@@ -58,6 +74,10 @@ const Eventos = () => {
 
         return matchesEstado && matchesDeporte && matchesSearch;
     });
+
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const currentEvents = filteredEvents.slice(startIndex, endIndex);
 
     const estadoLabels: { [key: string]: string } = {
         sin_comenzar: 'Sin comenzar',
@@ -125,8 +145,8 @@ const Eventos = () => {
             </div>
 
             {/* Aquí se muestra la lista de eventos generales */}
-            <div className="grid grid-cols-3 gap-x-6 mx-20">
-                {filteredEvents.map((event, index) => (
+            <div className="grid grid-cols-4 gap-x-6 mx-20">
+                {currentEvents.map((event, index) => (
                     <Link key={event.id_evento} to={`/events/${event.id_evento}`}>
                         <figure className="mt-4 relative hover:filter hover:grayscale">
                             <figcaption className="absolute inset-0 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
@@ -152,6 +172,25 @@ const Eventos = () => {
                         </figure>
                     </Link>
                 ))}
+            </div>
+            <div className="flex justify-center mt-2 space-x-4">
+                {currentPage > 1 && (
+                    <button
+                        onClick={prevPageEvents}
+                        className="mt-3 text-blue-600 hover:underline"
+                    >
+                        Anterior
+                    </button>
+                )}
+                <span className="text-gray-700 ml-3 mr-3 mt-3">{currentPage}</span>
+                {endIndex < events.length && (
+                    <button
+                        onClick={nextPageEvents}
+                        className="mt-3 text-blue-600 hover:underline"
+                    >
+                        Siguiente
+                    </button>
+                )}
             </div>
         </>
     );
