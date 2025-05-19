@@ -12,7 +12,7 @@ export const getSportsById = async (id: number) => {
   return response.data;
 };
 
-export const updateSport = async (id: number, sport: any) => {
+export const updateSport = async (id: number, sport: FormData) => {
   const response = await axios.put(`${API_URL}/update-sports/${id}`, sport);
   return response.data;
 };

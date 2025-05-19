@@ -17,11 +17,24 @@ const CreateSport = () => {
         });
     };
     
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!imageFile) {
+            alert('Por favor, selecciona una imagen');
+            return;
+        }
+
+        const form = new FormData();
+        form.append('nombre', formData.nombre);
+        form.append('descripcion', formData.descripcion);
+        form.append('informacion', formData.informacion);
+        form.append('categoria', formData.categoria);
+        form.append('equipamiento', formData.equipamiento);
+        form.append('imagen', imageFile as Blob);
         try {
-            await postSport(formData);
+            await postSport(form);
             alert('Deporte creado con éxito');
         } catch (error) {
             console.error('Error al crear el deporte:', error);
@@ -90,6 +103,17 @@ const CreateSport = () => {
                             onChange={handleChange}
                             placeholder="Equipamiento necesario"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" 
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen del evento:</label>
+                        <input
+                            type="file"
+                            name="imagen"
+                            accept="image/*"
+                            onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                             required
                         />
                     </div>

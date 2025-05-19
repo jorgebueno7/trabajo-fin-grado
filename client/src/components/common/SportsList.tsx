@@ -13,6 +13,7 @@ const Deportes = () => {
         informacion: string;
         categoria: string;
         equipamiento: string;
+        imagen: string;
     }
 
     const [sports, setSports] = useState<Sport[]>([]);
@@ -94,7 +95,7 @@ const Deportes = () => {
                 </div>
             </div>
             <div className="grid grid-cols-4 gap-x-6 mx-20">
-                {currentSports.map((sport, index) => (
+                {currentSports.map((sport) => (
                     <Link key={sport.id_deporte} to={`/sports/${sport.id_deporte}`}>
                         <figure  className="mt-4 relative hover:filter hover:grayscale">
                             <figcaption className="absolute inset-0 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
@@ -103,8 +104,15 @@ const Deportes = () => {
                                 <br></br>
                                 <strong><p className="block text-center">{sport.informacion}</p></strong>
                             </figcaption>
-                                <img className="h-auto w-[630px] rounded-lg transition-all duration-300 cursor-pointer" 
-                                    src={`https://flowbite.s3.amazonaws.com/docs/gallery/square/image-${index % 3 + 1}.jpg`} alt=""></img>
+                            <img
+                                className="w-[480px] h-[390px] object-cover rounded-lg transition-all duration-300 cursor-pointer"
+                                src={
+                                    sport.imagen
+                                        ? `http://localhost:5000/sportly/sports/${sport.id_deporte}/imagen`
+                                        : `https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg`
+                                }
+                                alt="Imagen del evento"
+                            />
                         </figure>
                     </Link>
                 ))}

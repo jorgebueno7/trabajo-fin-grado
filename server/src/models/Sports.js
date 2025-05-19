@@ -28,6 +28,7 @@ Sports.init({
         type: DataTypes.STRING,
         allowNull: false,
     },
+    imagen: { type: DataTypes.BLOB('long') }
 }, {
     sequelize,
     tableName: "sports",

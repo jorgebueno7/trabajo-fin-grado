@@ -9,6 +9,7 @@ const UpdateSport = () => {
     const [descripcion, setDescripcion] = useState<string>('');
     const [categoria, setCategoria] = useState<string>('');
     const [equipamiento, setEquipamiento] = useState<string>('');
+    const [imagen, setImagen] = useState<File | null>(null);
 
     const navigate = useNavigate();
 
@@ -22,6 +23,7 @@ const UpdateSport = () => {
                     setInformacion(sport.informacion);
                     setCategoria(sport.categoria);
                     setEquipamiento(sport.equipamiento);
+                    setImagen(sport.imagen);
                 }
             }
         } catch (error) {
@@ -36,15 +38,23 @@ const UpdateSport = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!nombre || !descripcion || !informacion || !categoria || !equipamiento) {
+        if (!nombre || !descripcion || !informacion || !categoria || !equipamiento || !imagen) {
             alert('Por favor, rellena todos los campos.');
             return;
         }
         try {
             if (id_deporte) {
-                const sportData = { nombre, informacion, descripcion, categoria, equipamiento };
-                console.log('datos que se envian', sportData);
-                await updateSport(Number(id_deporte), sportData);
+                // const sportData = { nombre, informacion, descripcion, categoria, equipamiento, imagen};
+                // await updateSport(Number(id_deporte), sportData);
+                const formData = new FormData();
+                formData.append('nombre', nombre);
+                formData.append('descripcion', descripcion);
+                formData.append('informacion', informacion);
+                formData.append('categoria', categoria);
+                formData.append('equipamiento', equipamiento);
+                formData.append('imagen', imagen); // ✅ importante
+
+                await updateSport(Number(id_deporte), formData); // ✅ FormData aquí
                 alert('¡Deporte actualizado exitosamente!');
                 navigate(`/sports/${id_deporte}`);
             }
@@ -118,6 +128,18 @@ const UpdateSport = () => {
                         onChange={(e) => setEquipamiento(e.target.value)}
                         className="w-full p-2 border rounded-lg"
                         placeholder="Equipamiento necesario" />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-2 text-sm font-medium text-gray-700">
+                        Imagen:
+                    </label>
+                    <input
+                        type="file"
+                        name="imagen"
+                        accept="image/*"
+                        onChange={(e) => setImagen(e.target.files?.[0] || null)}
+                        className="w-full p-2 border rounded-lg"
+                        placeholder="URL de la imagen" />
                 </div>
                 <button
                     type="submit"
