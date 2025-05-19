@@ -99,10 +99,10 @@ const Deportes = () => {
                     <Link key={sport.id_deporte} to={`/sports/${sport.id_deporte}`}>
                         <figure  className="mt-4 relative hover:filter hover:grayscale">
                             <figcaption className="absolute inset-0 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                                <strong><h1 className="text-lg">{sport.nombre}</h1></strong>
-                                <strong><p className="text-gray-900">{sport.descripcion}</p></strong>                            
+                                <strong><h1 className="text-lg bg-white bg-opacity-60 rounded-md px-1.5 py-0.5">{sport.nombre}</h1></strong>
+                                <strong><p className="text-gray-900 bg-white bg-opacity-60 rounded-md px-1.5 py-0.5">{sport.descripcion}</p></strong>                            
                                 <br></br>
-                                <strong><p className="block text-center">{sport.informacion}</p></strong>
+                                <strong><p className="block text-center bg-white bg-opacity-60 rounded-md px-1.5 py-0.5">{sport.informacion}</p></strong>
                             </figcaption>
                             <img
                                 className="w-[480px] h-[390px] object-cover rounded-lg transition-all duration-300 cursor-pointer"

@@ -152,17 +152,17 @@ const Eventos = () => {
                         <figure className="mt-4 relative hover:filter hover:grayscale">
                             <figcaption className="absolute inset-0 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                                 <strong>
-                                    <h1 className="text-gray-900">{event.nombre}</h1>
+                                    <h1 className="text-gray-900 bg-white bg-opacity-60 rounded-md px-1.5 py-0.5">{event.nombre}</h1>
                                 </strong>
                                 <strong>
-                                    <p className="text-gray-900">{dayjs.utc(event.fecha_ini).format('DD-MM-YYYY - HH:mm:ss')}</p>
+                                    <p className="text-gray-900 bg-white bg-opacity-60 rounded-md px-1.5 py-0.5">{dayjs.utc(event.fecha_ini).format('DD-MM-YYYY - HH:mm:ss')}</p>
                                 </strong>
                                 <strong>
-                                    <p className="text-gray-900">{dayjs.utc(event.fecha_fin).format('DD-MM-YYYY - HH:mm:ss')}</p>
+                                    <p className="text-gray-900 bg-white bg-opacity-60 rounded-md px-1.5 py-0.5">{dayjs.utc(event.fecha_fin).format('DD-MM-YYYY - HH:mm:ss')}</p>
                                 </strong>
                                 <br />
                                 <strong>
-                                    <p className="block text-center">{event.lugar}</p>
+                                    <p className="block text-center bg-white bg-opacity-60 rounded-md px-1.5 py-0.5">{event.lugar}</p>
                                 </strong>
                             </figcaption>
                             <img
