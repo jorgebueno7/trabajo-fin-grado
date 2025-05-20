@@ -89,12 +89,19 @@ const postEvent = async (req, res) => {
 const updateEvent = async (req, res) => {
     try {
         const { id_evento } = req.params;
+        const imagen = req.file ? req.file.buffer : null; // nombre del archivo
+
         const { id_deporte, nombre, fecha_ini, fecha_fin, fecha_limite, lugar, hora_ini, maximo_usuarios, clasificacion, estado } = req.body;
-        await event.update({ id_deporte, nombre, fecha_ini, fecha_fin, fecha_limite, lugar, hora_ini, maximo_usuarios, clasificacion, estado },
-            { where: { id_evento } });
+
+        const updateData = { id_deporte, nombre, fecha_ini, fecha_fin, fecha_limite, lugar, hora_ini, maximo_usuarios, clasificacion, estado };
+        if (imagen) {
+            updateData.imagen = imagen;
+        }
+
+        await event.update(updateData, { where: { id_evento } });
 
         const updatedEvent = await event.findByPk(id_evento);
-
+        
         // Si no se encuentra el evento, retorna un error
         if (!updatedEvent) {
             return res.status(404).json({ error: 'Event not found' });

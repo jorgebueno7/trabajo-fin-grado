@@ -9,7 +9,7 @@ router.get('/events/:id_evento/imagen', eventController.getEventImage);
 router.get('/events/:id_evento', eventController.getEventById);
 router.get('/events-available-user', verifySession, eventController.getAllEventsAndUserEventsFromUserLoggedIn);
 router.post('/events', upload.single('imagen'), eventController.postEvent);
-router.put('/events/:id_evento', eventController.updateEvent);
+router.put('/events/:id_evento', upload.single('imagen'), eventController.updateEvent);
 router.put('/events/update-status/:id_evento', eventController.updateEventStatus);
 router.delete('/events/:id_evento', eventController.deleteEvent);
 

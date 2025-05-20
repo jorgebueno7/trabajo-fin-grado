@@ -8,6 +8,7 @@ dayjs.extend(utc);
 const UpdateEvent = () => {
     const { id_evento } = useParams<{ id_evento: string }>();
 
+    const [nombre, setNombre] = useState<string>('');
     const [fecha_inicio, setFechaInicio] = useState<string>('');
     const [hora_inicio, setHoraInicio] = useState<string>('');
     const [hora_fin, setHoraFin] = useState<string>('');
@@ -15,7 +16,7 @@ const UpdateEvent = () => {
     const [maximo_usuarios, setMaximoUsuarios] = useState<number>(0);
     const [fecha_limite, setFechaLimite] = useState<string>('');
     const [estado, setEstado] = useState<string>('');
-
+    const [imagen, setImagen] = useState<File | null>(null);
 
     const navigate = useNavigate();
 
@@ -24,13 +25,15 @@ const UpdateEvent = () => {
             if (id_evento) {
                 const event = await getEventsById(Number(id_evento));
                 if (event) {
+                    setNombre(event.nombre);
                     setFechaInicio(dayjs(event.fecha_inicio).format('YYYY-MM-DD'));
-                    setHoraInicio(event.hora_inicio);
-                    setHoraFin(event.hora_fin);
+                    setHoraInicio(event.hora_ini);
+                    setHoraFin(dayjs(event.fecha_fin, 'HH:mm:ss').format('HH:mm'));
                     setLugar(event.lugar);
                     setMaximoUsuarios(event.maximo_usuarios);   
                     setFechaLimite(dayjs(event.fecha_limite).format('YYYY-MM-DD'));
                     setEstado(event.estado);
+                    setImagen(event.imagen);
                 }
             }
         } catch (error) {
@@ -46,15 +49,28 @@ const UpdateEvent = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!fecha_inicio || !hora_inicio || !hora_fin || !lugar || !maximo_usuarios 
-            || !fecha_limite || !estado) {
+            || !fecha_limite || !estado || !imagen) {
             alert('Por favor, rellena todos los campos.');
             return;
         }
         try {
             if (id_evento) {
-                const eventData = { fecha_inicio, hora_inicio, hora_fin, lugar, maximo_usuarios, fecha_limite, estado };
-                console.log('data enviada', eventData);
-                await putEvent(Number(id_evento), eventData);
+                // const eventData = { fecha_inicio, hora_inicio, hora_fin, lugar, maximo_usuarios, fecha_limite, estado };
+                // console.log('data enviada', eventData);
+                // await putEvent(Number(id_evento), eventData);
+                const formData = new FormData();
+                formData.append('nombre', nombre);
+                formData.append('fecha_inicio', fecha_inicio);
+                formData.append('hora_inicio', hora_inicio);
+                formData.append('hora_fin', hora_fin); 
+                formData.append('lugar', lugar);
+                formData.append('maximo_usuarios', maximo_usuarios.toString());
+                formData.append('fecha_limite', fecha_limite);
+                formData.append('estado', estado);
+                formData.append('imagen', imagen);
+
+                await putEvent(Number(id_evento), formData);
+                alert('¡Evento actualizado exitosamente!');
                 navigate(`/events/${id_evento}`);
             }
         } catch (error) {
@@ -63,6 +79,8 @@ const UpdateEvent = () => {
         }
     };
 
+    
+
     return (
         <div className="flex items-center justify-center min-h-screen">
             <form
@@ -70,6 +88,18 @@ const UpdateEvent = () => {
                 className="w-full max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow"
             >
                 <h1 className="text-2xl font-bold mb-4 text-center">Actualizar evento</h1>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nombre">
+                        Nombre del evento
+                    </label>
+                    <input
+                        type="text"
+                        id="nombre"
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    />
+                </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_inicio">
                         Fecha de inicio
@@ -153,6 +183,18 @@ const UpdateEvent = () => {
                         onChange={(e) => setEstado(e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-2 text-sm font-medium text-gray-700">
+                        Imagen:
+                    </label>
+                    <input
+                        type="file"
+                        name="imagen"
+                        accept="image/*"
+                        onChange={(e) => setImagen(e.target.files?.[0] || null)}
+                        className="w-full p-2 border rounded-lg"
+                        placeholder="URL de la imagen" />
                 </div>
                 <button
                     type="submit"

@@ -28,7 +28,7 @@ export const postEvent = async (event: FormData) => {
   return response.data;
 }
 
-export const putEvent = async (id: number, event: any) => {
+export const putEvent = async (id: number, event: FormData) => {
   const response = await axios.put(`${API_URL}/${id}`, event);
   return response.data;
 }

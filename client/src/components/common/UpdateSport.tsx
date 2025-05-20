@@ -52,9 +52,9 @@ const UpdateSport = () => {
                 formData.append('informacion', informacion);
                 formData.append('categoria', categoria);
                 formData.append('equipamiento', equipamiento);
-                formData.append('imagen', imagen); // ✅ importante
+                formData.append('imagen', imagen);
 
-                await updateSport(Number(id_deporte), formData); // ✅ FormData aquí
+                await updateSport(Number(id_deporte), formData);
                 alert('¡Deporte actualizado exitosamente!');
                 navigate(`/sports/${id_deporte}`);
             }
