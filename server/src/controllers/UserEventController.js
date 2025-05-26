@@ -377,7 +377,7 @@ const getNotificationsFromUserEvent = async (req, res) => {
         if (pendingNotifications.length > 0) {
             res.status(200).json(pendingNotifications);
         } else {
-            res.status(404).json({ error: 'No notifications found for the user' });
+            res.status(200).json([]);
         }
     } catch (error) {
         res.status(500).json({ error: `ERROR_GET_NOTIFICATIONS_FROM_USER_EVENT: ${error}` });

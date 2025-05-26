@@ -226,7 +226,6 @@ const ProfilePage = () => {
         try {
             // const events = await getEvents();
             const events = await getEventsAvailableByUserLoggedIn();
-            console.log("EVENTOS OBTENIDOS", events)
             setEvents(events);
         } catch (error) {
             console.error('Error obteniendo eventos:', error);
@@ -395,15 +394,32 @@ const ProfilePage = () => {
         }
     };
     
+    // const checkNotifications = async () => {
+    //     try {
+    //         const response = await getNotifications();
+    //         setNotifications(response);
+    //         setIsModalOpen(true);
+    //     } catch (error) {
+    //         console.error("Error al obtener las notificaciones: ", error);
+    //     }
+    // }
     const checkNotifications = async () => {
         try {
             const response = await getNotifications();
-            setNotifications(response);
-            setIsModalOpen(true);
-        } catch (error) {
-            console.error("Error al obtener las notificaciones: ", error);
+            if (response && response.length > 0) {
+                setNotifications(response);
+                setIsModalOpen(true);
+            }
+        } catch (error: any) {
+            if (error.response?.status === 404) {
+                // No hay notificaciones disponibles → no mostrar nada
+                console.log("No hay notificaciones nuevas.");
+            } else {
+                console.error("Error al obtener las notificaciones:", error);
+            }
         }
-    }
+    };
+    
 
     const handleCloseModal = async () => {
         try {
@@ -806,8 +822,8 @@ const ProfilePage = () => {
                                         <div className="block">
                                             <strong><h1>Deportes favoritos</h1></strong>
                                             <div className="mt-2">
-                                                {events.map((event) => (
-                                                    <p key={event.id_evento}>{event.Sport.nombre}</p>
+                                                {events.map((n, index) => (
+                                                    <p key={`${n.id_evento}-${index}`}>{n.Sport.nombre}</p>
                                                 ))}
                                             </div>
                                         </div>
@@ -845,7 +861,7 @@ const ProfilePage = () => {
                                 </thead>
                                 <tbody>
                                     {userEvents.filter(userEvent => userEvent.esta_inscrito == true).map((userEvent) => (
-                                        <tr key={userEvent.id_usuario} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                        <tr key={userEvent.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{userEvent.Event.nombre}</th>
                                             <td className="px-6 py-4">{userEvent.Event.Sport.nombre}</td>
                                             <td className="px-6 py-4">{dayjs(userEvent.Event.fecha_ini).format('DD-MM-YYYY')}</td>
@@ -877,8 +893,8 @@ const ProfilePage = () => {
                                 <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-lg">
                                     <h2 className="text-xl font-bold mb-4">¡Te hemos inscrito en nuevos eventos!</h2>
                                     <ul className="list-disc list-inside mb-4">
-                                        {notifications.map((n) => (
-                                            <li key={n.id_evento}>
+                                        {notifications.map((n, index) => (
+                                            <li key={`${n.id_evento}-${index}`}>
                                                 Evento: {n.Event?.nombre || 'Evento sin nombre'}
                                             </li>
                                         ))}
@@ -944,7 +960,7 @@ const ProfilePage = () => {
                                             {
                                             eventsOrganizer.filter(event => event.createdBy === user?.email && event.estado === 'finalizado')
                                                 .map((userEvent) => (
-                                                <tr key={userEvent.id_usuario} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                                <tr key={userEvent.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                                     <td className="px-6 py-4">{userEvent.nombre}</td>
                                                     <td className="px-6 py-4">{dayjs(userEvent.fecha_ini).format('DD-MM-YYYY')}</td>
                                                     <td className="px-6 py-4">{userEvent.lugar}</td>
@@ -979,7 +995,7 @@ const ProfilePage = () => {
                                 </thead>
                                 <tbody>
                                     {eventsOrganizer.filter(event => event.createdBy === user?.email).map((userEvent) => (
-                                        <tr key={userEvent.id_usuario} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                        <tr key={userEvent.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{userEvent.nombre}</th>
                                             <td className="px-6 py-4">{userEvent.Sport.nombre}</td>
                                             <td className="px-6 py-4">{dayjs(userEvent.fecha_ini).format('DD-MM-YYYY')}</td>
