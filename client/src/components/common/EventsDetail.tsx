@@ -23,6 +23,7 @@ const EventDetail = () => {
         estado: string;
         id_usuario_espera: number;
         createdBy: string;
+        imagen: string;
     }
     interface Sport {
         id_deporte: number;
@@ -141,14 +142,23 @@ const EventDetail = () => {
     const eventSport = sports.find((sport) => sport.id_deporte === event.id_deporte);
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center mt-8">
             <div className="max-w-lg p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <a>
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{event.nombre}</h5>
                 </a>
                 <hr />
                 <br />
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 hover:underline">
+                <img
+                    className="w-[480px] h-[390px] object-cover rounded-lg transition-all duration-300 cursor-pointer"
+                    src={
+                        event.imagen
+                        ? `http://localhost:5000/sportly/events/${event.id_evento}/imagen`
+                        : `https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg`
+                    }
+                    alt="Imagen del evento"
+                />
+                <p className="mb-3 mt-2 font-normal text-gray-700 dark:text-gray-400 hover:underline">
                     Deporte: <a className="font-normal text-blue-700 dark:text-blue-400 hover:underline" href={`/sports/${event.id_deporte}`}>{eventSport && <strong>{eventSport.nombre}</strong>}</a>
                 </p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha inicio del evento: <strong>{event.fecha_ini}</strong></p>

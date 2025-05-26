@@ -11,6 +11,7 @@ const SportDetail = () => {
         informacion: string;
         categoria: string;
         equipamiento: string;
+        imagen: string;
     }
 
     interface Event {
@@ -61,15 +62,24 @@ const SportDetail = () => {
 
     return (
         <div className="flex items-center justify-center min-h-screen">
-            <div className="max-w-lg p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div className="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <a href={`/sports/${sport.id_deporte}`}>
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{sport.nombre}</h5>
                 </a>
-                <hr className='mb-2'/>
-                <p className="text-gray-700 dark:text-gray-400">Descripción: <strong>{sport.descripcion}</strong></p>
-                <p className="text-gray-700 dark:text-gray-400">Información: <strong>{sport.informacion}</strong></p>
-                <p className="text-gray-700 dark:text-gray-400">Categoría: <strong>{sport.categoria}</strong></p>
-                <p className="text-gray-700 dark:text-gray-400">Equipamiento: <strong>{sport.equipamiento}</strong></p>
+                <hr className='mb-3'/>
+                <img
+                    className="w-[480px] h-[390px] first-line:object-cover rounded-lg transition-all duration-300 cursor-pointer mx-auto"
+                    src={
+                        sport.imagen
+                        ? `http://localhost:5000/sportly/sports/${sport.id_deporte}/imagen`
+                        : `https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg`
+                    }
+                    alt="Imagen del evento"
+                />
+                <p className="text-gray-700 dark:text-gray-400 mt-3">Descripción: <strong>{sport.descripcion}</strong></p>
+                <p className="text-gray-700 dark:text-gray-400 mt-1">Información: <strong>{sport.informacion}</strong></p>
+                <p className="text-gray-700 dark:text-gray-400 mt-1">Categoría: <strong>{sport.categoria}</strong></p>
+                <p className="text-gray-700 dark:text-gray-400 mt-1">Equipamiento: <strong>{sport.equipamiento}</strong></p>
 
                 <button
                     onClick={fetchEvents}
