@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'
-import { getUserEvents } from '../../api/userEvent';
+import { getUserEventsLoggedIn } from '../../api/userEvent';
 import { getEventsById } from '../../api/events';
-// import UserContext from '../../context/UsersContext';
 import { Calendar, dayjsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css' 
 import dayjs from 'dayjs'
@@ -42,7 +41,6 @@ interface TransformedEvent {
 
 const Calendario = () => {
     const [events, setEvents] = useState<TransformedEvent[]>([]);
-    // const { user } = useContext(UserContext);
 
     const localizer = dayjsLocalizer(dayjs);
 
@@ -80,7 +78,8 @@ const Calendario = () => {
     const fetchEventUser = async () => {
         try {
             // const user = getCurrentUser();
-            const userEvents = await getUserEvents();
+            const userEvents = await getUserEventsLoggedIn();
+            console.log("EVENTOS DEL USUARIO", userEvents);
             const eventPromises = userEvents.map((userEvent: UserEvent) => getEventsById(userEvent.id_evento));
             const events = await Promise.all(eventPromises);
             const transformedEvents = transformEvents(events);
