@@ -16,7 +16,7 @@ const ITEMS_PER_PAGE = 3;
 const ProfilePage = () => {  
     interface Event {
         id_evento: number;
-        // id_usuario: number;
+        id_usuario: number;
         createdBy: string;
         nombre: string;
         fecha_ini: string;
@@ -146,7 +146,6 @@ const ProfilePage = () => {
     // const currentRatings = allRatings.slice(startIndex, endIndex);
     const location = useLocation();
     const joinedEvent = location.state?.joinedEvent;
-
 
     const nextPageEvents = () => {
         if (endIndex < allEvents.length) {
@@ -415,8 +414,10 @@ const ProfilePage = () => {
         } catch (error) {
             console.error('Error al marcar notificar_union como false:', error);
         }
-    };    
-    
+    };
+
+
+    userEvents
 
     return (
         <>
@@ -936,6 +937,7 @@ const ProfilePage = () => {
                                                 <th scope="col" className="px-6 py-3">Fecha de evento</th>
                                                 <th scope="col" className="px-6 py-3">Lugar del evento</th>
                                                 <th></th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -952,7 +954,7 @@ const ProfilePage = () => {
                                                             className="text-blue-600 dark:text-blue-400 hover:underline">
                                                             Añadir estadísticas
                                                         </button>
-                                                    </td>                                                
+                                                    </td>                                       
                                                 </tr>
                                             ))}
                                         </tbody>
