@@ -84,7 +84,7 @@ const EventDetail = () => {
         try {
             const data = await getEventsById(Number(id));
             data.fecha_ini = dayjs.utc(data.fecha_ini).format('DD-MM-YYYY');
-            data.fecha_fin = dayjs.utc(data.fecha_fin).format('HH:mm:ss');
+            data.fecha_fin = dayjs.utc(data.fecha_fin).format('DD-MM-YYYY');
             data.fecha_limite = dayjs.utc(data.fecha_limite).format('DD-MM-YYYY');
             setEvent(data);
 
@@ -162,6 +162,7 @@ const EventDetail = () => {
                     Deporte: <a className="font-normal text-blue-700 dark:text-blue-400 hover:underline" href={`/sports/${event.id_deporte}`}>{eventSport && <strong>{eventSport.nombre}</strong>}</a>
                 </p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha inicio del evento: <strong>{event.fecha_ini}</strong></p>
+                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha fin del evento: <strong>{event.fecha_fin}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Estado del evento: 
                     <span 
                         className={`ml-1 font-bold
@@ -175,7 +176,6 @@ const EventDetail = () => {
                     </span>
                 </p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Hora de inicio del evento: <strong>{event.hora_ini}</strong></p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Hora final del evento: <strong>{event.fecha_fin}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Lugar del evento: <strong>{event.lugar}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Máximo de usuarios: <strong>{event.maximo_usuarios}</strong></p>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha límite de inscripción: <strong>{event.fecha_limite}</strong></p>
