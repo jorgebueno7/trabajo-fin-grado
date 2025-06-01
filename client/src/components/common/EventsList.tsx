@@ -86,8 +86,6 @@ const Eventos = () => {
         finalizado: 'Finalizado'
     };
     
-    
-    
     return (
         <>
             <div className="flex items-end gap-6 mx-20 mt-6">
