@@ -9,6 +9,7 @@ UserEvent.belongsTo(Event, { foreignKey: 'id_evento' });
 UserEvent.belongsTo(User, { foreignKey: 'id_usuario' });
 
 Event.hasMany(UserEvent, { foreignKey: 'id_evento' });
+User.hasMany(UserEvent, { foreignKey: 'id_usuario' });
 
 Ranking.belongsTo(Event, { foreignKey: 'id_evento' });
 Ranking.belongsTo(Sport, { foreignKey: 'id_deporte' });
@@ -16,3 +17,5 @@ Ranking.belongsTo(User, { foreignKey: 'id_usuario' });
 
 Event.hasMany(News, { foreignKey: 'id_evento' });
 News.belongsTo(Event, { foreignKey: 'id_evento' });
+
+module.exports = { User, UserEvent, Event };

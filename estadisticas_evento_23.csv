@@ -1,0 +1,4 @@
+id_usuario,id_deporte,id_evento,clasificacion,puntos,tiempo,resultado,observaciones
+2,2,23,2,3,120,"¡Un podio bien merecido!",""
+4,2,23,3,2,210,"¡Un podio bien merecido!","Tuvo problemas técnicos con su equipo."
+5,2,23,1,4,30,"¡Dominaste el evento con maestría!","Sufrió una ligera lesión durante la competición."
