@@ -22,7 +22,8 @@ const getNewImage = async (req, res) => {
 const getAllNews = async (req, res) => {
     try {
         const newsList = await news.findAll({
-            include: [{ model: event }]
+            include: [{ model: event }],
+            order: [['fecha_creacion', 'DESC']] // Ordenar por fecha de creación descendente
         });
         res.status(200).json(newsList);
     } catch (error) {
