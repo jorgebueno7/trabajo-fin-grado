@@ -68,7 +68,7 @@ const SportDetail = () => {
                 </a>
                 <hr className='mb-3'/>
                 <img
-                    className="w-[480px] h-[390px] first-line:object-cover rounded-lg transition-all duration-300 cursor-pointer mx-auto"
+                    className="h-[390px] first-line:object-cover rounded-lg transition-all duration-300 cursor-pointer mx-auto"
                     src={
                         sport.imagen
                         ? `http://localhost:5000/sportly/sports/${sport.id_deporte}/imagen`
