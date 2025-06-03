@@ -966,7 +966,11 @@ const ProfilePage = () => {
                                             eventsOrganizer.filter(event => event.createdBy === user?.email && event.estado === 'finalizado')
                                                 .map((userEvent) => (
                                                 <tr key={userEvent.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                                    <td className="px-6 py-4">{userEvent.nombre}</td>
+                                                    <td className="px-6 py-4">
+                                                        <button onClick={ () => navigateToEventDetail(userEvent.id_evento)} className="text-blue-600 hover:underline">
+                                                            {userEvent.nombre}
+                                                        </button>
+                                                    </td>
                                                     <td className="px-6 py-4">{dayjs(userEvent.fecha_ini).format('DD-MM-YYYY')}</td>
                                                     <td className="px-6 py-4">{userEvent.lugar}</td>
                                                     <td className="px-6 py-4">
@@ -1001,7 +1005,12 @@ const ProfilePage = () => {
                                 <tbody>
                                     {eventsOrganizer.filter(event => event.createdBy === user?.email).map((userEvent) => (
                                         <tr key={userEvent.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{userEvent.nombre}</th>
+                                        {/* <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{userEvent.nombre}</th> */}
+                                            <td className="px-6 py-4">
+                                                <button onClick={ () => navigateToEventDetail(userEvent.id_evento)} className="text-blue-600 hover:underline">
+                                                    {userEvent.nombre}
+                                                </button>
+                                            </td>
                                             <td className="px-6 py-4">{userEvent.Sport.nombre}</td>
                                             <td className="px-6 py-4">{dayjs(userEvent.fecha_ini).format('DD-MM-YYYY')}</td>
                                             <td className="px-6 py-4">{userEvent.lugar}</td>
