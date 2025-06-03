@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { postRating } from '../../api/ratings';
 
 const CreateRatingEvent = () => {
@@ -7,7 +7,6 @@ const CreateRatingEvent = () => {
     const [valoracion, setValoracion] = useState<number>(0);
     const [comentario, setComentario] = useState<string>('');
 
-    const navigate = useNavigate();
 
     const handleRatingChange = (rating: number) => {
         setValoracion(rating);
@@ -26,7 +25,6 @@ const CreateRatingEvent = () => {
             if (id_evento) {
                 await postRating(Number(id_evento), valoracion, comentario.trim());
                 alert('¡Valoración creada exitosamente!');
-                navigate(`/ratings/${id_evento}`);
             }
         } catch (error) {
             console.error('Error al crear la valoración:', error);
@@ -61,6 +59,7 @@ const CreateRatingEvent = () => {
                 className="w-full max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow"
             >
                 <h1 className="text-2xl font-bold mb-4 text-center">Valorar evento</h1>
+                <hr></hr><br></br>
                 <div className="mb-4">
                     <label className="block mb-2 text-sm font-medium text-gray-700">
                         Selecciona tu valoración:
@@ -82,7 +81,7 @@ const CreateRatingEvent = () => {
                 </div>
                 <button
                     type="submit"
-                    className="mt-3 ml-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                     Enviar valoración
                 </button>
             </form>

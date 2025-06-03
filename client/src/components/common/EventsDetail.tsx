@@ -49,6 +49,12 @@ const EventDetail = () => {
         }
     };
 
+    const navigateToCreateRating = (id_evento: number) => {
+        if (event) {
+            navigate(`/create-rating/${id_evento}`);
+        }
+    };
+
     const navigateToPostNew = (id_evento: number) => {
         navigate(`/create-news/${id_evento}`)
     }
@@ -143,7 +149,7 @@ const EventDetail = () => {
 
     return (
         <div className="flex items-center justify-center mt-8">
-            <div className="max-w-lg p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div className="max-w-lg p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <a>
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{event.nombre}</h5>
                 </a>
@@ -211,6 +217,19 @@ const EventDetail = () => {
                         Darse de baja del evento
                     </button>
                 )}
+                {
+                    isLoggedIn && user &&
+                    users.includes(user.id) &&
+                    event.estado === 'finalizado' &&
+                    user.role === 'participante' && (
+                    <button
+                        onClick={() => navigateToCreateRating(event.id_evento)}
+                        className="inline-flex items-center mr-3 px-3 py-2 mt-6 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    >
+                        Valorar evento
+                    </button>
+                )}
+                
                 <button
                     onClick={handleViewRatings}
                     className="inline-flex items-center px-3 py-2 mt-6 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600"
