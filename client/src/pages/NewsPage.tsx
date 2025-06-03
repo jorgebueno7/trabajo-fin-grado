@@ -80,7 +80,7 @@ const NewsPage = () => {
                         <img
                             src={`http://localhost:5000/sportly/news/${item.id_noticia}/imagen`}
                             alt={item.titulo}
-                            className="w-full h-max object-cover"
+                            className="w-[700px] h-[500px] object-cover"
                         />
                         <div className="p-4">
                             <h1 className="text-lg font-semibold text-gray-800">{item.titulo}</h1>
