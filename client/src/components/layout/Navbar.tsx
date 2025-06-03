@@ -32,10 +32,18 @@ const Navbar = () => {
       <div className="flex justify-center w-full space-x-4">
         <NavLink to="/sports" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Deportes</NavLink>
         <NavLink to="/events" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Eventos</NavLink>
-        {isLoggedIn ? (
-          <NavLink to="/user-calendar" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Mi calendario</NavLink>
-        ) : (
-          <NavLink to="/calendar" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Calendario</NavLink>
+        {/* CALENDARIO (visible si NO está logueado o si es participante/admin) */}
+        {(!isLoggedIn || rolUsuario === 'participante' || rolUsuario === 'administrador') && (
+          <NavLink to="/calendar" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">
+            Calendario
+          </NavLink>
+        )}
+
+        {/* MI CALENDARIO (solo para participantes) */}
+        {isLoggedIn && rolUsuario === 'participante' && (
+          <NavLink to="/user-calendar" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">
+            Mi calendario
+          </NavLink>
         )}
         {/* {isLoggedIn && (
           <NavLink to="/my-events" className="font-bold px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-100 hover:text-slate-900">Mis eventos</NavLink>
