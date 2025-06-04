@@ -1,4 +1,3 @@
-// leerUsuariosDelEvento.js
 const User = require('./server/src/models/User');
 const UserEvent = require('./server/src/models/UserEvent');
 const Event = require('./server/src/models/Event');
@@ -6,7 +5,6 @@ const fs = require('fs');
 const path = require('path');
 
 async function exportarEstadisticasACSV(registros, id_deporte, nombreArchivo) {
-    // Definimos las columnas que queremos exportar (encabezados)
     const headers = [
         'id_usuario',
         'id_deporte',

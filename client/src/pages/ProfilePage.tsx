@@ -954,6 +954,7 @@ const ProfilePage = () => {
                                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-3">
                                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
+                                                <th scope="col" className="px-6 py-3">Identificador evento</th>
                                                 <th scope="col" className="px-6 py-3">Evento</th>
                                                 <th scope="col" className="px-6 py-3">Fecha de evento</th>
                                                 <th scope="col" className="px-6 py-3">Lugar del evento</th>
@@ -966,6 +967,7 @@ const ProfilePage = () => {
                                             eventsOrganizer.filter(event => event.createdBy === user?.email && event.estado === 'finalizado')
                                                 .map((userEvent) => (
                                                 <tr key={userEvent.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                                    <td className="px-6 py-4">{userEvent.id_evento}</td>
                                                     <td className="px-6 py-4">
                                                         <button onClick={ () => navigateToEventDetail(userEvent.id_evento)} className="text-blue-600 hover:underline">
                                                             {userEvent.nombre}
