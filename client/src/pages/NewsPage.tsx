@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { getAllNews } from '../api/news';
+import { getAllNews, deleteNews } from '../api/news';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -37,6 +37,10 @@ const NewsPage = () => {
 
     const navigate = useNavigate();
 
+    const navigateToUpdateNew = (id_noticia: number) => {
+        navigate(`/update-new/${id_noticia}`);
+    }
+
     const navigateToCreateNew = () => {
         navigate('/create-new');
     }
@@ -52,6 +56,17 @@ const NewsPage = () => {
         fetchNews();
         setCurrentPage(1);
     }, []);
+
+    const handleDeleteNew = async (id_noticia: number) => {
+        try {
+            await deleteNews(id_noticia);
+            alert('Noticia eliminada correctamente');
+            setNews(news.filter(item => item.id_noticia !== id_noticia));
+        } catch (error) {
+            console.error('Error deleting news:', error);
+        }
+    }
+
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -88,6 +103,25 @@ const NewsPage = () => {
                             <p className="text-gray-500 text-xs mt-2">
                                 Publicado el: {dayjs.utc(item.fecha_creacion).format('DD-MM-YYYY HH:mm')}
                             </p>
+                            {
+                                isLoggedIn &&
+                                user?.role === 'administrador' && (
+                                <div>
+                                    <button onClick={() => navigateToUpdateNew(item.id_noticia)}
+                                        className="w-30 mt-2 text-white bg-blue-800 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
+                                            rounded-lg text-sm px-2 py-0.5 text-center dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-800">
+                                        Editar noticia
+                                    </button>
+                                    <button 
+                                        onClick={() => handleDeleteNew(item.id_noticia)}
+                                        className="w-30 mt-2 ml-2 text-white bg-red-800 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium 
+                                            rounded-lg text-sm px-2 py-0.5 text-center dark:bg-red-700 dark:hover:bg-red-800 dark:focus:ring-red-800">
+                                        Eliminar noticia
+                                    </button>
+                                </div>
+                                )
+                            }
+                            
                         </div>
                     </div>
                 ))}

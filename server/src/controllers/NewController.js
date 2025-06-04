@@ -88,20 +88,28 @@ const postNewFromEvent = async (req, res) => {
 const putNew = async (req, res) => {
     try {
         const { id_noticia } = req.params;
-        const { id_evento, titulo, subtitulo, imagen } = req.body;
-        const [updated] = await news.update({ id_evento, titulo, subtitulo, imagen }, {
-            where: { id_noticia }
-        });
-        if (updated) {
-            const updatedNoticia = await news.findByPk(id_noticia);
-            res.status(200).json(updatedNoticia);
-        } else {
-            res.status(404).json({ error: 'News with that id does not exist' });
+        const { id_evento, titulo, subtitulo } = req.body;
+    
+        // Buscamos la noticia actual para recuperar la imagen si no se actualiza
+        const existingNew = await news.findByPk(id_noticia);
+        if (!existingNew) {
+            return res.status(404).json({ error: 'News with that id does not exist' });
         }
+    
+        // Solo actualizar la imagen si se sube una nueva
+        const imagen = req.file ? req.file.buffer : null; // nombre del archivo
+    
+        const updateData = { id_evento, titulo, subtitulo };
+        if (imagen) {
+            updateData.imagen = imagen;
+        }
+
+        await news.update(updateData, { where: { id_noticia } });
+        res.status(200).json({ message: 'New updated successfully' });
     } catch (error) {
         res.status(500).json({ error: `ERROR_PUT_NEW: ${error}` });
     }
-}
+};
 
 const deleteNew = async (req, res) => {
     try {

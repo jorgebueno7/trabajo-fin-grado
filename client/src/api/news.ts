@@ -17,7 +17,7 @@ export const postNews = async (news: any) => {
     return response.data;
 };
 
-export const putNews = async (id: number, news: any) => {
+export const putNews = async (id: number, news: FormData) => {
     const response = await axios.put(`${API_URL}/${id}`, news);
     return response.data;
 };
