@@ -58,3 +58,8 @@ export const checkAdminExists = async () => {
       return false;
   }
 };
+
+export const getAllOrganizerUsers = async () => {
+  const response = await axios.get(API_URL + '/users/organizer');
+  return response.data;
+}

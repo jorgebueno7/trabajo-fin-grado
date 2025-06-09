@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getEventsById, putEvent } from '../../api/events';
+import { getAllOrganizerUsers } from '../../api/users';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
@@ -17,6 +18,8 @@ const UpdateEvent = () => {
     const [fecha_limite, setFechaLimite] = useState<string>('');
     const [estado, setEstado] = useState<string>('');
     const [imagen, setImagen] = useState<File | null>(null);
+    const [organizador, setOrganizador] = useState<string>('');
+    const [adminUsers, setAdminUsers] = useState<{ id: number, email: string }[]>([]);
 
     const navigate = useNavigate();
 
@@ -34,6 +37,7 @@ const UpdateEvent = () => {
                     setFechaLimite(dayjs(event.fecha_limite).format('YYYY-MM-DD'));
                     setEstado(event.estado);
                     setImagen(event.imagen);
+                    setOrganizador(event.createdBy);
                 }
             }
         } catch (error) {
@@ -42,14 +46,25 @@ const UpdateEvent = () => {
         }
     }
 
+    const fetchOrganizers = async () => {
+        try {
+            const organizers = await getAllOrganizerUsers();
+            setAdminUsers(organizers);
+        } catch (error) {
+            console.error('Error al obtener los organizadores:', error);
+            alert('No se pudo cargar la lista de organizadores.');
+        }
+    };
+
     useEffect(() => {
         fetchEvent();
+        fetchOrganizers();
     }, [id_evento]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!fecha_inicio || !hora_inicio || !hora_fin || !lugar || !maximo_usuarios 
-            || !fecha_limite || !estado || !imagen) {
+            || !fecha_limite || !estado || !imagen || !organizador) {
             alert('Por favor, rellena todos los campos.');
             return;
         }
@@ -68,6 +83,7 @@ const UpdateEvent = () => {
                 formData.append('fecha_limite', fecha_limite);
                 formData.append('estado', estado);
                 formData.append('imagen', imagen);
+                formData.append('createdBy', organizador);
 
                 await putEvent(Number(id_evento), formData);
                 alert('¡Evento actualizado exitosamente!');
@@ -78,8 +94,6 @@ const UpdateEvent = () => {
             alert('Ocurrió un error al actualizar el evento. Por favor, inténtalo de nuevo.');
         }
     };
-
-    
 
     return (
         <div className="flex items-center justify-center min-h-screen">
@@ -162,7 +176,7 @@ const UpdateEvent = () => {
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_limite">
-                        Fecha límite
+                        Fecha límite de inscripción
                     </label>
                     <input
                         type="date"
@@ -176,13 +190,23 @@ const UpdateEvent = () => {
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="estado">
                         Estado
                     </label>
-                    <input
+                    {/* <input
                         type="text"
                         id="estado"
                         value={estado}
                         onChange={(e) => setEstado(e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
+                    /> */}
+                    <select
+                        id="estado"
+                        value={estado}
+                        onChange={(e) => setEstado(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    >
+                        <option value="sin_comenzar">Sin comenzar</option>
+                        <option value="en_curso">En curso</option>
+                        <option value="finalizado">Finalizado</option>
+                    </select>
                 </div>
                 <div className="mb-4">
                     <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -195,6 +219,24 @@ const UpdateEvent = () => {
                         onChange={(e) => setImagen(e.target.files?.[0] || null)}
                         className="w-full p-2 border rounded-lg"
                         placeholder="URL de la imagen" />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="organizador">
+                        Organizador
+                    </label>
+                    <select
+                        id="organizador"
+                        value={organizador}
+                        onChange={(e) => setOrganizador(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    >
+                        <option value="">Selecciona un organizador</option>
+                        {adminUsers.map((user) => (
+                            <option key={user.id} value={user.email}>
+                                {user.email}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <button
                     type="submit"

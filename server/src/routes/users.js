@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require('../controllers/UserController');
 const verifySession = require('../middleware/verify-sessions');
 
+router.get('/users/organizer', userController.getAllOrganizerUsers);
 router.get('/users', userController.getAllUsers);
 router.get('/users/:id', userController.getUserById);
 router.post('/registro', userController.registroUsers);

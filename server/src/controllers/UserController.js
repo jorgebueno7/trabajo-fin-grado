@@ -445,5 +445,14 @@ const getUserFromSession = async (req, res) => {
     }
 };
 
+const getAllOrganizerUsers = async (req, res) => {
+    try {
+        const usuarios = await users.findAll({ where: { role: 'organizador' } });
+        res.status(200).json(usuarios);
+    } catch (error) {
+        res.status(500).json({ error: `ERROR_GET_ALL_ORGANIZER_USERS: ${error}` });
+    }
+};
+
 module.exports = { getAllUsers, registroUsers, loginUsers, logout, getUserById, updateUserById, deleteUserById, completeProfile, 
-    getUserFromSession, userAdminExists, updateUserProfile, deleteUserFromSession };
+    getUserFromSession, userAdminExists, updateUserProfile, deleteUserFromSession, getAllOrganizerUsers };

@@ -91,9 +91,9 @@ const updateEvent = async (req, res) => {
         const { id_evento } = req.params;
         const imagen = req.file ? req.file.buffer : null; // nombre del archivo
 
-        const { id_deporte, nombre, fecha_ini, fecha_fin, fecha_limite, lugar, hora_ini, maximo_usuarios, clasificacion, estado } = req.body;
+        const { id_deporte, nombre, fecha_ini, fecha_fin, fecha_limite, lugar, hora_ini, maximo_usuarios, clasificacion, estado, createdBy } = req.body;
 
-        const updateData = { id_deporte, nombre, fecha_ini, fecha_fin, fecha_limite, lugar, hora_ini, maximo_usuarios, clasificacion, estado };
+        const updateData = { id_deporte, nombre, fecha_ini, fecha_fin, fecha_limite, lugar, hora_ini, maximo_usuarios, clasificacion, estado, createdBy };
         if (imagen) {
             updateData.imagen = imagen;
         }
