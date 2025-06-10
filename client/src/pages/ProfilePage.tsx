@@ -9,6 +9,7 @@ import { getEventsByOrganizer, getUserEventsLoggedIn, getNotifications, markNoti
 import { putEventStatus, getEvents, deleteEvent, getEventsAvailableByUserLoggedIn } from '../api/events';
 import { getSports, deleteSport } from '../api/sports'
 import { getUsers, deleteUserById } from '../api/users'
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
 // import { deleteRating } from '../api/ratings' 
 
 const ITEMS_PER_PAGE = 3;
@@ -137,6 +138,10 @@ const ProfilePage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [notifications, setNotifications] = useState<UserEvent[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [selectedSport, setSelectedSport] = useState<string>('');
+    const deportes = [...new Set(userEvents.map(e => e.Event.Sport.nombre))];
+    const [showChartModal, setShowChartModal] = useState(false);
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -353,7 +358,7 @@ const ProfilePage = () => {
             fetchAllEvents();
         }
     }, 
-    [user, location.key]);
+    [user, location.key, selectedSport]);
 
     useEffect(() => {
         fetchAllSports();
@@ -432,8 +437,17 @@ const ProfilePage = () => {
         }
     };
 
+    const filteredSports = userEvents.filter(event => {
+        const matchesSport = selectedSport === '' || event.Event.Sport?.nombre === selectedSport;
+        return matchesSport;
+    });
 
-    userEvents
+    const chartData = filteredSports.map((r) => ({
+        name: r.Event.nombre,
+        clasificacion: r.clasificacion,
+        puntos: r.puntos,
+        tiempo: r.tiempo,
+    }));
 
     return (
         <>
@@ -820,24 +834,61 @@ const ProfilePage = () => {
                                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Estadísticas</h5>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="block">
-                                            <strong><h1>Deportes favoritos</h1></strong>
-                                            <div className="mt-2">
-                                                {events.map((n, index) => (
-                                                    <p key={`${n.id_evento}-${index}`}>{n.Sport.nombre}</p>
-                                                ))}
+                                            {/* <strong><h1>Deportes favoritos</h1></strong> */}
+                                            <div className="flex items-end mt-2">
+                                                <div className="flex flex-col">
+                                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Filtrar estadísticas según deporte:</label>
+                                                    {/* <select
+                                                        value={selectedSport}
+                                                            onChange={(e) => setSelectedSport(e.target.value)}
+                                                            className="mt-1 w-full py-2 px-3 border border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-md shadow-sm"
+                                                        > */}
+                                                        <select
+                                                            value={selectedSport}
+                                                            onChange={(e) => {
+                                                                setSelectedSport(e.target.value);
+                                                                setShowChartModal(true);
+                                                            }}
+                                                            className="mt-1 w-full py-2 px-3 border border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-md shadow-sm"
+                                                        >
+                                                        <option value=""></option>
+                                                        {deportes.map((nombre) => (
+                                                            <option key={nombre} value={nombre}>
+                                                                {nombre}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="block">
-                                            <h1>Grid de eventos</h1>
+                                            {showChartModal && (
+                                                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                                                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-4xl w-full relative">
+                                                    <button
+                                                        onClick={() => setShowChartModal(false)}
+                                                        className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 dark:hover:text-white"
+                                                    >
+                                                        ✖
+                                                    </button>
+                                                    <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">
+                                                        Estadísticas de {selectedSport}
+                                                    </h2>
+                                                    <div className="h-[500px] w-full">
+                                                        <ResponsiveContainer width="100%" height="100%">
+                                                        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                                            <CartesianGrid /> <XAxis dataKey="name" /> <YAxis /> <Tooltip /> <Legend />
+                                                            <Bar dataKey="clasificacion" fill="#247380" name="Clasificación" radius={[4, 4, 0, 0]} />
+                                                            <Bar dataKey="puntos" fill="#2ad9b9" name="Puntos" radius={[4, 4, 0, 0]} />
+                                                            <Bar dataKey="tiempo" fill="#53c48f" name="Tiempo (min)" radius={[4, 4, 0, 0]} />
+                                                        </BarChart>
+                                                        </ResponsiveContainer>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
-                                    <button 
-                                        // onClick={}
-                                        className="w-30 mt-3 text-white bg-green-700 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium 
-                                            rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" 
-                                    >
-                                        Actualizar perfil
-                                    </button>
                                 </a>
                             </div>
                         </div>

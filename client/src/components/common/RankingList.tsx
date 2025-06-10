@@ -65,11 +65,6 @@ const Posiciones = () => {
     const openModal = (data: JSON) => setModalData(data);
     const closeModal = () => setModalData(null);
 
-    // const filteredEvents = rankings.filter(event => {
-    //     const matchesEvent = selectedEvent === '' || event.Event?.nombre === selectedEvent;
-    //     return matchesEvent;
-    // });
-
     const filteredEvents = [...rankings].filter((event) => {
         return selectedEvent === '' || event.Event?.nombre === selectedEvent;
     }).sort((a, b) => {
@@ -99,7 +94,7 @@ const Posiciones = () => {
     return (
         <div className="overflow-x-auto">
             <div className="flex items-end mx-12 mt-6">
-                 <div className="flex flex-col">
+                <div className="flex flex-col">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Filtrar estadísticas según evento:</label>
                     <select
                         value={selectedEvent}
