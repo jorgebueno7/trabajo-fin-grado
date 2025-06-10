@@ -165,8 +165,14 @@ const main = async () => {
 
             // Tiempo: mejor clasificación menor tiempo, rango 30-300 s
             // Aquí hacemos que tiempo sea linealmente proporcional a la clasificación
-            const tiempo = (30 + ((clasificacion - 1) / (maxUsuarios - 1)) * (300 - 30)).toFixed(2);
-
+            
+            let tiempo;
+            if (maxUsuarios === 1) {
+                tiempo = 30;
+            }
+            else {
+                tiempo = (30 + ((clasificacion - 1) / (maxUsuarios - 1)) * (300 - 30)).toFixed(2);
+            }
             // Resultado texto según clasificación
             const resultado = mensajesResultado(clasificacion);
 

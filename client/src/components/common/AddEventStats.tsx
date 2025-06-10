@@ -50,11 +50,6 @@ const AddEventStats = () => {
     const [selectedStatsUser, setSelectedStatsUser] = useState<UserEvent | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // const openStatsModal = (user: UserEvent) => {
-    //   setSelectedStatsUser(user);
-    //   setIsModalOpen(true);
-    // };
-    
     const closeStatsModal = () => {
       setIsModalOpen(false);
       setSelectedStatsUser(null);
@@ -81,17 +76,7 @@ const AddEventStats = () => {
                 }));
             }
         }
-    };  
-
-    // const handleInputChange = (userId: number, field: string, value: string) => {
-    //     setFormDataMap(prev => ({
-    //       ...prev,
-    //       [userId]: {
-    //         ...prev[userId],
-    //         [field]: value
-    //       }
-    //     }));
-    // };
+    };
 
     const handleExtraStatChange = (userId: number, index: number, field: 'key' | 'value', value: string) => {
       setFormDataMap(prev => {
@@ -131,191 +116,66 @@ const AddEventStats = () => {
         fecthUsers();
     }, [id_evento]);
 
-    // const exportToExcel = () => {
-    //     const generarEstadisticas = (clasificacion: number, maxUsuarios: number) => {
-    //         let puntos: number;
-    //         let tiempo: string;
-    //         let resultado: string;
-    //         let observaciones: string;
-    
-    //         if (clasificacion === 1) {
-    //             puntos = 100;
-    //             tiempo = "1:59:32";
-    //             resultado = "Ganador";
-    //             observaciones = "Excelente rendimiento. Dominó la competencia.";
-    //         } else if (clasificacion <= 3) {
-    //             puntos = 90 - (clasificacion - 1) * 5;
-    //             tiempo = `2:0${clasificacion}:1${clasificacion}`;
-    //             resultado = "Podio";
-    //             observaciones = "Muy buena actuación, mostró gran nivel.";
-    //         } else if (clasificacion <= 5) {
-    //             puntos = 70 - (clasificacion - 3) * 10;
-    //             tiempo = `2:2${clasificacion}:1${clasificacion + 2}`;
-    //             resultado = "Competente";
-    //             observaciones = "Buen rendimiento general, aunque con margen de mejora.";
-    //         } else if (clasificacion < maxUsuarios) {
-    //             puntos = 30 - (clasificacion * 2);
-    //             tiempo = `2:5${clasificacion}:3${clasificacion}`;
-    //             resultado = "Finalizó";
-    //             observaciones = "Debe mejorar la consistencia.";
-    //         } else {
-    //             puntos = 10;
-    //             tiempo = "DNF";
-    //             resultado = "No completó";
-    //             observaciones = "No completó la prueba por fatiga o lesión.";
-    //         }
-    
-    //         return { puntos, tiempo, resultado, observaciones };
-    //     };
-
-    //     const exportData = users.map(user => {
-    //         const maxUsuarios = user.Event?.maximo_usuarios || 0;
-
-    //         const clasificacion = user.clasificacion && user.clasificacion > 0 ? user.clasificacion : Math.floor(Math.random() * maxUsuarios) + 1;
-
-    //         const {
-    //             puntos, tiempo, resultado, observaciones
-    //         } = user.puntos && user.resultado && user.tiempo && user.observaciones 
-    //             ? {
-    //                 puntos: user.puntos,
-    //                 tiempo: user.tiempo,
-    //                 resultado: user.resultado,
-    //                 observaciones: user.observaciones
-    //             }
-    //             : generarEstadisticas(clasificacion, maxUsuarios); 
-    //         return {
-    //             'Nombre': `${user.user.nombre} ${user.user.apellidos}`,
-    //             'Email': user.user.email,
-    //             'Evento': user.Event.nombre,
-    //             'Deporte del Evento': user.Event.Sport.nombre,
-    //             'Clasificación': clasificacion,
-    //             'Puntos': puntos,
-    //             'Resultado': resultado,
-    //             'Tiempo': tiempo,
-    //             'Observaciones': observaciones,
-    //         };
-    //     });
-      
-    //     const worksheet = XLSX.utils.json_to_sheet(exportData);
-    //     const workbook = XLSX.utils.book_new();
-    //     XLSX.utils.book_append_sheet(workbook, worksheet, "Estadísticas");
-      
-    //     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    //     const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    //     saveAs(data, `estadísticas_evento_${id_evento}.xlsx`);
-    // };
-
-    // const handleImportStats = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const file = e.target.files?.[0];
-    //     if (!file) return;
-    
-    //     try {
-    //         const data = await file.arrayBuffer();
-    //         const workbook = XLSX.read(data);
-    //         const sheetName = workbook.SheetNames[0];
-    //         const worksheet = workbook.Sheets[sheetName];
-    //         const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet);
-    
-    //         for (const row of jsonData) {
-    //             const {
-    //                 'ID Evento': id_evento,
-    //                 'ID Usuario': id_usuario,
-    //                 'ID Deporte': id_deporte,
-    //                 'Clasificación': clasificacion,
-    //                 'Puntos': puntos,
-    //                 'Resultado': resultado,
-    //                 'Tiempo': tiempo,
-    //                 'Observaciones': observaciones,
-    //                 ...extras
-    //             } = row;
-    
-    //             // Filtra columnas extra no estándar
-    //             const estadisticas_extra: { [key: string]: string | number } = {};
-    //             Object.keys(extras).forEach(key => {
-    //                 estadisticas_extra[key] = isNaN(Number(extras[key])) ? extras[key] : Number(extras[key]);
-    //             });
-    
-    //             const payload = {
-    //                 clasificacion: Number(clasificacion),
-    //                 puntos: Number(puntos),
-    //                 resultado,
-    //                 tiempo,
-    //                 observaciones,
-    //                 estadisticas_extra
-    //             };
-    
-    //             await addEventStats(Number(id_evento), Number(id_usuario), {
-    //                 ...payload,
-    //             });
-    //         }
-    
-    //         alert('Estadísticas importadas correctamente');
-    //         fecthUsers(); // actualiza tabla
-    //     } catch (error) {
-    //         console.error("Error al importar estadísticas:", error);
-    //         alert("Hubo un error al procesar el archivo");
-    //     }
-    // };
-
     const handleImportStats = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
       
         const reader = new FileReader();
         reader.onload = async (event) => {
-          const data = new Uint8Array(event.target?.result as ArrayBuffer);
-          const workbook = XLSX.read(data, { type: 'array', codepage: 65001 });
-          const sheet = workbook.Sheets[workbook.SheetNames[0]];
-          const jsonData = XLSX.utils.sheet_to_json(sheet);
-      
-          for (const row of jsonData) {
-            const {
-              id_evento,
-              id_usuario,
-              clasificacion,
-              puntos,
-              tiempo,
-              resultado,
-              observaciones,
-            //   ...estadisticas_extra
-            } = row as any;
-      
-            // Validación
-            if (isNaN(Number(id_evento)) || isNaN(Number(id_usuario))) {
-              console.warn("Fila inválida: id_evento o id_usuario no numéricos", row);
-              continue;
+            const text = event.target?.result as string;
+            const workbook = XLSX.read(text, { type: 'string' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(sheet);
+            console.log(jsonData); // Aquí verás los datos parseados
+        
+            for (const row of jsonData) {
+                const {
+                    id_evento,
+                    id_usuario,
+                    clasificacion,
+                    puntos,
+                    tiempo,
+                    resultado,
+                    observaciones,
+                    //   ...estadisticas_extra
+                } = row as any;
+        
+                console.log("JSON DATA", jsonData);
+                console.log("Fila actual", row);
+                // Validación
+                if (isNaN(Number(id_evento)) || isNaN(Number(id_usuario))) {
+                    console.warn("Fila inválida: id_evento o id_usuario no numéricos", row);
+                    continue;
+                }
+        
+                // const formattedExtraStats: { [key: string]: string | number } = {};
+                // for (const [key, value] of Object.entries(estadisticas_extra)) {
+                //   formattedExtraStats[key] = isNaN(Number(value)) ? value : Number(value);
+                // }
+        
+                try {
+                    console.log(`Añadiendo estadísticas para usuario ${id_usuario} en evento ${id_evento}`);
+                    await addEventStats(Number(id_evento), Number(id_usuario), {
+                        clasificacion,
+                        puntos,
+                        tiempo,
+                        resultado,
+                        observaciones,
+                        // estadisticas_extra: formattedExtraStats
+                    });
+                    console.log(`Estadísticas añadidas para usuario ${id_usuario}`);
+                } catch (error) {
+                    console.error(`Error al importar estadísticas del usuario ${id_usuario}`, error);
+                }
             }
-      
-            // const formattedExtraStats: { [key: string]: string | number } = {};
-            // for (const [key, value] of Object.entries(estadisticas_extra)) {
-            //   formattedExtraStats[key] = isNaN(Number(value)) ? value : Number(value);
-            // }
-      
-            try {
-              await addEventStats(Number(id_evento), Number(id_usuario), {
-                clasificacion,
-                puntos,
-                tiempo,
-                resultado,
-                observaciones,
-                // estadisticas_extra: formattedExtraStats
-              });
-              console.log(`Estadísticas añadidas para usuario ${id_usuario}`);
-            } catch (error) {
-              console.error(`Error al importar estadísticas del usuario ${id_usuario}`, error);
-            }
-          }
-      
-          alert('Importación completada');
-          fecthUsers(); // para actualizar la tabla
+        
+            alert('Importación completada');
+            fecthUsers(); // para actualizar la tabla
         };
         reader.readAsText(file, 'utf-8');
-
         // reader.readAsArrayBuffer(file);
-      };
-      
+    };
     
-
     return (
       <div className="p-5">
          <div className="flex justify-between items-center">
@@ -353,7 +213,7 @@ const AddEventStats = () => {
                 <tbody>
                     {users.map((userEvent) => (
                         <>
-                            <tr key={userEvent.id_usuario} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700 dark:bg-gray-800">
+                            <tr key={userEvent.id_evento} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700 dark:bg-gray-800">
                                 <td className="px-6 py-4">{userEvent.Event.nombre}</td>
                                 <td className="px-6 py-4">{userEvent.user.nombre} {userEvent.user.apellidos}</td>
                                 <td className="px-6 py-4">{userEvent.user.email}</td>
@@ -363,19 +223,7 @@ const AddEventStats = () => {
                                     <button onClick={() => toggleExpandRow(userEvent.id_usuario)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                         {expandedRow === userEvent.id_usuario ? 'Ocultar' : 'Añadir Estadísticas'}
                                     </button>
-                                    </td>
-                                  {/*
-                              </td>
-                              <td className="px-6 py-4">
-                                  <button onClick={() => openStatsModal(userEvent)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                      Consultar estadísticas
-                                  </button>
-                              </td>
-                              <td className="px-6 py-4">
-                                  <button onClick={exportToExcel} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                      Exportar estadísticas
-                                  </button>
-                              </td> */}
+                                </td>
                             </tr>
 
                             {expandedRow === userEvent.id_usuario && (
@@ -428,46 +276,6 @@ const AddEventStats = () => {
                                             }}
                                             className="grid grid-cols-2 gap-4"
                                         >
-                                            {/* <input type="number" placeholder="Clasificación" className="border p-2 rounded"
-                                                value={formDataMap[userEvent.id_usuario]?.clasificacion || ''}
-                                                onChange={(e) => handleInputChange(userEvent.id_usuario, 'clasificacion', e.target.value)} />
-
-                                            <input type="number" placeholder="Puntos" className="border p-2 rounded"
-                                                value={formDataMap[userEvent.id_usuario]?.puntos || ''}
-                                                onChange={(e) => handleInputChange(userEvent.id_usuario, 'puntos', e.target.value)} />
-
-                                            <input type="text" placeholder="Resultado" className="border p-2 rounded"
-                                                value={formDataMap[userEvent.id_usuario]?.resultado || ''}
-                                                onChange={(e) => handleInputChange(userEvent.id_usuario, 'resultado', e.target.value)} />
-
-                                            <input type="text" placeholder="Tiempo" className="border p-2 rounded"
-                                                value={formDataMap[userEvent.id_usuario]?.tiempo || ''}
-                                                onChange={(e) => handleInputChange(userEvent.id_usuario, 'tiempo', e.target.value)} />
-
-                                            <input type="text" placeholder="Observaciones" className="border p-2 rounded col-span-2"
-                                                value={formDataMap[userEvent.id_usuario]?.observaciones || ''}
-                                                onChange={(e) => handleInputChange(userEvent.id_usuario, 'observaciones', e.target.value)} /> */}
-
-                                            {/* <div className="col-span-2">
-                                                <h4 className="font-semibold mb-2">Estadísticas extra:</h4>
-                                                {formDataMap[userEvent.id_usuario]?.estadisticas_extra.map((item: any, index: number) => (
-                                                    <div key={index} className="flex gap-2 mb-2">
-                                                        <input type="text" placeholder="Nombre" className="border p-2 rounded w-1/2"
-                                                            value={item.key}
-                                                            onChange={(e) => handleExtraStatChange(userEvent.id_usuario, index, 'key', e.target.value)} />
-                                                        <input type="text" placeholder="Valor" className="border p-2 rounded w-1/2"
-                                                            value={item.value}
-                                                            onChange={(e) => handleExtraStatChange(userEvent.id_usuario, index, 'value', e.target.value)} />
-                                                    </div>
-                                                ))}
-                                                <button type="button" onClick={() => addExtraStatField(userEvent.id_usuario)} className="text-sm text-blue-600 hover:underline mt-1">
-                                                    + Añadir estadística extra
-                                                </button>
-                                            </div>
-
-                                            <button type="submit" className="col-span-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                                                Añadir estadísticas
-                                            </button> */}
                                         </form>
                                     </td>
                                 </tr>
