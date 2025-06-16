@@ -19,6 +19,7 @@ const Deportes = () => {
     const [sports, setSports] = useState<Sport[]>([]);
     const { user, isLoggedIn } = useContext(UserContext);
     const [selectedSport, setSelectedSport] = useState<string>('all');
+    const [searchQuery, setSearchQuery] = useState<string>('');
     const deportes = [...new Set(sports.map(e => e.nombre))]; // Lista de deportes únicos
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -38,7 +39,7 @@ const Deportes = () => {
 
     useEffect(() => {
         fetchSports();
-    }, []);
+    }, [selectedSport, searchQuery]);
     
     const fetchSports = async () => {
         try {
@@ -57,7 +58,8 @@ const Deportes = () => {
 
     const filteredSports = sports.filter(sport => {
         const matchesDeporte = selectedSport === 'all' || sport.nombre === selectedSport;
-        return matchesDeporte ;
+        const matchesSearch = sport.nombre.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesDeporte && matchesSearch;
     });
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -67,6 +69,18 @@ const Deportes = () => {
     return (
         <>
             <div className="flex items-end gap-6 mx-20 mt-6">
+                <div className="flex flex-col">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                        Buscar por nombre:
+                    </label>
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Ej. Fútbol, Baloncesto"
+                        className="mt-1 w-full py-2 px-3 border border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-md shadow-sm"
+                    />
+                </div>
                 <div className="flex flex-col">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Filtrar por deporte:</label>
                     <select
