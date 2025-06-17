@@ -6,6 +6,7 @@ import utc from 'dayjs/plugin/utc';
 import UserContext from '../context/UsersContext';
 
 dayjs.extend(utc);
+<p></p>
 
 const ITEMS_PER_PAGE = 6;
 
@@ -17,6 +18,9 @@ const NewsPage = () => {
         subtitulo: string;
         imagen: string;
         fecha_creacion: string;
+        Event: {
+            nombre: string;
+        }
     }
 
     const [news, setNews] = useState<News[]>([]);
@@ -75,7 +79,7 @@ const NewsPage = () => {
     return (
         <div className="p-5">
             <div className="flex justify-between items-center flex-wrap mb-6">
-                <h1 className="text-2xl font-bold ml-2">Últimas noticias</h1>
+                <h1 className="text-2xl font-bold ml-2">¡Noticias de última hora!</h1>
                 {isLoggedIn && (user?.role === 'organizador' || user?.role === 'administrador') && (
                     <button
                         onClick={navigateToCreateNew}
@@ -100,6 +104,9 @@ const NewsPage = () => {
                         <div className="p-4">
                             <h1 className="text-lg font-semibold text-gray-800">{item.titulo}</h1>
                             <h3 className="text-gray-600 text-sm">{item.subtitulo}</h3>
+                            <h4 className="text-gray-500 text-sm mt-1">
+                                Evento: {item.Event?.nombre ?? 'Noticia publicada sin evento asociado'}
+                            </h4>                            
                             <p className="text-gray-500 text-xs mt-2">
                                 Publicado el: {dayjs.utc(item.fecha_creacion).format('DD-MM-YYYY HH:mm')}
                             </p>
@@ -121,7 +128,6 @@ const NewsPage = () => {
                                 </div>
                                 )
                             }
-                            
                         </div>
                     </div>
                 ))}

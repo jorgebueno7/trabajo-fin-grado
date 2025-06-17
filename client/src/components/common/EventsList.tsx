@@ -153,10 +153,10 @@ const Eventos = () => {
                                     <h1 className="text-gray-900 bg-white bg-opacity-60 rounded-md px-1.5 py-0.5">{event.nombre}</h1>
                                 </strong>
                                 <strong>
-                                    <p className="text-gray-900 bg-white bg-opacity-60 rounded-md px-1.5 py-0.5">{dayjs.utc(event.fecha_ini).format('DD-MM-YYYY - HH:mm:ss')}</p>
+                                    <p className="text-gray-900 bg-white bg-opacity-60 rounded-md px-1.5 py-0.5">Fecha de inicio: {dayjs.utc(event.fecha_ini).format('DD-MM-YYYY - HH:mm:ss')}</p>
                                 </strong>
                                 <strong>
-                                    <p className="text-gray-900 bg-white bg-opacity-60 rounded-md px-1.5 py-0.5">{dayjs.utc(event.fecha_fin).format('DD-MM-YYYY - HH:mm:ss')}</p>
+                                    <p className="text-gray-900 bg-white bg-opacity-60 rounded-md px-1.5 py-0.5">Fecha de fin: {dayjs.utc(event.fecha_fin).format('DD-MM-YYYY - HH:mm:ss')}</p>
                                 </strong>
                                 <br />
                                 <strong>
