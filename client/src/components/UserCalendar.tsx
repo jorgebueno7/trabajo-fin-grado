@@ -7,6 +7,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
+import Footer from '../components/Footer';
+
 
 interface UserEvent {
     id_evento: number;
@@ -93,13 +95,17 @@ const Calendario = () => {
     const eventos = events;
 
     return (
-        <div className="mt-4" style={{height: "90vh", width: "100%"}}>
-            <Calendar
-                localizer={localizer}
-                events={eventos}
-                onSelectEvent={navigateDetail}
-            />
-        </div>
+        <>
+            <div className="mt-4" style={{height: "90vh", width: "100%"}}>
+                <Calendar
+                    localizer={localizer}
+                    events={eventos}
+                    onSelectEvent={navigateDetail}
+                />
+            </div>
+            <Footer />
+        </>
+        
         
     );
 };

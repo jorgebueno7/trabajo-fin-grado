@@ -5,6 +5,7 @@ import { getAllOrganizerUsers } from '../api/users';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
+import Footer from '../components/Footer';
 
 const UpdateEvent = () => {
     const { id_evento } = useParams<{ id_evento: string }>();
@@ -96,156 +97,160 @@ const UpdateEvent = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
-            <form
-                onSubmit={handleSubmit}
-                className="w-full max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow"
-            >
-                <h1 className="text-2xl font-bold mb-4 text-center">Actualizar evento</h1>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nombre">
-                        Nombre del evento
-                    </label>
-                    <input
-                        type="text"
-                        id="nombre"
-                        value={nombre}
-                        onChange={(e) => setNombre(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_inicio">
-                        Fecha de inicio
-                    </label>
-                    <input
-                        type="date"
-                        id="fecha_inicio"
-                        value={fecha_inicio}
-                        onChange={(e) => setFechaInicio(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="hora_inicio">
-                        Hora de inicio
-                    </label>
-                    <input
-                        type="time"
-                        id="hora_inicio"
-                        value={hora_inicio}
-                        onChange={(e) => setHoraInicio(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="hora_fin">
-                        Hora de fin
-                    </label>
-                    <input
-                        type="time"
-                        id="hora_fin"
-                        value={hora_fin}
-                        onChange={(e) => setHoraFin(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lugar">
-                        Lugar
-                    </label>
-                    <input
-                        type="text"
-                        id="lugar"
-                        value={lugar}
-                        onChange={(e) => setLugar(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="maximo_usuarios">
-                        Máximo de usuarios
-                    </label>
-                    <input
-                        type="number"
-                        id="maximo_usuarios"
-                        value={maximo_usuarios}
-                        onChange={(e) => setMaximoUsuarios(Number(e.target.value))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_limite">
-                        Fecha límite de inscripción
-                    </label>
-                    <input
-                        type="date"
-                        id="fecha_limite"
-                        value={fecha_limite}
-                        onChange={(e) => setFechaLimite(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="estado">
-                        Estado
-                    </label>
-                    {/* <input
-                        type="text"
-                        id="estado"
-                        value={estado}
-                        onChange={(e) => setEstado(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    /> */}
-                    <select
-                        id="estado"
-                        value={estado}
-                        onChange={(e) => setEstado(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    >
-                        <option value="sin_comenzar">Sin comenzar</option>
-                        <option value="en_curso">En curso</option>
-                        <option value="finalizado">Finalizado</option>
-                    </select>
-                </div>
-                <div className="mb-4">
-                    <label className="block mb-2 text-sm font-medium text-gray-700">
-                        Imagen:
-                    </label>
-                    <input
-                        type="file"
-                        name="imagen"
-                        accept="image/*"
-                        onChange={(e) => setImagen(e.target.files?.[0] || null)}
-                        className="w-full p-2 border rounded-lg"
-                        placeholder="URL de la imagen" />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="organizador">
-                        Organizador
-                    </label>
-                    <select
-                        id="organizador"
-                        value={organizador}
-                        onChange={(e) => setOrganizador(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    >
-                        <option value="">Selecciona un organizador</option>
-                        {adminUsers.map((user) => (
-                            <option key={user.id} value={user.email}>
-                                {user.email}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <button
-                    type="submit"
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+        <>
+            <div className="flex items-center justify-center min-h-screen">
+                <form
+                    onSubmit={handleSubmit}
+                    className="w-full max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow"
                 >
-                    Actualizar evento
-                </button>
-            </form>
-        </div>
+                    <h1 className="text-2xl font-bold mb-4 text-center">Actualizar evento</h1>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nombre">
+                            Nombre del evento
+                        </label>
+                        <input
+                            type="text"
+                            id="nombre"
+                            value={nombre}
+                            onChange={(e) => setNombre(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_inicio">
+                            Fecha de inicio
+                        </label>
+                        <input
+                            type="date"
+                            id="fecha_inicio"
+                            value={fecha_inicio}
+                            onChange={(e) => setFechaInicio(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="hora_inicio">
+                            Hora de inicio
+                        </label>
+                        <input
+                            type="time"
+                            id="hora_inicio"
+                            value={hora_inicio}
+                            onChange={(e) => setHoraInicio(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="hora_fin">
+                            Hora de fin
+                        </label>
+                        <input
+                            type="time"
+                            id="hora_fin"
+                            value={hora_fin}
+                            onChange={(e) => setHoraFin(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lugar">
+                            Lugar
+                        </label>
+                        <input
+                            type="text"
+                            id="lugar"
+                            value={lugar}
+                            onChange={(e) => setLugar(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="maximo_usuarios">
+                            Máximo de usuarios
+                        </label>
+                        <input
+                            type="number"
+                            id="maximo_usuarios"
+                            value={maximo_usuarios}
+                            onChange={(e) => setMaximoUsuarios(Number(e.target.value))}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fecha_limite">
+                            Fecha límite de inscripción
+                        </label>
+                        <input
+                            type="date"
+                            id="fecha_limite"
+                            value={fecha_limite}
+                            onChange={(e) => setFechaLimite(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="estado">
+                            Estado
+                        </label>
+                        {/* <input
+                            type="text"
+                            id="estado"
+                            value={estado}
+                            onChange={(e) => setEstado(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        /> */}
+                        <select
+                            id="estado"
+                            value={estado}
+                            onChange={(e) => setEstado(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        >
+                            <option value="sin_comenzar">Sin comenzar</option>
+                            <option value="en_curso">En curso</option>
+                            <option value="finalizado">Finalizado</option>
+                        </select>
+                    </div>
+                    <div className="mb-4">
+                        <label className="block mb-2 text-sm font-medium text-gray-700">
+                            Imagen:
+                        </label>
+                        <input
+                            type="file"
+                            name="imagen"
+                            accept="image/*"
+                            onChange={(e) => setImagen(e.target.files?.[0] || null)}
+                            className="w-full p-2 border rounded-lg"
+                            placeholder="URL de la imagen" />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="organizador">
+                            Organizador
+                        </label>
+                        <select
+                            id="organizador"
+                            value={organizador}
+                            onChange={(e) => setOrganizador(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        >
+                            <option value="">Selecciona un organizador</option>
+                            {adminUsers.map((user) => (
+                                <option key={user.id} value={user.email}>
+                                    {user.email}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <button
+                        type="submit"
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                    >
+                        Actualizar evento
+                    </button>
+                </form>
+            </div>
+            <Footer />
+        </>
+        
     )
 };
 

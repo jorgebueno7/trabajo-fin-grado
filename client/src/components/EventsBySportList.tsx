@@ -1,11 +1,13 @@
 import { useEffect, useState, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams /*, useNavigate*/ } from 'react-router-dom';
 import UserContext from '../context/UsersContext';
 import { getEventsBySport, getSportsById } from '../api/sports';
-import { postUserEvent, getUserEvents } from '../api/userEvent';
+// import { postUserEvent, getUserEvents } from '../api/userEvent';
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
+import Footer from '../components/Footer';
+
 
 const EventsBySportList = () => { 
     interface Event {
@@ -29,17 +31,18 @@ const EventsBySportList = () => {
     const { id_deporte } = useParams<{ id_deporte: string }>(); // Obtenemos el id_deporte desde la URL
     const [events, setEvents] = useState<Event[]>([]);
     const [sport, setSport] = useState<Sport | null>(null);
-    const [userEvents, setUserEvents] = useState<number[]>([]); 
+    // const [userEvents, setUserEvents] = useState<number[]>([]); 
     const { isLoggedIn, user } = useContext(UserContext);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
-    const navigateToLogin = () => {
-        navigate('/login');
-    };
+    // const navigateToLogin = () => {
+    //     navigate('/login');
+    // };
 
-    const navigateToMyEvents = () => {
-        navigate('/my-events');
-    }
+    // const navigateToMyEvents = () => {
+    //     navigate('/my-events');
+    // }
+
     const fetchEvents = async () => {
         if (id_deporte) {
             try {
@@ -62,46 +65,47 @@ const EventsBySportList = () => {
         }
     };
 
-    const fetchUserEvents = async () => {
-        if (isLoggedIn && user) {
-            try {
-                const data = await getUserEvents(); // Obtener la lista de eventos del usuario logueado
-                const eventIds = data.map((event: Event) => event.id_evento); // Extraer los IDs de los eventos
-                setUserEvents(eventIds);
-            } catch (error) {
-                console.error('Error fetching user events:', error);
-            }
-        }
-    };
+    // const fetchUserEvents = async () => {
+    //     if (isLoggedIn && user) {
+    //         try {
+    //             const data = await getUserEvents(); // Obtener la lista de eventos del usuario logueado
+    //             const eventIds = data.map((event: Event) => event.id_evento); // Extraer los IDs de los eventos
+    //             setUserEvents(eventIds);
+    //         } catch (error) {
+    //             console.error('Error fetching user events:', error);
+    //         }
+    //     }
+    // };
 
     useEffect(() => {
         fetchEvents();
         fetchSport();
-        fetchUserEvents();
+        // fetchUserEvents();
     }, [id_deporte, isLoggedIn, user]);
 
     // Handles para unirse al evento
-    const handleJoinEvent = async (id_evento: number) => {
-        if (!isLoggedIn) {
-            alert('Debes iniciar sesión para unirte a este evento');
-            navigateToLogin();
-            return;
-        }
-        try {
-            if (user && events) {
-                for (const event of events) {
-                    await postUserEvent(event.id_evento);
-                }
-                alert('Te has unido al evento exitosamente');
-                setUserEvents([...userEvents, id_evento]); // Actualiza la lista de eventos inscritos
-            }
-        } catch (error) {
-            console.error('Error al unirse al evento:', error);
-        }
-    };
+    // const handleJoinEvent = async (id_evento: number) => {
+    //     if (!isLoggedIn) {
+    //         alert('Debes iniciar sesión para unirte a este evento');
+    //         navigateToLogin();
+    //         return;
+    //     }
+    //     try {
+    //         if (user && events) {
+    //             for (const event of events) {
+    //                 await postUserEvent(event.id_evento);
+    //             }
+    //             alert('Te has unido al evento exitosamente');
+    //             setUserEvents([...userEvents, id_evento]); // Actualiza la lista de eventos inscritos
+    //         }
+    //     } catch (error) {
+    //         console.error('Error al unirse al evento:', error);
+    //     }
+    // };
     
     return (
-        <div className="p-6 ml-3">
+        <>
+            <div className="p-6 ml-3">
             <h1 className="text-2xl mb-4 ml-2">Eventos asociados al deporte: {sport ? <strong>{sport.nombre}</strong> : ''}</h1>
             {events.length > 0 ? (
                 (events.map((event) =>
@@ -113,7 +117,7 @@ const EventsBySportList = () => {
                         <p><strong>Hora de inicio:</strong> {event.hora_ini}</p>
                         <p><strong>Plazas disponibles:</strong> {event.maximo_usuarios}</p>
                         <p><strong>Fecha límite de inscripción:</strong> {dayjs(event.fecha_limite).format('DD/MM/YYYY hh:mm:ss')}</p>
-                        <button
+                        {/* <button
                             onClick={() => handleJoinEvent(event.id_evento)}
                             className={`inline-flex items-center px-3 py-2 mt-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 
                                 ${
@@ -130,7 +134,7 @@ const EventsBySportList = () => {
                             >
                                 Consultar mis eventos
                             </button>) : (<></>)
-                        }
+                        } */}
                     </div>
                     
                 ))
@@ -139,7 +143,10 @@ const EventsBySportList = () => {
             (
                 <p>No hay eventos asociados a este deporte.</p>
             )}
-        </div>
+            </div>  
+            <Footer />
+        </>
+        
     );
 };
 

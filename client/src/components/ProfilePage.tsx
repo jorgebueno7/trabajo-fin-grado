@@ -11,6 +11,7 @@ import { getSports, deleteSport } from '../api/sports'
 import { getUsers, deleteUserById } from '../api/users'
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
 // import { deleteRating } from '../api/ratings' 
+import Footer from '../components/Footer';
 
 const ITEMS_PER_PAGE = 3;
 
@@ -1108,6 +1109,7 @@ const ProfilePage = () => {
                 : 
                 (<></>)
             }
+            <Footer />
         </>
     );
 };

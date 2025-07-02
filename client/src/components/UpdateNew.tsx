@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getNewById, putNews } from '../api/news';
 import { getEvents } from '../api/events';
+import Footer from '../components/Footer';
 
 const UpdateNew = () => {
     interface Event {
@@ -71,65 +72,69 @@ const UpdateNew = () => {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen overflow-y-auto">
-            <div className="w-full max-w-md bg-white border border-gray-300 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-                <h1 className="text-2xl font-bold mb-2">Actualizar Noticia</h1>
-                <hr></hr><br></br>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Título</label>
-                        <input
-                            type="text"
-                            value={titulo}
-                            onChange={(e) => setTitulo(e.target.value)}
-                            required
-                            className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2"
-                        />
-                    </div>
-                    <div>
-                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subtítulo</label>
-                        <textarea
-                            value={subtitulo}
-                            onChange={(e) => setSubtitulo(e.target.value)}
-                            required
-                            className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2"
-                        />
-                    </div>
-                    <div>
-                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen</label>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => setImagen(e.target.files ? e.target.files[0] : null)}
-                            className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2"
-                        />
-                    </div>
-                    <div>
-                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Evento relacionado</label>
-                        <select
-                            value={idEvento}
-                            onChange={(e) => setIdEvento(Number(e.target.value))}
-                            required
-                            disabled
-                            className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2"
+        <>
+            <div className="flex items-center justify-center min-h-screen overflow-y-auto">
+                <div className="w-full max-w-md bg-white border border-gray-300 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+                    <h1 className="text-2xl font-bold mb-2">Actualizar Noticia</h1>
+                    <hr></hr><br></br>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Título</label>
+                            <input
+                                type="text"
+                                value={titulo}
+                                onChange={(e) => setTitulo(e.target.value)}
+                                required
+                                className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2"
+                            />
+                        </div>
+                        <div>
+                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subtítulo</label>
+                            <textarea
+                                value={subtitulo}
+                                onChange={(e) => setSubtitulo(e.target.value)}
+                                required
+                                className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2"
+                            />
+                        </div>
+                        <div>
+                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => setImagen(e.target.files ? e.target.files[0] : null)}
+                                className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2"
+                            />
+                        </div>
+                        <div>
+                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Evento relacionado</label>
+                            <select
+                                value={idEvento}
+                                onChange={(e) => setIdEvento(Number(e.target.value))}
+                                required
+                                disabled
+                                className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2"
+                            >
+                                <option value="">Selecciona un evento</option>
+                                {eventos.map((evento) => (
+                                    <option key={evento.id_evento} value={evento.id_evento}>
+                                    {evento.nombre}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition-colors"
                         >
-                            <option value="">Selecciona un evento</option>
-                            {eventos.map((evento) => (
-                                <option key={evento.id_evento} value={evento.id_evento}>
-                                {evento.nombre}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition-colors"
-                    >
-                        Actualizar Noticia
-                    </button>
-                </form>
+                            Actualizar Noticia
+                        </button>
+                    </form>
+                </div>
             </div>
-        </div>
+            <Footer />
+        </>
+        
     );
 };                     
 

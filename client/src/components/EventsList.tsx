@@ -5,6 +5,8 @@ import { getEvents } from '../api/events';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
+import Footer from '../components/Footer';
+
 
 const ITEMS_PER_PAGE = 8;
 
@@ -196,6 +198,7 @@ const Eventos = () => {
                     </button>
                 )}
             </div>
+            <Footer />
         </>
     );
 };

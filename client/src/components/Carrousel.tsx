@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import ciclismoImage from '../../assets/images/ciclismo2.jpg';
-import futbolImage from '../../assets/images/olimpiadas.webp';
-import tenisMesaImage from '../../assets/images/tenismesa.jpg';
-import basketImage from '../../assets/images/basket.jpg';
-import natacionImage from '../../assets/images/natacion.jpg';
+import ciclismoImage from '../assets/images/ciclismo2.jpg';
+import futbolImage from '../assets/images/olimpiadas.webp';
+import tenisMesaImage from '../assets/images/tenismesa.jpg';
+import basketImage from '../assets/images/basket.jpg';
+import natacionImage from '../assets/images/natacion.jpg';
 
 const images = [ciclismoImage, futbolImage, tenisMesaImage, basketImage, natacionImage];
 

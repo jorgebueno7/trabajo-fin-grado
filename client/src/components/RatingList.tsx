@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRatings, deleteRating } from '../api/ratings';
+import Footer from '../components/Footer';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -152,6 +153,7 @@ const Valoraciones = () => {
                     </button>
                 )}
             </div>
+            <Footer />
         </>
         
     );

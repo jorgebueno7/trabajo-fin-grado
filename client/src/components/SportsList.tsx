@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getSports } from '../api/sports';
 import UserContext from "../context/UsersContext";
+import Footer from '../components/Footer';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -150,6 +151,7 @@ const Deportes = () => {
                     </button>
                 )}
             </div>
+            <Footer />
         </>
     );
 };

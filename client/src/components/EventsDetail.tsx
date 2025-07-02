@@ -8,6 +8,8 @@ import { getSports } from '../api/sports';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
+import Footer from '../components/Footer';
+
 
 const EventDetail = () => {
     interface Event {
@@ -148,109 +150,113 @@ const EventDetail = () => {
     const eventSport = sports.find((sport) => sport.id_deporte === event.id_deporte);
 
     return (
-        <div className="flex items-center justify-center mt-8">
-            <div className="max-w-lg p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <a>
-                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{event.nombre}</h5>
-                </a>
-                <hr />
-                <br />
-                <img
-                    className="w-[480px] h-[390px] object-cover rounded-lg transition-all duration-300 cursor-pointer"
-                    src={
-                        event.imagen
-                        ? `http://localhost:5000/sportly/events/${event.id_evento}/imagen`
-                        : `https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg`
-                    }
-                    alt="Imagen del evento"
-                />
-                <p className="mb-3 mt-2 font-normal text-gray-700 dark:text-gray-400 hover:underline">
-                    Deporte: <a className="font-normal text-blue-700 dark:text-blue-400 hover:underline" href={`/sports/${event.id_deporte}`}>{eventSport && <strong>{eventSport.nombre}</strong>}</a>
-                </p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha inicio del evento: <strong>{event.fecha_ini}</strong></p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha fin del evento: <strong>{event.fecha_fin}</strong></p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Estado del evento: 
-                    <span 
-                        className={`ml-1 font-bold
-                            ${event.estado === 'sin_comenzar' ? 'text-blue-500' : ''}
-                            ${event.estado === 'en_curso' ? 'text-green-500' : ''}
-                            ${event.estado === 'finalizado' ? 'text-red-500' : ''}`}
-                    >
-                        {event.estado === 'sin_comenzar' ? 'Sin comenzar' : ''}
-                        {event.estado === 'en_curso' ? 'En curso' : ''}
-                        {event.estado === 'finalizado' ? 'Finalizado' : ''}
-                    </span>
-                </p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Hora de inicio del evento: <strong>{event.hora_ini}</strong></p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Lugar del evento: <strong>{event.lugar}</strong></p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Máximo de usuarios: <strong>{event.maximo_usuarios}</strong></p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha límite de inscripción: <strong>{event.fecha_limite}</strong></p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Cantidad de usuarios inscritos: <strong>{users.length}</strong></p>
-                <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
-                    <div className={`${progressBarColor} text-xs font-medium text-center p-0.5 leading-none rounded-full`} style={{ width: `${percentage}%` }}>
-                        {percentage}%
+        <>
+            <div className="flex items-center justify-center mt-8">
+                <div className="max-w-lg p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <a>
+                        <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{event.nombre}</h5>
+                    </a>
+                    <hr />
+                    <br />
+                    <img
+                        className="w-[480px] h-[390px] object-cover rounded-lg transition-all duration-300 cursor-pointer"
+                        src={
+                            event.imagen
+                            ? `http://localhost:5000/sportly/events/${event.id_evento}/imagen`
+                            : `https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg`
+                        }
+                        alt="Imagen del evento"
+                    />
+                    <p className="mb-3 mt-2 font-normal text-gray-700 dark:text-gray-400 hover:underline">
+                        Deporte: <a className="font-normal text-blue-700 dark:text-blue-400 hover:underline" href={`/sports/${event.id_deporte}`}>{eventSport && <strong>{eventSport.nombre}</strong>}</a>
+                    </p>
+                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha inicio del evento: <strong>{event.fecha_ini}</strong></p>
+                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha fin del evento: <strong>{event.fecha_fin}</strong></p>
+                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Estado del evento: 
+                        <span 
+                            className={`ml-1 font-bold
+                                ${event.estado === 'sin_comenzar' ? 'text-blue-500' : ''}
+                                ${event.estado === 'en_curso' ? 'text-green-500' : ''}
+                                ${event.estado === 'finalizado' ? 'text-red-500' : ''}`}
+                        >
+                            {event.estado === 'sin_comenzar' ? 'Sin comenzar' : ''}
+                            {event.estado === 'en_curso' ? 'En curso' : ''}
+                            {event.estado === 'finalizado' ? 'Finalizado' : ''}
+                        </span>
+                    </p>
+                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Hora de inicio del evento: <strong>{event.hora_ini}</strong></p>
+                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Lugar del evento: <strong>{event.lugar}</strong></p>
+                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Máximo de usuarios: <strong>{event.maximo_usuarios}</strong></p>
+                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Fecha límite de inscripción: <strong>{event.fecha_limite}</strong></p>
+                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Cantidad de usuarios inscritos: <strong>{users.length}</strong></p>
+                    <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+                        <div className={`${progressBarColor} text-xs font-medium text-center p-0.5 leading-none rounded-full`} style={{ width: `${percentage}%` }}>
+                            {percentage}%
+                        </div>
                     </div>
+                    {
+                        isLoggedIn && user && 
+                        !users.includes(user.id) && 
+                        event.estado !== 'en_curso' && 
+                        event.estado !== 'finalizado' &&
+                        user.role === 'participante' && (
+                            <button
+                                onClick={handleJoinEvent}
+                                className="inline-flex items-center px-3 py-2 mt-6 mr-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700"
+                            >
+                                {users.length >= event.maximo_usuarios ? 'Unirse a la cola' : 'Unirse al evento'}
+                            </button>
+                    )}
+                    {
+                        isLoggedIn && user && 
+                        users.includes(user.id) && 
+                        event.estado !== 'en_curso' && 
+                        event.estado !== 'finalizado' && 
+                        user.role === 'participante' && (
+                        <button
+                            onClick={handleLeaveEvent}
+                            className="inline-flex items-center px-3 py-2 mt-6 mr-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600"
+                        >
+                            Darse de baja del evento
+                        </button>
+                    )}
+                    {
+                        isLoggedIn && user &&
+                        users.includes(user.id) &&
+                        event.estado === 'finalizado' &&
+                        user.role === 'participante' && (
+                        <button
+                            onClick={() => navigateToCreateRating(event.id_evento)}
+                            className="inline-flex items-center mr-3 px-3 py-2 mt-6 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+                        >
+                            Valorar evento
+                        </button>
+                    )}
+                    
+                    <button
+                        onClick={handleViewRatings}
+                        className="inline-flex items-center px-3 py-2 mt-6 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600"
+                    >
+                        Ver valoraciones
+                    </button>
+                    {
+                        isLoggedIn && user &&
+                        event.createdBy === user.email &&
+                        (
+                            <button
+                                onClick={() => navigateToPostNew(event.id_evento)}
+                                className="inline-flex items-center px-3 py-2 ml-2 mt-6 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+                            >
+                                Crear noticia
+                            </button>
+                        )
+                    }
+                    
                 </div>
-                {
-                    isLoggedIn && user && 
-                    !users.includes(user.id) && 
-                    event.estado !== 'en_curso' && 
-                    event.estado !== 'finalizado' &&
-                    user.role === 'participante' && (
-                        <button
-                            onClick={handleJoinEvent}
-                            className="inline-flex items-center px-3 py-2 mt-6 mr-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700"
-                        >
-                            {users.length >= event.maximo_usuarios ? 'Unirse a la cola' : 'Unirse al evento'}
-                        </button>
-                )}
-                {
-                    isLoggedIn && user && 
-                    users.includes(user.id) && 
-                    event.estado !== 'en_curso' && 
-                    event.estado !== 'finalizado' && 
-                    user.role === 'participante' && (
-                    <button
-                        onClick={handleLeaveEvent}
-                        className="inline-flex items-center px-3 py-2 mt-6 mr-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600"
-                    >
-                        Darse de baja del evento
-                    </button>
-                )}
-                {
-                    isLoggedIn && user &&
-                    users.includes(user.id) &&
-                    event.estado === 'finalizado' &&
-                    user.role === 'participante' && (
-                    <button
-                        onClick={() => navigateToCreateRating(event.id_evento)}
-                        className="inline-flex items-center mr-3 px-3 py-2 mt-6 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
-                    >
-                        Valorar evento
-                    </button>
-                )}
-                
-                <button
-                    onClick={handleViewRatings}
-                    className="inline-flex items-center px-3 py-2 mt-6 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600"
-                >
-                    Ver valoraciones
-                </button>
-                {
-                    isLoggedIn && user &&
-                    event.createdBy === user.email &&
-                    (
-                        <button
-                            onClick={() => navigateToPostNew(event.id_evento)}
-                            className="inline-flex items-center px-3 py-2 ml-2 mt-6 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600"
-                        >
-                            Crear noticia
-                        </button>
-                    )
-                }
-                
             </div>
-        </div>
+            <Footer />
+        </>
+        
     );
 };
 

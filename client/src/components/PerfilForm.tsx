@@ -137,6 +137,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../context/UsersContext';
 import { updateProfile } from '../api/users';
+import Footer from '../components/Footer';
+
 // import axios from 'axios';
 
 const PerfilForm = () => {
@@ -256,117 +258,121 @@ const PerfilForm = () => {
     
 
     return (
-        <div className="flex items-center justify-center min-h-screen overflow-y-auto">
-            <div className="w-full max-w-sm bg-white border border-gray-300 rounded-lg shadow md:p-6 dark:bg-gray-800 dark:border-gray-700">
-                <form className="space-y-5 max-w-sm mx-auto" onSubmit={handleSubmit}>
-                    <h5 className="text-xl font-medium text-gray-900 dark:text-white text-center">
-                        Actualizar Perfil
-                    </h5>
-                    <div className="relative max-w-sm">
-                        <label htmlFor="nombre" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                            Nombre
-                        </label>
-                        <input
-                            type="text"
-                            value={nombre}
-                            onChange={e => setNombre(e.target.value)}
-                            className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
-                        />
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="apellidos" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Apellidos
-                        </label>
-                        <input
-                            type="text"
-                            value={apellidos}
-                            onChange={e => setApellidos(e.target.value)}
-                            className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
-                        />
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                            className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
-                        />
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="telefono" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                            Teléfono
-                        </label>
-                        <input
-                            type="text"
-                            value={telefono}
-                            onChange={e => setTelefono(e.target.value)}
-                            className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
-                        />
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="direccion" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                            Dirección
-                        </label>
-                        <input
-                            type="text"
-                            value={direccion}
-                            onChange={e => setDireccion(e.target.value)}
-                            className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
-                        />
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="altura" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                            Altura (cm)
-                        </label>
-                        <input
-                            type="text"
-                            value={altura}
-                            onChange={e => setAltura(e.target.value)}
-                            className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
-                        />
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="peso" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                            Peso (kg)
-                        </label>
-                        <input
-                            type="text"
-                            value={peso}
-                            onChange={e => setPeso(e.target.value)}
-                            className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
-                        />
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="deporte" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                            Deporte
-                        </label>
-                        <input
-                            type="text"
-                            value={deporte}
-                            onChange={e => setDeporte(e.target.value)}
-                            className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
-                        />
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="mejor_marca" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                            Mejor marca
-                        </label>
-                        <input
-                            type="text"
-                            value={mejor_marca}
-                            onChange={e => setMejorMarca(e.target.value)}
-                            className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
-                        />
-                    </div>
-                    <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600">
-                        Guardar cambios
-                    </button>
-                </form>
+        <>
+            <div className="flex items-center justify-center min-h-screen overflow-y-auto">
+                <div className="w-full max-w-sm bg-white border border-gray-300 rounded-lg shadow md:p-6 dark:bg-gray-800 dark:border-gray-700">
+                    <form className="space-y-5 max-w-sm mx-auto" onSubmit={handleSubmit}>
+                        <h5 className="text-xl font-medium text-gray-900 dark:text-white text-center">
+                            Actualizar Perfil
+                        </h5>
+                        <div className="relative max-w-sm">
+                            <label htmlFor="nombre" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                Nombre
+                            </label>
+                            <input
+                                type="text"
+                                value={nombre}
+                                onChange={e => setNombre(e.target.value)}
+                                className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                            />
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="apellidos" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Apellidos
+                            </label>
+                            <input
+                                type="text"
+                                value={apellidos}
+                                onChange={e => setApellidos(e.target.value)}
+                                className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                            />
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                            />
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="telefono" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                Teléfono
+                            </label>
+                            <input
+                                type="text"
+                                value={telefono}
+                                onChange={e => setTelefono(e.target.value)}
+                                className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                            />
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="direccion" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                Dirección
+                            </label>
+                            <input
+                                type="text"
+                                value={direccion}
+                                onChange={e => setDireccion(e.target.value)}
+                                className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                            />
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="altura" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                Altura (cm)
+                            </label>
+                            <input
+                                type="text"
+                                value={altura}
+                                onChange={e => setAltura(e.target.value)}
+                                className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                            />
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="peso" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                Peso (kg)
+                            </label>
+                            <input
+                                type="text"
+                                value={peso}
+                                onChange={e => setPeso(e.target.value)}
+                                className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                            />
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="deporte" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                Deporte
+                            </label>
+                            <input
+                                type="text"
+                                value={deporte}
+                                onChange={e => setDeporte(e.target.value)}
+                                className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                            />
+                        </div>
+                        <div className="mb-5">
+                            <label htmlFor="mejor_marca" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                Mejor marca
+                            </label>
+                            <input
+                                type="text"
+                                value={mejor_marca}
+                                onChange={e => setMejorMarca(e.target.value)}
+                                className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                            />
+                        </div>
+                        <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600">
+                            Guardar cambios
+                        </button>
+                    </form>
+                </div>
             </div>
-        </div>
+            <Footer />
+        </>
+        
     );
 };
 

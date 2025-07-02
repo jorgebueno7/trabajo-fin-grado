@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import UserContext from '../context/UsersContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getRatingsByEvent, deleteRating } from '../api/ratings';
+import Footer from '../components/Footer';
 
 const RatingDetailFromEvents = () => {
     interface Rating {
@@ -69,45 +70,48 @@ const RatingDetailFromEvents = () => {
     }
 
     return (
-        <div className="p-5">
-            <h1 className="text-2xl mb-4 ml-2">Valoraciones del evento: <strong>{nombreEvento()}</strong></h1>
-                {ratings.length > 0 ? 
-                    (ratings.map((rating) => 
-                        <div key={rating.id_evento} className="border p-4 mb-4 ml-2 rounded-lg bg-white shadow-md">
-                            <p><strong>Valoración:</strong> <span className="text-yellow-500">{renderStars(rating.valoracion)}</span></p>
-                            <p><strong>Comentario:</strong> {rating.comentario}</p>
-                            <p><strong>Usuario:</strong> {rating.user.email}</p>
-                            { isLoggedIn && user?.email === rating.user.email? 
-                                (<div>
-                                    <button 
-                                        className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                                        onClick={() => handleDeleteRating(rating.id_rating)}
-                                    >
-                                        Eliminar valoracion
-                                    </button> 
-                                    <button 
-                                        className="mt-3 px-4 py-2 ml-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                                        onClick={() => navigateToUpdateRating(rating.id_rating)}
-                                    >
-                                        Actualizar valoracion
-                                    </button>
-                                    <button 
-                                        onClick={() => navigateToEventDetail(rating.id_evento)}
-                                        className="mt-3 px-4 py-2 ml-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                                    >
-                                        Información del evento
-                                    </button>
-                                </div>)
-                                : 
-                                <></>
-                            }
-                        </div>
-                    )) 
-                    : 
-                    (<p className="ml-2">No hay valoraciones disponibles.</p>)
-                }
-                
-        </div>
+        <>
+            <div className="p-5">
+                <h1 className="text-2xl mb-4 ml-2">Valoraciones del evento: <strong>{nombreEvento()}</strong></h1>
+                    {ratings.length > 0 ? 
+                        (ratings.map((rating) => 
+                            <div key={rating.id_evento} className="border p-4 mb-4 ml-2 rounded-lg bg-white shadow-md">
+                                <p><strong>Valoración:</strong> <span className="text-yellow-500">{renderStars(rating.valoracion)}</span></p>
+                                <p><strong>Comentario:</strong> {rating.comentario}</p>
+                                <p><strong>Usuario:</strong> {rating.user.email}</p>
+                                { isLoggedIn && user?.email === rating.user.email? 
+                                    (<div>
+                                        <button 
+                                            className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                                            onClick={() => handleDeleteRating(rating.id_rating)}
+                                        >
+                                            Eliminar valoracion
+                                        </button> 
+                                        <button 
+                                            className="mt-3 px-4 py-2 ml-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                            onClick={() => navigateToUpdateRating(rating.id_rating)}
+                                        >
+                                            Actualizar valoracion
+                                        </button>
+                                        <button 
+                                            onClick={() => navigateToEventDetail(rating.id_evento)}
+                                            className="mt-3 px-4 py-2 ml-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                        >
+                                            Información del evento
+                                        </button>
+                                    </div>)
+                                    : 
+                                    <></>
+                                }
+                            </div>
+                        )) 
+                        : 
+                        (<p className="ml-2">No hay valoraciones disponibles.</p>)
+                    }
+            </div>
+            <Footer />
+        </>
+        
     );
 };
 
