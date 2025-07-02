@@ -13,13 +13,26 @@ const Navbar = () => {
     };
 
   const handleLogOut = async () => {
+    // try {
+    //   await axios.post(import.meta.env.VITE_API_URL + '/logout', {}, { withCredentials: true });
+    //   setLoggedIn(false);
+    //   navigateHome();
+    // } catch (error) {
+    //   console.error('Error al cerrar sesión:', error);
+    // }
     try {
-      await axios.post(import.meta.env.VITE_API_URL + '/logout', {}, { withCredentials: true });
+      const response = await axios.post(
+        import.meta.env.VITE_API_URL + '/logout',
+        {},
+        { withCredentials: true }
+      );
+      console.log('Logout response:', response.data);
       setLoggedIn(false);
       navigateHome();
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+    } catch (error: any) {
+      console.error('Error al cerrar sesión:', error.response || error.message);
     }
+    
   };
 
   const rolUsuario = user?.role;

@@ -241,7 +241,12 @@ const logout = async (req, res) => {
             if (err) {
                 return res.status(500).json({error: `ERROR_LOGOUT: ${err}`});
             }
-            res.clearCookie('connect.sid');
+            // res.clearCookie('connect.sid');
+            res.clearCookie('connect.sid', {
+                httpOnly: true,
+                sameSite: 'lax',   // o 'none' si usas secure: true
+                secure: false      // o true en producción
+            });
             res.status(200).json({message: 'Logout successfully'});
         });
     } catch (error) {

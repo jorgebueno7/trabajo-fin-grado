@@ -20,9 +20,7 @@ const Deportes = () => {
     const [sports, setSports] = useState<Sport[]>([]);
     const { user, isLoggedIn } = useContext(UserContext);
     const [selectedSport, setSelectedSport] = useState<string>('all');
-    const [searchQuery, setSearchQuery] = useState<string>('');
-    const deportes = [...new Set(sports.map(e => e.nombre))]; // Lista de deportes únicos
-
+    const deportes = [...new Set(sports.map(e => e.nombre))].sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
     const [currentPage, setCurrentPage] = useState(1);
 
     const nextPageSports = () => {
@@ -40,7 +38,7 @@ const Deportes = () => {
 
     useEffect(() => {
         fetchSports();
-    }, [selectedSport, searchQuery]);
+    }, [selectedSport]);
     
     const fetchSports = async () => {
         try {
@@ -59,8 +57,7 @@ const Deportes = () => {
 
     const filteredSports = sports.filter(sport => {
         const matchesDeporte = selectedSport === 'all' || sport.nombre === selectedSport;
-        const matchesSearch = sport.nombre.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesDeporte && matchesSearch;
+        return matchesDeporte;
     });
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -71,25 +68,13 @@ const Deportes = () => {
         <>
             <div className="flex items-end gap-6 mx-20 mt-6">
                 <div className="flex flex-col">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                        Buscar por nombre:
-                    </label>
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Ej. Fútbol, Baloncesto"
-                        className="mt-1 w-full py-2 px-3 border border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-md shadow-sm"
-                    />
-                </div>
-                <div className="flex flex-col">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Filtrar por deporte:</label>
                     <select
                         value={selectedSport}
                         onChange={(e) => setSelectedSport(e.target.value)}
                         className="mt-1 w-48 py-2 px-3 border border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-md shadow-sm"
                     >
-                        <option value="all">Todos</option>
+                        <option value="all"></option>
                         {deportes.map((nombre) => (
                             <option key={nombre} value={nombre}>
                                 {nombre}

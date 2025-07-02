@@ -74,7 +74,7 @@ const UpdateNew = () => {
     return (
         <>
             <div className="flex items-center justify-center min-h-screen overflow-y-auto">
-                <div className="w-full max-w-md bg-white border border-gray-300 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+                <div className="w-full max-w-xl bg-white border border-gray-300 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
                     <h1 className="text-2xl font-bold mb-2">Actualizar Noticia</h1>
                     <hr></hr><br></br>
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -125,9 +125,9 @@ const UpdateNew = () => {
                         </div>
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition-colors"
+                            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                         >
-                            Actualizar Noticia
+                            Actualizar noticia
                         </button>
                     </form>
                 </div>

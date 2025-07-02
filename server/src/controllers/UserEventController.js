@@ -121,8 +121,7 @@ const postUserEvent = async (req, res) => {
         if (!evento) { // Si el evento no existe, devolver un 404
             return res.status(404).json({ error: 'Event not found' });
         }
-        // Contar los usuarios actuales en el evento
-        const currentUsersCount = await user_event.count({ where: { id_evento } });
+        const currentUsersCount = await user_event.count({ where: { id_evento } }); // Contar los usuarios actuales en el evento
         if (currentUsersCount < evento.maximo_usuarios) { // Si el número de usuarios de los eventos, es menor al máximo permitido por el evento
             // Crear un nuevo usuario en el evento
             const newUserEvent = await user_event.create({ id_usuario, id_evento, esta_inscrito: true });

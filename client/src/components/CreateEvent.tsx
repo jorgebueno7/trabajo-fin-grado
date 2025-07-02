@@ -82,7 +82,7 @@ const CreateEvent = () => {
     return (
         <>
             <div className="flex items-center justify-center min-h-screen overflow-y-auto">
-                <div className="w-full max-w-sm bg-white border border-gray-300 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+                <div className="w-full max-w-md bg-white border border-gray-300 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
                     <h1 className="text-2xl font-bold mb-2">Creación de evento</h1>
                     <hr></hr><br></br>
                     <form onSubmit={handleSubmit} className="space-y-4">

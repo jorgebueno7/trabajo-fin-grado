@@ -98,14 +98,18 @@ const NewsPage = () => {
                             key={item.id_noticia}
                             className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-lg transition"
                         >
+                            <div className="p-4">
+                                <h1 className="text-xl font-bold text-gray-800">{item.titulo}</h1>
+                                <h2 className="text-gray-600 text-sm">{item.subtitulo}</h2>
+                            </div>
                             <img
                                 src={`http://localhost:5000/sportly/news/${item.id_noticia}/imagen`}
                                 alt={item.titulo}
                                 className="w-[700px] h-[500px] object-cover"
                             />
                             <div className="p-4">
-                                <h1 className="text-lg font-semibold text-gray-800">{item.titulo}</h1>
-                                <h3 className="text-gray-600 text-sm">{item.subtitulo}</h3>
+                                {/* <h1 className="text-lg font-semibold text-gray-800">{item.titulo}</h1> */}
+                                {/* <h3 className="text-gray-600 text-sm">{item.subtitulo}</h3> */}
                                 <h4 className="text-gray-500 text-sm mt-1">
                                     Evento: {item.Event?.nombre ?? 'Noticia publicada sin evento asociado'}
                                 </h4>                            
@@ -115,26 +119,46 @@ const NewsPage = () => {
                                 {
                                     isLoggedIn &&
                                     user?.role === 'administrador' && (
-                                    <div>
-                                        <button onClick={() => navigateToUpdateNew(item.id_noticia)}
-                                            className="w-30 mt-2 text-white bg-blue-800 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
-                                                rounded-lg text-sm px-2 py-0.5 text-center dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-800">
-                                            Editar noticia
-                                        </button>
-                                        <button 
-                                            onClick={() => handleDeleteNew(item.id_noticia)}
-                                            className="w-30 mt-2 ml-2 text-white bg-red-800 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium 
-                                                rounded-lg text-sm px-2 py-0.5 text-center dark:bg-red-700 dark:hover:bg-red-800 dark:focus:ring-red-800">
-                                            Eliminar noticia
-                                        </button>
-                                    </div>
+                                        <div className="flex gap-4 mt-3">
+                                            <button 
+                                                onClick={() => navigateToUpdateNew(item.id_noticia)}
+                                                className="w-1/2 text-white bg-blue-800 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
+                                                    rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-800">
+                                                Editar noticia
+                                            </button>
+                                            <button 
+                                                onClick={() => handleDeleteNew(item.id_noticia)}
+                                                className="w-1/2 text-white bg-red-800 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium 
+                                                    rounded-lg text-sm px-4 py-2 text-center dark:bg-red-700 dark:hover:bg-red-800 dark:focus:ring-red-800">
+                                                Eliminar noticia
+                                            </button>
+                                        </div>
                                     )
                                 }
                             </div>
                         </div>
                     ))}
                 </div>
-                <div className="flex justify-center mt-4 space-x-6">
+                <div className="flex justify-center mt-2 space-x-4">
+                    {currentPage > 1 && (
+                        <button
+                            onClick={prevPageEvents}
+                            className="mt-3 text-blue-600 hover:underline"
+                        >
+                            Anterior
+                        </button>
+                    )}
+                    <span className="text-gray-700 ml-3 mr-3 mt-3">{currentPage}</span>
+                    {endIndex < news.length && (
+                        <button
+                            onClick={nextPageEvents}
+                            className="mt-3 text-blue-600 hover:underline"
+                        >
+                            Siguiente
+                        </button>
+                    )}
+                </div>
+                {/* <div className="flex justify-center mt-4 space-x-6">
                     <button
                         onClick={prevPageEvents}
                         disabled={currentPage === 1}
@@ -160,7 +184,7 @@ const NewsPage = () => {
                     >
                         Siguiente
                     </button>
-                </div>
+                </div> */}
             </div>
             <Footer />
         </>

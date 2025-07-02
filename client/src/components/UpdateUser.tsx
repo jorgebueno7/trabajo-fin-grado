@@ -82,17 +82,17 @@ const UpdateSport = () => {
 
     return (
         <>
-            <div className="flex items-center justify-center min-h-screen overflow-y-auto">
-                <div className="w-full max-w-sm bg-white border border-gray-300 rounded-lg shadow md:p-6 dark:bg-gray-800 dark:border-gray-700">
-                    <form className="space-y-1 max-w-sm mx-auto" onSubmit={handleSubmit}>
-                        <h5 className="text-xl font-medium text-gray-900 dark:text-white text-center">
-                            Modificar perfil
-                        </h5>
-                        {formError && <p className="text-red-600 text-sm mt-2">{formError}</p>}
-                        {currentPage === 1 && (
-                            <>
-                                <div className="relative max-w-sm">
-                                <label htmlFor="nombre" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+            <div className="flex items-center justify-center min-h-screen">
+                <form
+                    onSubmit={handleSubmit}
+                    className="w-full max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow"
+                >
+                    {formError && <p className="text-red-600 text-sm mt-2">{formError}</p>}
+                    {currentPage === 1 && (
+                    <>
+                        <h1 className="text-2xl font-bold mb-4 text-center">Actualizar usuario</h1>
+                            <div className="mb-4">
+                                <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     DNI
                                 </label>
                                 <input
@@ -101,75 +101,84 @@ const UpdateSport = () => {
                                     onChange={(e) => setUser({ ...user!, dni: e.target.value })}
                                     className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
                                 />
-                                </div>
-                                <div className="relative max-w-sm">
-                                    <label htmlFor="nombre" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                                        Nombre
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={user?.nombre || ''}
-                                        onChange={(e) => setUser({ ...user!, nombre: e.target.value })}
-                                        className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Nombre
+                                </label>
+                                <input
+                                    type="text"
+                                    value={user?.nombre || ''}
+                                    onChange={(e) => setUser({ ...user!, nombre: e.target.value })}
+                                    className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
                                     />
-                                </div>
-                                <div className="mb-5">
-                                    <label htmlFor="apellidos" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                        Apellidos
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={user?.apellidos || ''}
-                                        onChange={(e) => setUser({ ...user!, apellidos: e.target.value })}
-                                        className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
-                                    />
-                                </div>
-                                <div className="mb-5">
-                                    <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                                        Email
-                                    </label>
-                                    <input
-                                        type="email"
-                                        value={user?.email || ''}
-                                        onChange={(e) => setUser({ ...user!, email: e.target.value })}
-                                        className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
-                                    />
-                                </div>
-                                <div className="mb-5">
-                                    <label htmlFor="fecha_nacimiento" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                                        Fecha de nacimiento
-                                    </label>
-                                    <input
-                                        type="date"
-                                        value={user?.fecha_nacimiento || ''}
-                                        onChange={(e) => setUser({ ...user!, fecha_nacimiento: e.target.value })}
-                                        className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
-                                    />
-                                </div>
-                                <div className="mb-5">
-                                    <label htmlFor="role" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
-                                        Role
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={user?.role || ''}
-                                        onChange={(e) => setUser({ ...user!, role: e.target.value })}
-                                        className="bg-gray-50 mb-4 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
-                                    />
-                                </div>
-                                <button 
-                                    type="button" 
-                                    onClick={handleNext} 
-                                    className="w-full text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="apellidos" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Apellidos
+                                </label>
+                                <input
+                                    type="text"
+                                    value={user?.apellidos || ''}
+                                    onChange={(e) => setUser({ ...user!, apellidos: e.target.value })}
+                                    className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Email
+                                </label>
+                                <input
+                                    type="email"
+                                    value={user?.email || ''}
+                                    onChange={(e) => setUser({ ...user!, email: e.target.value })}
+                                    className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="fecha_nacimiento" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Fecha de nacimiento
+                                </label>
+                                <input
+                                    type="date"
+                                    value={user?.fecha_nacimiento || ''}
+                                    onChange={(e) => setUser({ ...user!, fecha_nacimiento: e.target.value })}
+                                    className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="role" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                    Role
+                                </label>
+                                <select
+                                    id='role'
+                                    value={user?.role || ''}
+                                    onChange={(e) => setUser({ ...user!, role: e.target.value })}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                                 >
-                                    <span>Continuar</span>
-                                </button>
-                            </>
+                                    <option value="participante">Participante</option>
+                                    <option value="organizador">Organizador</option>
+                                </select>
+                                {/* <input
+                                    type="text"
+                                    value={user?.role || ''}
+                                    onChange={(e) => setUser({ ...user!, role: e.target.value })}
+                                    className="bg-gray-50 mb-4 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
+                                /> */}
+                            </div>
+                            <button 
+                                type="button" 
+                                onClick={handleNext} 
+                                className="w-full mt-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                                >
+                                <span>Continuar</span>
+                            </button>
+                        </>
                         )}
                         {currentPage === 2 && (
                             <>
-                                <div className="mb-5">
-                                    <label htmlFor="telefono" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                <div className="mb-4">
+                                    <label htmlFor="telefono" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                         Teléfono
                                     </label>
                                     <input
@@ -179,8 +188,8 @@ const UpdateSport = () => {
                                         className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
                                     />
                                 </div>
-                                <div className="mb-5">
-                                    <label htmlFor="direccion" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                <div className="mb-4">
+                                    <label htmlFor="direccion" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                         Dirección
                                     </label>
                                     <input
@@ -190,8 +199,8 @@ const UpdateSport = () => {
                                         className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
                                     />
                                 </div>
-                                <div className="mb-5">
-                                    <label htmlFor="altura" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                <div className="mb-4">
+                                    <label htmlFor="altura" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                         Altura (cm)
                                     </label>
                                     <input
@@ -201,8 +210,8 @@ const UpdateSport = () => {
                                         className="bg-gray-50 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
                                     />
                                 </div>
-                                <div className="mb-5">
-                                    <label htmlFor="peso" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                <div className="mb-4">
+                                    <label htmlFor="peso" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                         Peso (kg)
                                     </label>
                                     <input
@@ -212,8 +221,8 @@ const UpdateSport = () => {
                                         className="bg-gray-50 mb-4 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
                                     />
                                 </div>
-                                <div className="mb-5">
-                                    <label htmlFor="deporte" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                <div className="mb-4">
+                                    <label htmlFor="deporte" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                         Deporte
                                     </label>
                                     <input
@@ -223,8 +232,8 @@ const UpdateSport = () => {
                                         className="bg-gray-50 mb-4 border text-sm rounded-lg focus:ring-blue-600 block w-full p-2.5 dark:bg-gray-600"
                                     />
                                 </div>
-                                <div className="mb-5">
-                                    <label htmlFor="mejor_marca" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                                <div className="mb-4">
+                                    <label htmlFor="mejor_marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                         Mejor marca
                                     </label>
                                     <input
@@ -237,19 +246,18 @@ const UpdateSport = () => {
                                 <button 
                                     type="button" 
                                     onClick={handlePrevious} 
-                                    className="w-full text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
-                                >
+                                    className="w-full mt-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                                    >
                                     <span>Retroceder</span>
 
                                 </button>
-                                <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600">
+                                <button type="submit" className="w-full mt-2 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600">
                                     Modificar usuario
                                 </button>
                             </>
                         )}
                     </form>
                 </div>
-            </div>
             <Footer />
         </>
     );

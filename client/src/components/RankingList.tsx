@@ -113,41 +113,51 @@ const Posiciones = () => {
                     </div>
                 </div>
                 <table className="w-full mt-4 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" className="px-6 py-3">Usuario</th>
-                            <th scope="col" className="px-6 py-3">Evento</th>
-                            <th scope="col" className="px-6 py-3">Deporte</th>
-                            <th scope="col" className="px-6 py-3 cursor-pointer" onClick={() => handleSort('clasificacion')}>Clasificación {getSortIcon('clasificacion')}</th>
-                            <th scope="col" className="px-6 py-3 cursor-pointer" onClick={() => handleSort('puntos')}>Puntos {getSortIcon('puntos')}</th>
-                            <th scope="col" className="px-6 py-3 cursor-pointer" onClick={() => handleSort('tiempo')}>Tiempo empleado (min) {getSortIcon('tiempo')}</th>
-                            <th scope="col" className="px-6 py-3">Resultado</th>
-                            <th scope="col" className="px-6 py-3">Observaciones</th>
-                            <th scope="col" className="px-6 py-3">Estadísticas extra</th>
+                    { selectedEvent !== '' && (
+                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" className="px-6 py-3">Usuario</th>
+                                <th scope="col" className="px-6 py-3">Evento</th>
+                                <th scope="col" className="px-6 py-3">Deporte</th>
+                                <th scope="col" className="px-6 py-3 cursor-pointer" onClick={() => handleSort('clasificacion')}>Clasificación {getSortIcon('clasificacion')}</th>
+                                <th scope="col" className="px-6 py-3 cursor-pointer" onClick={() => handleSort('puntos')}>Puntos {getSortIcon('puntos')}</th>
+                                <th scope="col" className="px-6 py-3 cursor-pointer" onClick={() => handleSort('tiempo')}>Tiempo empleado (min) {getSortIcon('tiempo')}</th>
+                                <th scope="col" className="px-6 py-3">Resultado</th>
+                                <th scope="col" className="px-6 py-3">Observaciones</th>
+                                <th scope="col" className="px-6 py-3">Estadísticas extra</th>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredEvents.map((ranking) => (
-                            <tr key={ranking.id_ranking} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                <td className="px-6 py-4">{ranking.user.nombre} {ranking.user.apellidos}</td>
-                                <td className="px-6 py-4">{ranking.Event.nombre}</td>
-                                <td className="px-6 py-4">{ranking.Sport.nombre}</td>
-                                <td className="px-6 py-4">{ranking.clasificacion}</td>
-                                <td className="px-6 py-4">{ranking.puntos}</td>
-                                <td className="px-6 py-4">{ranking.tiempo}</td>
-                                <td className="px-6 py-4">{ranking.resultado}</td>
-                                <td className="px-6 py-4">{ranking.observaciones}</td> 
-                                <td className="px-6 py-4">
-                                    <button
-                                        onClick={() => openModal(ranking.estadisticas_extra)}
-                                        className="text-blue-600 hover:underline"
-                                    >
-                                        Ver
-                                    </button>
-                                </td>                  
                             </tr>
-                        ))}
+                        </thead>
+                    )}
+                    <tbody>
+                    {selectedEvent === '' ? (
+                        <tr>
+                            <td colSpan={9} className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                Selecciona un evento para ver los resultados.
+                            </td>
+                        </tr>
+                    ) : (
+                        filteredEvents.map((ranking) => (
+                        <tr key={ranking.id_ranking} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td className="px-6 py-4">{ranking.user.nombre} {ranking.user.apellidos}</td>
+                            <td className="px-6 py-4">{ranking.Event.nombre}</td>
+                            <td className="px-6 py-4">{ranking.Sport.nombre}</td>
+                            <td className="px-6 py-4">{ranking.clasificacion}</td>
+                            <td className="px-6 py-4">{ranking.puntos}</td>
+                            <td className="px-6 py-4">{ranking.tiempo}</td>
+                            <td className="px-6 py-4">{ranking.resultado}</td>
+                            <td className="px-6 py-4">{ranking.observaciones}</td> 
+                            <td className="px-6 py-4">
+                            <button
+                                onClick={() => openModal(ranking.estadisticas_extra)}
+                                className="text-blue-600 hover:underline"
+                            >
+                                Ver
+                            </button>
+                            </td>                  
+                        </tr>
+                        ))
+                    )}
                     </tbody>
                 </table>
                 {modalData && (

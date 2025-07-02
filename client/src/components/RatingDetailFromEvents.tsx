@@ -73,6 +73,7 @@ const RatingDetailFromEvents = () => {
         <>
             <div className="p-5">
                 <h1 className="text-2xl mb-4 ml-2">Valoraciones del evento: <strong>{nombreEvento()}</strong></h1>
+                <div className="grid grid-cols-4 gap-x-6">
                     {ratings.length > 0 ? 
                         (ratings.map((rating) => 
                             <div key={rating.id_evento} className="border p-4 mb-4 ml-2 rounded-lg bg-white shadow-md">
@@ -108,6 +109,7 @@ const RatingDetailFromEvents = () => {
                         : 
                         (<p className="ml-2">No hay valoraciones disponibles.</p>)
                     }
+                </div>
             </div>
             <Footer />
         </>

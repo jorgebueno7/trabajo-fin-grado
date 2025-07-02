@@ -33,7 +33,7 @@ const Eventos = () => {
     const [selectedSport, setSelectedSport] = useState<string>('all');
     const [selectedEstado, setSelectedEstado] = useState<string>('all');
     const [searchQuery, setSearchQuery] = useState<string>('');
-    const deportes = [...new Set(events.map(e => e.Sport.nombre))]; // Lista de deportes únicos
+    const deportes = [...new Set(events.map(e => e.Sport.nombre))].sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
     const [currentPage, setCurrentPage] = useState(1);
 
     const nextPageEvents = () => {
@@ -110,7 +110,7 @@ const Eventos = () => {
                         onChange={(e) => setSelectedSport(e.target.value)}
                         className="mt-1 w-48 py-2 px-3 border border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-md shadow-sm"
                     >
-                        <option value="all">Todos</option>
+                        <option value="all"></option>
                         {deportes.map((nombre) => (
                             <option key={nombre} value={nombre}>
                                 {nombre}
