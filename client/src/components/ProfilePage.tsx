@@ -827,7 +827,7 @@ const ProfilePage = () => {
                                         Anterior
                                     </button>
                                 )}
-                                <span className="text-gray-700">{currentPage}</span>
+                                <span className="text-gray-700">{currentPageAdmin}</span>
                                 {endIndexUsersAdmin < usuarios.length && (
                                     <button onClick={nextPageUsersAdmin} className="text-blue-600 hover:underline">
                                         Siguiente
