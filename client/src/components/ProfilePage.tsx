@@ -14,6 +14,9 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, Cart
 import Footer from '../components/Footer';
 
 const ITEMS_PER_PAGE = 3;
+const ITEMS_PER_PAGE_ORGANIZER = 6;
+const ITEMS_PER_PAGE_ADMIN = 6;
+
 
 const ProfilePage = () => {  
     interface Event {
@@ -139,6 +142,9 @@ const ProfilePage = () => {
     const [usuarios, setUsuarios] = useState<User[]>([]);
     const [activeTab, setActiveTab] = useState<'eventos' | 'deportes' | 'valoraciones'>('eventos');
     const [currentPage, setCurrentPage] = useState(1);
+    const [currentPageCreated, setCurrentPageCreated] = useState(1);
+    const [currentPageOver, setCurrentPageOver] = useState(1); 
+    const [currentPageAdmin, setCurrentPageAdmin] = useState(1);       
     const [notifications, setNotifications] = useState<UserEvent[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -149,8 +155,12 @@ const ProfilePage = () => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
 
+    // const startIndexOrganizer = (currentPageOrganizer - 1) * ITEMS_PER_PAGE_ORGANIZER;
+    // const endIndexOrganizer = startIndexOrganizer + ITEMS_PER_PAGE_ORGANIZER;
+
     const currentEvents = allEvents.slice(startIndex, endIndex);
     const currentSports = allSports.slice(startIndex, endIndex);
+
     // const currentRatings = allRatings.slice(startIndex, endIndex);
     const location = useLocation();
     const joinedEvent = location.state?.joinedEvent;
@@ -445,6 +455,47 @@ const ProfilePage = () => {
         return matchesSport;
     });
 
+    const filteredEvents = events.filter(event => event.estado === 'sin_comenzar' && event.UserEvents.length === 0);
+    const filteredEventsOrganizer = eventsOrganizer.filter(event => event.createdBy === user?.email && event.estado !== 'finalizado');
+    const filteredEventsOverOrganizer = eventsOrganizer.filter(event => event.createdBy === user?.email && event.estado === 'finalizado');
+
+    const startIndexCreated = (currentPageCreated - 1) * ITEMS_PER_PAGE_ORGANIZER;
+    const endIndexCreated = startIndexCreated + ITEMS_PER_PAGE_ORGANIZER;
+    const paginatedEventsCreated = filteredEventsOrganizer.slice(startIndexCreated, endIndexCreated);
+
+    const startIndexOver = (currentPageOver - 1) * ITEMS_PER_PAGE;
+    const endIndexOver = startIndexOver + ITEMS_PER_PAGE;
+    const paginatedEventsOver = filteredEventsOverOrganizer.slice(startIndexOver, endIndexOver);
+
+    const eventsAvailable = filteredEvents.slice(startIndex, endIndex);
+
+    const startIndexUsersAdmin = (currentPageAdmin - 1) * ITEMS_PER_PAGE_ADMIN;
+    const endIndexUsersAdmin = startIndexUsersAdmin + ITEMS_PER_PAGE_ADMIN;
+    // const eventsCreatedByMyself = filteredEventsOrganizer.slice(startIndexOrganizer, endIndexOrganizer);
+    // const eventsOverCreatedByMyself = filteredEventsOverOrganizer.slice(startIndex, endIndex);
+
+
+    const nextPageEventsAvailable = () => {
+        if (endIndex < filteredEvents.length) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+    
+    const prevPageEventsAvailable = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const nextPageEventsCreatedBy = () => setCurrentPageCreated(prev => prev + 1);
+    const prevPageEventsCreatedBy = () => setCurrentPageCreated(prev => prev - 1);
+
+    const nextPageEventsOver = () => setCurrentPageOver(prev => prev + 1);
+    const prevPageEventsOver = () => setCurrentPageOver(prev => prev - 1);
+
+    const nextPageUsersAdmin = () => setCurrentPageAdmin(prev => prev + 1);
+    const prevPageUsersAdmin = () => setCurrentPageAdmin(prev => prev - 1);
+
     const chartData = filteredSports.map((r) => ({
         name: r.Event.nombre,
         clasificacion: r.clasificacion,
@@ -459,7 +510,7 @@ const ProfilePage = () => {
                     <>
                         <div className="grid grid-cols-3 gap-4 mt-8 p-2">
                             <div>
-                                <a className="block max-w p-4 bg-white border border-gray-200 rounded-lg shadow-sm 
+                                <a className="block max-w p-5 bg-white border border-gray-200 rounded-lg shadow-sm 
                                     hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
                                     <h3 className="mb-4 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{user?.nombre} {user?.apellidos}</h3>
                                     <hr></hr>
@@ -731,14 +782,18 @@ const ProfilePage = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {usuarios.map((user) => (
+                                    {usuarios.slice(startIndexUsersAdmin, endIndexUsersAdmin).map((user) => (
                                         <tr key={user.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                             <td className="px-6 py-4">{user.dni}</td>
                                             <td className="px-6 py-4">{user.nombre}</td>
                                             <td className="px-6 py-4">{user.apellidos}</td>
                                             <td className="px-6 py-4">{user.email}</td>
                                             <td className="px-6 py-4">{dayjs.utc(user.fecha_nacimiento).format('DD-MM-YYYY')}</td>
-                                            <td className="px-6 py-4">{user.role}</td>
+                                            <td className="px-6 py-4">
+                                                    {user.role === 'administrador' ? 'Administrador' : ''}
+                                                    {user.role === 'participante' ? 'Participante' : ''}
+                                                    {user.role === 'organizador' ? 'Organizador' : ''}
+                                            </td>
                                             <td className="px-6 py-4">{user.telefono}</td>
                                             <td className="px-6 py-4">{user.direccion}</td>
                                             <td className="px-6 py-4">{user.altura}</td>
@@ -766,6 +821,19 @@ const ProfilePage = () => {
                                     ))}
                                 </tbody>
                             </table>
+                            <div className="flex justify-center mt-4 space-x-10">
+                                {currentPageAdmin > 1 && (
+                                    <button onClick={prevPageUsersAdmin} className="text-blue-600 hover:underline">
+                                        Anterior
+                                    </button>
+                                )}
+                                <span className="text-gray-700">{currentPage}</span>
+                                {endIndexUsersAdmin < usuarios.length && (
+                                    <button onClick={nextPageUsersAdmin} className="text-blue-600 hover:underline">
+                                        Siguiente
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </>
                 ) 
@@ -778,7 +846,7 @@ const ProfilePage = () => {
                         {/* Grid con información del usuario */}
                         <div className="grid grid-cols-3 gap-4 mt-8 p-2">
                             <div>
-                                <a className="block max-w p-4 bg-white border border-gray-200 rounded-lg shadow-sm 
+                                <a className="block max-w p-5 bg-white border border-gray-200 rounded-lg shadow-sm 
                                     hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
                                     <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{user?.nombre} {user?.apellidos}</h3>
                                     <hr></hr>
@@ -805,7 +873,7 @@ const ProfilePage = () => {
                                 <a className="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow-sm 
                                     hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
                                     <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Eventos disponibles</h3>
-                                    <hr></hr>
+                                    <hr />
                                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-3">
                                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
@@ -815,8 +883,7 @@ const ProfilePage = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {events.filter(event => event.estado === 'sin_comenzar' && event.UserEvents.length === 0
-                                                ).map((userEvent) => (
+                                            {eventsAvailable.map((userEvent) => (
                                                 <tr key={userEvent.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                                     <td className="px-6 py-4">
                                                         <button onClick={ () => navigateToEventDetail(userEvent.id_evento)} className="text-blue-600 hover:underline">
@@ -829,6 +896,19 @@ const ProfilePage = () => {
                                             ))}
                                         </tbody>
                                     </table>
+                                    <div className="flex justify-center mt-4 space-x-4">
+                                        {currentPage > 1 && (
+                                            <button onClick={prevPageEventsAvailable} className="text-blue-600 hover:underline">
+                                                Anterior
+                                            </button>
+                                        )}
+                                        <span className="text-gray-700">{currentPage}</span>
+                                        {endIndex < filteredEvents.length && (
+                                            <button onClick={nextPageEventsAvailable} className="text-blue-600 hover:underline">
+                                                Siguiente
+                                            </button>
+                                        )}
+                                    </div>
                                 </a>
                             </div>
                             <div>
@@ -979,7 +1059,7 @@ const ProfilePage = () => {
                     <>
                         <div className="grid grid-cols-3 gap-4 mt-8 p-2">
                             <div>
-                                <a className="block max-w p-4 bg-white border border-gray-200 rounded-lg shadow-sm 
+                                <a className="block max-w p-5 bg-white border border-gray-200 rounded-lg shadow-sm 
                                     hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
                                     <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{user?.nombre} {user?.apellidos}</h3>
                                     <hr></hr>
@@ -1020,9 +1100,7 @@ const ProfilePage = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {
-                                            eventsOrganizer.filter(event => event.createdBy === user?.email && event.estado === 'finalizado')
-                                                .map((userEvent) => (
+                                            {paginatedEventsOver.map((userEvent) => (
                                                 <tr key={userEvent.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                                     <td className="px-6 py-4">{userEvent.id_evento}</td>
                                                     <td className="px-6 py-4">
@@ -1043,7 +1121,21 @@ const ProfilePage = () => {
                                                 </tr>
                                             ))}
                                         </tbody>
+                                        
                                     </table>
+                                    <div className="flex justify-center mt-4 space-x-10">
+                                        {currentPageOver > 1 && (
+                                            <button onClick={prevPageEventsOver} className="text-blue-600 hover:underline">
+                                                Anterior
+                                            </button>
+                                        )}
+                                        <span className="text-gray-700">{currentPageOver}</span>
+                                        {endIndexOver < filteredEventsOverOrganizer.length && (
+                                            <button onClick={nextPageEventsOver} className="text-blue-600 hover:underline">
+                                                Siguiente
+                                            </button>
+                                        )}
+                                    </div>
                                 </a>
                             </div>
                         </div>
@@ -1064,7 +1156,7 @@ const ProfilePage = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {eventsOrganizer.filter(event => event.createdBy === user?.email).map((userEvent) => (
+                                    {paginatedEventsCreated.map((userEvent) => (
                                         <tr key={userEvent.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                         {/* <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{userEvent.nombre}</th> */}
                                             <td className="px-6 py-4">
@@ -1103,6 +1195,19 @@ const ProfilePage = () => {
                                     ))}
                                 </tbody>
                             </table>
+                            <div className="flex justify-center mt-4 space-x-10">
+                                {currentPageCreated > 1 && (
+                                    <button onClick={prevPageEventsCreatedBy} className="text-blue-600 hover:underline">
+                                        Anterior
+                                    </button>
+                                )}
+                                <span className="text-gray-700">{currentPageCreated}</span>
+                                {endIndexCreated < filteredEventsOrganizer.length && (
+                                    <button onClick={nextPageEventsCreatedBy} className="text-blue-600 hover:underline">
+                                        Siguiente
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </>
                 ) 
