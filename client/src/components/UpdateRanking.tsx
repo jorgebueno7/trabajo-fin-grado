@@ -119,8 +119,7 @@ const UpdateRanking = () => {
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lugar">
                             Observaciones
                         </label>
-                        <input
-                            type="text"
+                        <textarea
                             value={observaciones}
                             onChange={(e) => setObservaciones(e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg"

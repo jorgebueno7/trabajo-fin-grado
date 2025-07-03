@@ -3,6 +3,7 @@ const event = require('../models/Event')
 const sport = require('../models/Sports');
 const user = require('../models/User');
 const ranking = require('../models/Ranking');
+const transporter = require('../utils/mailtrap')
 let queue = {};
 
 const getAllUserEvents = async (req, res) => {
@@ -271,6 +272,36 @@ const deleteUserEvent = async (req, res) => {
                 { where: { id_evento } }
             );
 
+            // Obtener usuario y evento para el email
+            const usuario = await user.findByPk(nextUser);
+            const evento = await event.findByPk(id_evento, {
+                include: [{ model: sport }]
+            });
+
+            const email_options = {
+                from: 'sportly@events.com',
+                to: usuario.email,
+                subject: `¡Has sido añadido al evento!`,
+                html: `
+                    <h1>Hola ${usuario.nombre} 🙌</h1>
+                    <p>¡Has sido inscrito automáticamente en el evento al que estabas en la cola!</p>
+                    <ul>
+                        <li><strong>Evento:</strong> ${evento.nombre}</li>
+                        <li><strong>Fecha:</strong> ${evento.fecha_ini}</li>
+                        <li><strong>Lugar:</strong> ${evento.lugar}</li>
+                    </ul>
+                    <p>¡Te esperamos! 🎉</p>
+                `
+            };
+
+            transporter.sendMail(email_options, (error, info) => {
+                if (error) {
+                    console.error('Error sending email:', error);
+                } else {
+                    console.log('Email sent: ' + info.response);
+                }
+            });
+
             console.log(`Updated event ${id_evento} waiting user to ${firstUserInQueue}`);
         } else {
             // Si ya no hay nadie en la cola, limpia el campo
@@ -373,6 +404,7 @@ const getNotificationsFromUserEvent = async (req, res) => {
             where: { id_usuario, notificar_union: true },
             include: [{ model: event, include: [{ model: sport }] }],
         });
+
         if (pendingNotifications.length > 0) {
             res.status(200).json(pendingNotifications);
         } else {

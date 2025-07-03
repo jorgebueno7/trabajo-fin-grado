@@ -108,7 +108,7 @@ const Valoraciones = () => {
                 <h1 className="text-2xl font-bold mt-4">Listado de valoraciones</h1>
             </div>
 
-            <div className="grid grid-cols-4 gap-x-4 mx-16">
+            <div className="grid grid-cols-3 gap-x-4 mx-16">
                     {ratings.length > 0 ? 
                         (currentRatings.map((rating) => 
                             <div key={rating.id_rating} className="border p-4 mb-4 ml-2 rounded-lg bg-white shadow-md">

@@ -219,7 +219,7 @@ const AddEventStats = () => {
                                     </tr>
                                     {expandedRow === userEvent.id_usuario && (
                                         <tr className="bg-gray-100">
-                                            <td colSpan={7} className="px-6 py-4">
+                                            <td colSpan={9} className="px-6 py-4">
                                                 <form
                                                     onSubmit={async (e) => {
                                                         e.preventDefault();

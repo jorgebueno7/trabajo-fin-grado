@@ -1055,9 +1055,12 @@ const ProfilePage = () => {
                                     <h2 className="text-xl font-bold mb-4">¡Te hemos inscrito en nuevos eventos!</h2>
                                     <ul className="list-disc list-inside mb-4">
                                         {notifications.map((n, index) => (
-                                            <li key={`${n.id_evento}-${index}`}>
-                                                Evento: {n.Event?.nombre || 'Evento sin nombre'}
-                                            </li>
+                                            <>
+                                                <li key={`${n.id_evento}-${index}`}>
+                                                    Evento: {n.Event?.nombre || 'Evento sin nombre'}
+                                                    <a href="https://mailtrap.io/inboxes/3055831/messages">Revisa tu correo!</a>
+                                                </li>
+                                            </>
                                         ))}
                                     </ul>
                                     <button
