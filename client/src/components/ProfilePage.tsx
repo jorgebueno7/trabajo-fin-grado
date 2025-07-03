@@ -16,7 +16,7 @@ import Footer from '../components/Footer';
 const ITEMS_PER_PAGE = 3;
 const ITEMS_PER_PAGE_ORGANIZER = 6;
 const ITEMS_PER_PAGE_ADMIN = 6;
-
+const ITEMS_PER_PAGE_PARTICIPANTE = 4;
 
 const ProfilePage = () => {  
     interface Event {
@@ -144,7 +144,8 @@ const ProfilePage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [currentPageCreated, setCurrentPageCreated] = useState(1);
     const [currentPageOver, setCurrentPageOver] = useState(1); 
-    const [currentPageAdmin, setCurrentPageAdmin] = useState(1);       
+    const [currentPageAdmin, setCurrentPageAdmin] = useState(1);   
+    const [currentPageParticipante, setCurrentParticipante] = useState(1);      
     const [notifications, setNotifications] = useState<UserEvent[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -458,6 +459,7 @@ const ProfilePage = () => {
     const filteredEvents = events.filter(event => event.estado === 'sin_comenzar' && event.UserEvents.length === 0);
     const filteredEventsOrganizer = eventsOrganizer.filter(event => event.createdBy === user?.email && event.estado !== 'finalizado');
     const filteredEventsOverOrganizer = eventsOrganizer.filter(event => event.createdBy === user?.email && event.estado === 'finalizado');
+    const filteredEventsParticipante = userEvents.filter(userEvent => userEvent.esta_inscrito == true);
 
     const startIndexCreated = (currentPageCreated - 1) * ITEMS_PER_PAGE_ORGANIZER;
     const endIndexCreated = startIndexCreated + ITEMS_PER_PAGE_ORGANIZER;
@@ -471,8 +473,10 @@ const ProfilePage = () => {
 
     const startIndexUsersAdmin = (currentPageAdmin - 1) * ITEMS_PER_PAGE_ADMIN;
     const endIndexUsersAdmin = startIndexUsersAdmin + ITEMS_PER_PAGE_ADMIN;
-    // const eventsCreatedByMyself = filteredEventsOrganizer.slice(startIndexOrganizer, endIndexOrganizer);
-    // const eventsOverCreatedByMyself = filteredEventsOverOrganizer.slice(startIndex, endIndex);
+
+    const startIndexParticipante = (currentPageParticipante - 1) * ITEMS_PER_PAGE_PARTICIPANTE;
+    const endIndexParticipante = startIndexParticipante + ITEMS_PER_PAGE_PARTICIPANTE;
+    const paginatedEventsParticipante = filteredEventsParticipante.slice(startIndexParticipante, endIndexParticipante);
 
 
     const nextPageEventsAvailable = () => {
@@ -495,6 +499,9 @@ const ProfilePage = () => {
 
     const nextPageUsersAdmin = () => setCurrentPageAdmin(prev => prev + 1);
     const prevPageUsersAdmin = () => setCurrentPageAdmin(prev => prev - 1);
+
+    const nextPageEventsParticipante = () => setCurrentParticipante(prev => prev + 1);
+    const prevPageEventsParticipante = () => setCurrentParticipante(prev => prev - 1);
 
     const chartData = filteredSports.map((r) => ({
         name: r.Event.nombre,
@@ -978,7 +985,7 @@ const ProfilePage = () => {
                         {/* Listado de eventos que ha finalizado el usuario */}
                         <div>
                             <h1 className="mt-10 text-2xl font-bold tracking-tight text-gray-900 dark:text-white ml-8">Eventos inscritos</h1>
-                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ml-4 mt-3">
+                            <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400 mt-3">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" className="px-6 py-3">Evento</th>
@@ -995,7 +1002,7 @@ const ProfilePage = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {userEvents.filter(userEvent => userEvent.esta_inscrito == true).map((userEvent) => (
+                                    {paginatedEventsParticipante.map((userEvent) => (
                                         <tr key={userEvent.id_evento} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                         {/* <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{userEvent.Event.nombre}</th> */}
                                             <td className="px-6 py-4">
@@ -1012,7 +1019,7 @@ const ProfilePage = () => {
                                             <td className="px-6 py-4">{userEvent.tiempo}</td>
                                             <td className="px-6 py-4">{userEvent.resultado}</td>
                                             <td className="px-6 py-4">{userEvent.observaciones}</td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-6 py-3">
                                                 <span 
                                                     className={`px-3 py-1 rounded-lg text-white font-semibold
                                                         ${userEvent.Event.estado === 'sin_comenzar' ? 'bg-blue-500' : ''}
@@ -1028,6 +1035,19 @@ const ProfilePage = () => {
                                     ))}
                                 </tbody>
                             </table>
+                            <div className="flex justify-center mt-4 space-x-4">
+                                {currentPageParticipante > 1 && (
+                                    <button onClick={prevPageEventsParticipante} className="text-blue-600 hover:underline">
+                                        Anterior
+                                    </button>
+                                )}
+                                <span className="text-gray-700">{currentPageParticipante}</span>
+                                {endIndexParticipante < filteredEventsParticipante.length && (
+                                    <button onClick={nextPageEventsParticipante} className="text-blue-600 hover:underline">
+                                        Siguiente
+                                    </button>
+                                )}
+                            </div>
                         </div>
                         {isModalOpen && (
                             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
