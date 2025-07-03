@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
-import { getRankings } from '../api/rankings';
+import { useEffect, useState, useContext } from 'react';
+import { getRankings, deleteRanking } from '../api/rankings';
+import { useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer';
+import UserContext from '../context/UsersContext';
+
 
 const Posiciones = () => {
     interface Ranking {
@@ -49,7 +52,12 @@ const Posiciones = () => {
     const eventos = [...new Set(rankings.map(e => e.Event.nombre))];
     const [sortField, setSortField] = useState<'clasificacion' | 'puntos' | 'tiempo' | null>(null);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-    
+    const { isLoggedIn, user } = useContext(UserContext);
+    const navigate = useNavigate();
+
+    const navigateToUpdateRanking = (id_ranking: number) => {
+        navigate(`/update-ranking/${id_ranking}`)
+    }
     useEffect(() => {
         fetchRankigns();
     }, [selectedEvent]);
@@ -92,6 +100,17 @@ const Posiciones = () => {
         return sortOrder === 'asc' ? '⬆' : '⬇';
     };
 
+    const handleDelete = async (id: number) => {
+        if (window.confirm('¿Estás seguro de que quieres eliminar este registro?')) {
+            try {
+                await deleteRanking(id.toString());
+                setRankings(rankings.filter(ranking => ranking.id_ranking !== id));
+            } catch (error) {
+                console.error('Error deleting ranking:', error);
+            }
+        }
+    };
+
     return (
         <>
             <div className="overflow-x-auto">
@@ -125,7 +144,9 @@ const Posiciones = () => {
                                 <th scope="col" className="px-6 py-3">Resultado</th>
                                 <th scope="col" className="px-6 py-3">Observaciones</th>
                                 <th scope="col" className="px-6 py-3">Estadísticas extra</th>
-
+                                {isLoggedIn && user?.role === 'administrador' && (
+                                    <th scope="col" className="px-6 py-3 text-center">Acciones</th>
+                                )}
                             </tr>
                         </thead>
                     )}
@@ -154,7 +175,25 @@ const Posiciones = () => {
                             >
                                 Ver
                             </button>
-                            </td>                  
+                            </td>   
+                            {isLoggedIn && user?.role === 'administrador' && (
+                                <td className="px-6 py-3 text-center">
+                                    <div className="flex justify-center space-x-4">
+                                        <button 
+                                            onClick={() => navigateToUpdateRanking(ranking.id_ranking)}
+                                            className="w-50 text-white bg-blue-800 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
+                                                rounded-lg text-sm px-1 py-0.5 text-center dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-800">
+                                            Editar registro
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(ranking.id_ranking)} 
+                                            className="w-50 text-white bg-red-800 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium 
+                                                rounded-lg text-sm px-1 py-0.5 text-center dark:bg-red-700 dark:hover:bg-red-800 dark:focus:ring-red-800">
+                                            Eliminar registo
+                                        </button>
+                                    </div>
+                              </td>
+                            )}               
                         </tr>
                         ))
                     )}
@@ -189,106 +228,3 @@ const Posiciones = () => {
 };
 
 export default Posiciones;
-
-// import { useEffect, useState } from 'react';
-// import { getRankings } from '../../api/rankings';
-// import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
-
-// const Posiciones = () => {
-//     interface Ranking {
-//         id_ranking: number;
-//         id_usuario: number;
-//         id_deporte: number;
-//         id_evento: number;
-//         clasificacion: number;
-//         puntos: number;
-//         tiempo: number;
-//         resultado: string;
-//         observaciones: string;
-//         estadisticas_extra: JSON;
-//         user: {
-//             id_usuario: number;
-//             nombre: string;
-//             apellidos: string;
-//         };
-//         Event: {
-//             id_evento: number;
-//             nombre: string;
-//         };
-//         Sport: {
-//             id_deporte: number;
-//             nombre: string;
-//         };
-//     }
-//     const [selectedEvent, setSelectedEvent] = useState<string>('');
-//     const [rankings, setRankings] = useState<Ranking[]>([]);
-//     const eventos = [...new Set(rankings.map(e => e.Event.nombre))];
-
-//     useEffect(() => {
-//         fetchRankings();
-//     }, [selectedEvent]);
-
-//     const filteredEvents = rankings.filter(event => {
-//         const matchesEvent = selectedEvent === '' || event.Event?.nombre === selectedEvent;
-//         return matchesEvent;
-//     });
-//     const fetchRankings = async () => {
-//         try {
-//             const data = await getRankings();
-//             setRankings(data);
-//         } catch (error) {
-//             console.error('Error fetching rankings:', error);
-//         }
-//     };
-
-//     const chartData = filteredEvents.map((r) => ({
-//         name: `${r.user.nombre} ${r.user.apellidos}`,
-//         clasificacion: r.clasificacion,
-//         puntos: r.puntos,
-//         tiempo: r.tiempo,
-//     }));
-
-//     return (
-//         <>
-//             <div className="flex items-end gap-6 mx-20 mt-6">
-//                 <div className="flex flex-col">
-//                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Filtrar estadísticas según evento:</label>
-//                     <select
-//                         value={selectedEvent}
-//                             onChange={(e) => setSelectedEvent(e.target.value)}
-//                             className="mt-1 w-48 py-2 px-3 border border-gray-300 bg-white dark:bg-gray-700 dark:text-white rounded-md shadow-sm"
-//                         >
-//                         <option value=""></option>
-//                         {eventos.map((nombre) => (
-//                             <option key={nombre} value={nombre}>
-//                                 {nombre}
-//                             </option>
-//                         ))}
-//                     </select>
-//                 </div>
-//             </div>
-//             { selectedEvent && (
-//                 <div className="p-6">
-//                     <div className="h-[500px] w-full">
-//                         <ResponsiveContainer width="100%" height="100%">
-//                         <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-//                             <CartesianGrid /> <XAxis dataKey="name"/> <YAxis /> <Tooltip /> <Legend />
-//                             <Bar dataKey="clasificacion" fill="#247380" name="Clasificación" radius={[4, 4, 0, 0]} />
-//                             <Bar dataKey="puntos" fill="#2ad9b9" name="Puntos" radius={[4, 4, 0, 0]} />
-//                             <Bar dataKey="tiempo" fill="#53c48f" name="Tiempo (min)" radius={[4, 4, 0, 0]} />
-//                         </BarChart>
-//                         </ResponsiveContainer>
-//                     </div>
-//                 </div>
-//             )}
-//             {!selectedEvent && (
-//                 <div className="text-center text-gray-500 mt-10">
-//                     Por favor, selecciona un evento para ver las estadísticas.
-//                 </div>
-//             )}
-//         </>
-//     );
-// };
-
-// export default Posiciones;
-
